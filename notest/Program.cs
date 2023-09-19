@@ -31,9 +31,7 @@ public class Program
         .login("amohandas", "D@d5m4gaav009")
         .transaction("me2n")
         .clear("Purchasing Document Number")
-        .set("Plant","22a1")
-        .set_range("Plant", "2200", "22A2")
-        .sets("Purchasing Group", "2200", "22A2")
+        .sets("Plant",  "2200", "22A1","22A2")
         .execute()
         .wait_for_table()
         .export("me2n.xlsx");

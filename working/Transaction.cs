@@ -35,7 +35,7 @@ public class Transaction
 
     public void Initialize()
     {
-        termo.show.info("TRANSACTION OVERVIEW");
+        termo.show.divider("TRANSACTION OVERVIEW");
         var fhandelsTask = inner.inner.page.QuerySelectorAllAsync(input_selector);
         var multi_buttonsTask = inner.inner.page.QuerySelectorAllAsync(multi_button_selector);
 
@@ -46,9 +46,12 @@ public class Transaction
 
         var titleTasks = fhandels.Select(field => field.GetAttributeAsync("title")).ToList();
         Task.WhenAll(titleTasks).Wait();
-
-        var groups = fhandels.Zip(titleTasks.Select(t => t.Result), (field, title) => new { Title = title, Field = field })
-                             .GroupBy(item => item.Title);
+        // we will combine the fields with the same title into a single input.
+        // only if there are at least 2 fields with the same title we will add a multi button to the input
+        var groups = titleTasks.Select((title, index) => new { Title = title.Result, Field = fhandels[index] })
+            .GroupBy(field => field.Title)
+            .Where(group => group.Count() > 1)
+            .ToList();
 
         _fields = new Dictionary<string, Input>();
         foreach (var group in groups)
