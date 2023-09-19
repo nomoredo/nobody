@@ -25,12 +25,17 @@ public class Program
 
         transaction
         .clear("Purchasing Document Number")
-        .set_range("Plant", "2200", "22A2")
+        .set("Plant","22a1")
+        // .set_range("Plant", "2200", "22A2")
         .sets("Purchasing Group", ["162", "163"])
         
         .execute()
+        .wait_until_table_loaded()
+        .list_tables()
         .export("me2n.xlsx");
 
+
+        
 
     }
 }

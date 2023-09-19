@@ -1,4 +1,5 @@
 
+
 namespace termo
 {
     public class show {
@@ -25,6 +26,24 @@ namespace termo
             Console.Write("INFO: ");
             Console.ForegroundColor = ConsoleColor.White;
             Console.Write(text);
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.Write(" ");
+            foreach (var param in parameters)
+            {
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.Write(param);
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.Write(" ");
+            }
+            Console.WriteLine();
+        }
+
+        internal static void not_found(string v, params string[] parameters)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.Write("NOT FOUND: ");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.Write(v);
             Console.ForegroundColor = ConsoleColor.Gray;
             Console.Write(" ");
             foreach (var param in parameters)

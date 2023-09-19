@@ -36,7 +36,7 @@ public class Online
 
     public Online type(string selector, string text)
     {
-        execute_sync(page, (b) => b.TypeAsync(selector, text));
+        execute_sync(page, (b) => b.FillAsync(selector, text));
         return this;
     }
 
