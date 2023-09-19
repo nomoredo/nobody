@@ -19,7 +19,7 @@ public class Program
 
 
         
-    ar01();
+    me2n();
         
 
     }
@@ -33,7 +33,7 @@ public class Program
         .clear("Purchasing Document Number")
         .set("Plant","22a1")
         .set_range("Plant", "2200", "22A2")
-        .sets("Purchasing Group", ["162", "163"])
+        .sets("Purchasing Group", "2200", "22A2")
         .execute()
         .wait_for_table()
         .export("me2n.xlsx");

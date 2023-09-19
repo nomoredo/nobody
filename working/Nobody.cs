@@ -21,16 +21,7 @@ public static class nobody
        return  sap(visible).Result;
     }
 
-    /*
-           var sap = await nobody.sap(visible: true);
-        sap.login("amohandas", "D@d5m4gaav009")
-        .transaction("me2n")
-        .set("plant", "8000")
-        .sets("vendor", ["100000", "100001"])
-        .execute()
-        .export("me2n.xlsx")
-        .close();
-    */
+
     public static async Task<SapWebUi> sap(bool visible)
     {
         var browser = await online(visible);

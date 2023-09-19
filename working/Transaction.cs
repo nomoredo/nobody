@@ -35,6 +35,7 @@ public class Transaction
 
     public void Initialize()
     {
+        termo.show.info("TRANSACTION OVERVIEW");
         var fhandelsTask = inner.inner.page.QuerySelectorAllAsync(input_selector);
         var multi_buttonsTask = inner.inner.page.QuerySelectorAllAsync(multi_button_selector);
 
@@ -60,6 +61,7 @@ public class Transaction
             _fields[label] = input;
             input.show();
         }
+        termo.show.divider();
     }
 
 
@@ -149,14 +151,41 @@ public class Transaction
         return this;
     }
 
-    public Transaction sets(string label, string[] values)
+
+    //click on multi button
+    //wait for the popup window to appear with role="dialog" and ct="PW"
+    // click on role="gridcell" lsmatrixcolindex="1" and lsmatrixrowindex=index to activate the input inside popup window
+    // enter text in input with  name="InputField" and class="lsField__input"
+    // click on next row and scroll down one row
+
+    public Transaction sets(string label, params string[] values)
     {
-        // var field = get_field(label);
-        // field.multipleEntryButton.ClickAsync().Wait();
-        // for (int i = 0; i < values.Length; i++)
-        // {
-        //     field.multiSelectRows[i].TypeAsync(values[i]).Wait();
-        // }
+       if (_fields != null && _fields.TryGetValue(label, out var field))
+        {
+            
+            field.multi_button.ClickAsync().Wait();
+            browser.page.WaitForSelectorAsync("div[ct='PW'][role='dialog']", new PageWaitForSelectorOptions { Timeout = 5 * 60 * 1000 }).Wait();
+            var popup_window = browser.page.QuerySelectorAsync("div[ct='PW'][role='dialog']").Result;
+            var rows = popup_window.QuerySelectorAllAsync("td[role='gridcell'][lsmatrixcolindex='1']").Result.ToList();
+
+            for (int i = 0; i < values.Length; i++)
+            {
+                var row = rows.ElementAtOrDefault(i);
+                if (row != null)
+                {
+                    row.ClickAsync().Wait();
+                    var input = row.QuerySelectorAsync("input[name='InputField'][class='lsField__input']").Result;
+                    input.FillAsync(values[i]).Wait();
+                    browser.page.Keyboard.PressAsync("ArrowDown").Wait();
+                }
+            }
+
+            popup_window.QuerySelectorAsync("div[title='Copy (F8)']").Result.ClickAsync().Wait();
+        }
+        else
+        {
+            termo.show.not_found("FIELD", label);
+        }
         return this;
     }
 
