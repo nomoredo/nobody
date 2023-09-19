@@ -45,9 +45,9 @@ public class Online
         inner.CloseAsync().Wait();
     }
 
-    public Online wait_for(string selector)
+    public Online wait_for(string selector, int timeout=5)
     {
-        execute_sync(page, (b) => b.WaitForSelectorAsync(selector));
+        execute_sync(page, (b) => b.WaitForSelectorAsync(selector, new PageWaitForSelectorOptions { Timeout = timeout *60*1000}));
         return this;
     }
 
@@ -57,6 +57,11 @@ public class Online
         return this;
     }
 
+    public ILocator locate(string selector,string? has_text= null ,  string? has_not_text = null , ILocator? has = null , ILocator? has_not = null )
+    {
+        return  page.Locator(selector, options: new PageLocatorOptions { HasText = has_text ,Has = has, HasNot = has_not, HasNotText = has_not_text });
+
+    }
 
 
 
@@ -157,5 +162,9 @@ public class Online
         }
     }
 
-
+    internal Online right_click(string table_selector2)
+    {
+        execute_sync(page, async (b) => await b.ClickAsync(table_selector2, new PageClickOptions { Button = MouseButton.Right }));
+        return this;
+    }
 }

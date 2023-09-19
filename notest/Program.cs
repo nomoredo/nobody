@@ -18,25 +18,43 @@ public class Program
         //          .close();
 
 
-        var sap = await nobody.sap(visible: true);
-        sap.login("amohandas", "D@d5m4gaav009");
-        var transaction = sap.transaction("me2n");
+        
+    ar01();
+        
+
+    }
 
 
-        transaction
+
+    public static void me2n(){
+        nobody.open_sap(visible: true)
+        .login("amohandas", "D@d5m4gaav009")
+        .transaction("me2n")
         .clear("Purchasing Document Number")
         .set("Plant","22a1")
-        // .set_range("Plant", "2200", "22A2")
+        .set_range("Plant", "2200", "22A2")
         .sets("Purchasing Group", ["162", "163"])
-        
         .execute()
-        .wait_until_table_loaded()
-        .list_tables()
+        .wait_for_table()
         .export("me2n.xlsx");
+    }
 
+    public static void mb52(){
+        nobody.open_sap(visible: true)
+        .login("amohandas", "D@d5m4gaav009")
+        .transaction("mb52")
+        .set_range("Plant", "2200", "22A2")
+        .execute()
+        .export_table("mb52.xlsx");
+    }
 
-        
-
+    public static void ar01(){
+        nobody.open_sap(visible: true)
+        .login("amohandas", "D@d5m4gaav009")
+        .transaction("ar01")
+        .set("Plant","22a1")
+        .execute()
+        .export_table("ar01.xlsx", timeout:5);
     }
 }
 

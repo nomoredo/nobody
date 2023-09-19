@@ -1,4 +1,5 @@
 using Microsoft.Playwright;
+using Microsoft.VisualBasic;
 using termo;
 using working;
 public class Transaction
@@ -89,7 +90,7 @@ public class Transaction
 
     public Transaction execute()
     {
-        browser.page.QuerySelectorAsync(execute_button_selector).Result.ClickAsync().Wait();
+        browser.click(execute_button_selector);
         return this;
     }
 
@@ -119,9 +120,9 @@ public class Transaction
     }
 
 
-    public Transaction wait_for_download(string path)
+    public Transaction wait_for_download(string path, int timeout = 5)
     {
-        browser.page.WaitForDownloadAsync(options: new PageWaitForDownloadOptions { Timeout = 50000,Predicate=download=>download.SuggestedFilename==path}).Wait();
+        browser.page.WaitForDownloadAsync(options: new PageWaitForDownloadOptions { Timeout = timeout*60*1000,Predicate=download=>download.SuggestedFilename==path}).Wait();
         //get the download
         browser.page.Download += async (sender, e) =>
         {
@@ -181,10 +182,30 @@ public class Transaction
         return this;
     }
 
-    public Transaction wait_until_table_loaded(float? timeout = null)
+    public Transaction wait_for_table(int timeout = 5)
     {
-        browser.page.WaitForSelectorAsync(table_selector, new PageWaitForSelectorOptions { Timeout = (timeout??500000)}).Wait();
+        browser.page.WaitForSelectorAsync(table_selector, new PageWaitForSelectorOptions { Timeout = (timeout*60*1000)}).Wait();
         return this;
     }
- 
+
+
+
+    //sap table other format eg. mb51
+    const string table_selector2 = "table[id='userarealist0'][role='region']";
+    const string table_ctx_spreadsheets_selector2 = "xpath=/html/body/table/tbody/tr/td/div/div/div[1]/div[1]/span[2]/div/div[5]/table/tbody/tr[27]";
+    const string popup_window_confirm_button = "xpath=/html/body/table/tbody/tr/td/div/div/div[1]/div[11]/div/div/div[4]/div/table/tbody/tr/td[3]/div/div/div/div[1]/span[2]/div";
+    const string popup_window_file_name_input = "xpath=/html/body/table/tbody/tr/td/div/div/div[3]/div/div[3]/table/tbody/tr/td/div/table/tbody/tr[1]/td[2]/table/tbody/tr/td/input";
+
+    const string popup_window_file_name_confirm_button = "xpath=/html/body/table/tbody/tr/td/div/div/div[3]/div/div[4]/div/table/tbody/tr/td[3]/table/tbody/tr/td[1]/div";
+
+    public void export_table(string path, int timeout = 5)
+    {
+        browser.wait_for(table_selector2, timeout);
+        browser.right_click(table_selector2);
+        browser.click(table_ctx_spreadsheets_selector2);
+        browser.click(popup_window_confirm_button);
+        browser.type(popup_window_file_name_input, path);
+        browser.click(popup_window_file_name_confirm_button);
+        Task.Delay(100000).Wait();
+    }
 }

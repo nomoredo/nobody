@@ -16,6 +16,11 @@ public static class nobody
         return new Online(browser);
     }
 
+    public static SapWebUi open_sap(bool visible)
+    {
+       return  sap(visible).Result;
+    }
+
     /*
            var sap = await nobody.sap(visible: true);
         sap.login("amohandas", "D@d5m4gaav009")
