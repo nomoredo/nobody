@@ -98,6 +98,11 @@ public class SapWebUi
         inner.close();
     }
 
+    public SapWebUi watch_network()
+    {
+       inner.watch_network();
+        return this;
+    }
 }
 
 

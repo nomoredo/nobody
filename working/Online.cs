@@ -74,7 +74,7 @@ public class Online
     {
         show.action("WAITING FOR", selector);
         var locator = locate(selector, has_text);
-        page.WaitForSelectorAsync(selector, new PageWaitForSelectorOptions { Timeout = timeout * 1000 }).Wait();
+        page.WaitForSelectorAsync(selector, new PageWaitForSelectorOptions { Timeout = timeout * 1000* 60 }).Wait();
         return this;
     }
 
@@ -212,7 +212,20 @@ public class Online
         return v2;
     }
 
-   
+    internal Online watch_network()
+    {
+        // page.Request += async (sender, e) =>
+        // {
+        //     show.request(e);
+        // };
+
+        page.Response += async (sender, e) =>
+        {
+            show.response(e);
+        };
+
+        return this;
+    }
 }
 
 

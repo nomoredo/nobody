@@ -1,32 +1,35 @@
 
 
+using System.Diagnostics;
+using Microsoft.Playwright;
 using Spectre.Console;
 
 namespace termo
 {
-    public class show {
+    public class show
+    {
 
         //divider
         public static void divider(string text)
         {
-                 Console.WriteLine("————————————————————————————————————————————————————————————");
-                 //in purple
-                 Console.WriteLine($" \x1b[1;35m{text}\x1b[0m");
-                 Console.WriteLine("————————————————————————————————————————————————————————————");
+            Console.WriteLine("————————————————————————————————————————————————————————————");
+            //in purple
+            Console.WriteLine($" \x1b[1;35m{text}\x1b[0m");
+            Console.WriteLine("————————————————————————————————————————————————————————————");
         }
 
         //divider
         public static void divider()
         {
-                 Console.WriteLine("————————————————————————————————————————————————————————————");
+            Console.WriteLine("————————————————————————————————————————————————————————————");
         }
 
         // info
         // INFO in gray , text in white, params in cyan
-        
+
         public static void info(string text, params string[] parameters)
         {
-           // INFO {text in yellow bold} {params in cyan} next params in cyan +1
+            // INFO {text in yellow bold} {params in cyan} next params in cyan +1
             Console.Write($" \x1b[2mINFO\x1b[0m \x1b[1;33m{text}\x1b[0m");
             for (int i = 0; i < parameters.Length; i++)
             {
@@ -37,7 +40,7 @@ namespace termo
 
         internal static void not_found(string v, params string[] parameters)
         {
-                // NOT FOUND in orange , text in white, params in cyan
+            // NOT FOUND in orange , text in white, params in cyan
             Console.Write($" \x1b[1;33mNOT FOUND\x1b[0m \x1b[1;33m{v}\x1b[0m");
             for (int i = 0; i < parameters.Length; i++)
             {
@@ -72,7 +75,40 @@ namespace termo
 
         public static void success(string login)
         {
-           AnsiConsole.MarkupLine($"[gray]SUCCESS[/] [green]{login}[/]");
+            AnsiConsole.MarkupLine($"[gray]SUCCESS[/] [green]{login}[/]");
+        }
+
+
+
+        internal static void request(IRequest e)
+        {
+            // print request and its properties in a
+            // neat and structured way
+            AnsiConsole.MarkupLine($"╭─[gray] REQUEST[/] [green]{e.Method}[/] [yellow]{e.Url}[/]");
+            AnsiConsole.MarkupLine($"│ [gray]HEADERS[/]");
+            if (e.PostData != null)
+            {
+                AnsiConsole.MarkupLine($"│ [gray]POST DATA[/] [yellow]{e.PostData}[/]");
+
+
+            }
+            
+
+        }
+
+        internal static void response(IResponse e)
+        {
+            // print response and its properties in a
+            // neat and structured way
+            AnsiConsole.MarkupLine($"│ [gray]RESPONSE[/] [green]{e.Status}[/] [yellow]{e.Url}[/]");
+            AnsiConsole.MarkupLine($"│ [gray]HEADERS[/]");
+            foreach (var header in e.Headers)
+            {
+                AnsiConsole.MarkupLine($"│ [gray]{header.Key}[/] [yellow]{header.Value}[/]");
+            }
+            AnsiConsole.MarkupLine($"╰─[gray] END[/]");
         }
     }
 }
+
+    

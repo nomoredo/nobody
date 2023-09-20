@@ -240,4 +240,17 @@ public class Transaction
         browser.click(popup_window_file_name_confirm_button);
         Task.Delay(100000).Wait();
     }
+
+    public Transaction listen_downloads()
+    {
+        browser.page.Download += async (sender, e) =>
+        {
+            termo.show.info("DOWNLOADING", e.SuggestedFilename);
+            var dir = System.IO.Directory.GetCurrentDirectory();
+            var path = System.IO.Path.Combine(dir, e.SuggestedFilename);
+            await e.SaveAsAsync(path);
+            
+        };
+        return this;
+    }
 }
