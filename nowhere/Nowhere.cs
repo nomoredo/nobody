@@ -9,9 +9,9 @@ public class Nowhere
 
     public static async Task<DirectoryInfo> GetDir(string path)
     {
-      //stores information in users home directory under .nothing
+      //stores information in users home directory under .nowhere
       var home = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile));
-      var dir = new DirectoryInfo(Path.Join(home,".nothing",path));
+      var dir = new DirectoryInfo(Path.Join(home,".nowhere",path));
       if (!dir.Exists)
       {
           dir.Create();
