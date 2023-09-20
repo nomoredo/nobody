@@ -121,6 +121,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.3"
+  coco:
+    dependency: transitive
+    description:
+      name: coco
+      sha256: "879863805df2ecc7519f9c4d7f5b02e26657599a5ba9647e0d865c7556285627"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.2"
   code_builder:
     dependency: transitive
     description:
@@ -424,6 +432,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.1"
+  termo:
+    dependency: "direct main"
+    description:
+      path: "../termo"
+      relative: true
+    source: path
+    version: "1.0.0"
   test_api:
     dependency: transitive
     description:

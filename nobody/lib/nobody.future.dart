@@ -41,27 +41,54 @@ extension ExOnline on Future<Online> {
   }
 
   Future<Online> waitFor(
-    String selector,
+    Future<bool> Function(Online) waitable,
   ) async {
     var Online = await this;
     return Online.waitFor(
-      selector,
-    );
-  }
-
-  Future<Online> has(
-    String selector,
-    String text,
-  ) async {
-    var Online = await this;
-    return Online.has(
-      selector,
-      text,
+      waitable,
     );
   }
 
   Future<Online> close() async {
     var Online = await this;
     return Online.close();
+  }
+
+  Future<Online> screenshot(
+    String path,
+  ) async {
+    var Online = await this;
+    return Online.screenshot(
+      path,
+    );
+  }
+
+  Future<Online> scrollToElement(
+    String selector,
+  ) async {
+    var Online = await this;
+    return Online.scrollToElement(
+      selector,
+    );
+  }
+
+  Future<Online> scrollBy(
+    int x,
+    int y,
+  ) async {
+    var Online = await this;
+    return Online.scrollBy(
+      x,
+      y,
+    );
+  }
+
+  Future<Online> switchToFrame(
+    String selector,
+  ) async {
+    var Online = await this;
+    return Online.switchToFrame(
+      selector,
+    );
   }
 }

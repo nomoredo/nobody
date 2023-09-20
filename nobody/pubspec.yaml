@@ -10,6 +10,9 @@ dependencies:
   puppeteer: any
   codegen: 
     path: ../codegen
+  termo:
+    path: ../termo
+
 
 dev_dependencies:
   build_runner: any

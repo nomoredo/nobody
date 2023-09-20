@@ -116,7 +116,13 @@ class FutureGenerator extends GeneratorForAnnotation<NomoCode> {
     buffer.writeln('extension Ex$className on Future<$className> {');
 
     for (var method in classElement.methods) {
-      if (method.isOperator || method.isAbstract) {
+      if (method.isOperator ||
+          method.isAbstract ||
+          //make sure that return type is Future<$className>
+          method.returnType.toString() != 'Future<$className>') {
+        //if method is operator or abstract or return type is not Future<$className>
+        //then skip it
+
         continue;
       }
 
