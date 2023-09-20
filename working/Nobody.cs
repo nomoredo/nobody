@@ -10,6 +10,7 @@ public static class nobody
 {
     public static async Task<Online> online(bool visible)
     {
+        termo.show.start("OPENING", "BROWSER");
         var playwright = await Playwright.CreateAsync();
         var browser = await playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions { Headless = !visible, Timeout = 10000 });
         var page = await browser.NewPageAsync();

@@ -10,6 +10,7 @@ public class Online
 
     public Online(IBrowser inner)
     {
+        
         this.inner = inner;
 
     }
@@ -221,25 +222,9 @@ public class Online
 
         page.Response += async (sender, e) =>
         {
-            show.response(e);
+            show.response(e.Url, e.Status.ToString(), e.Headers.ToString());
         };
 
         return this;
-    }
-}
-
-
-public delegate Task<bool> Predicate(Online x);
-
-
-
-public class check
-{
-    public Predicate condition;
-    public Action<Online> ifTrue;
-    public check(Predicate check, Action<Online> ifTrue)
-    {
-        this.condition = check;
-        this.ifTrue = ifTrue;
     }
 }

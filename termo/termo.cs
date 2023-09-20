@@ -1,7 +1,6 @@
 
 
 using System.Diagnostics;
-using Microsoft.Playwright;
 using Spectre.Console;
 
 namespace termo
@@ -12,101 +11,140 @@ namespace termo
         //divider
         public static void divider(string text)
         {
-            Console.WriteLine("————————————————————————————————————————————————————————————");
+            Console.WriteLine("────────────────────────────────────────────────────────────");
             //in purple
             Console.WriteLine($" \x1b[1;35m{text}\x1b[0m");
-            Console.WriteLine("————————————————————————————————————————————————————————————");
+            Console.WriteLine("────────────────────────────────────────────────────────────");
         }
 
         //divider
         public static void divider()
         {
-            Console.WriteLine("————————————————————————————————————————————————————————————");
+            Console.WriteLine("────────────────────────────────────────────────────────────");
         }
+
+         static  string[] color_sequence = ["cyan", "magenta", "yellow", "green", "blue", "purple"];
 
         // info
         // INFO in gray , text in white, params in cyan
 
         public static void info(string text, params string[] parameters)
         {
-            // INFO {text in yellow bold} {params in cyan} next params in cyan +1
-            Console.Write($" \x1b[2mINFO\x1b[0m \x1b[1;33m{text}\x1b[0m");
+         //info in gray, text in white , params in sequence of colors
+            AnsiConsole.MarkupInterpolated($"[gray] INFO[/] [white]{text}[/]");
             for (int i = 0; i < parameters.Length; i++)
             {
-                Console.Write($" \x1b[1;36m{parameters[i]}\x1b[0m");
-            }
-            Console.WriteLine();
+                AnsiConsole.MarkupInterpolated($" [{color_sequence[i]}]{parameters[i]}[/]");
+            }    
+            AnsiConsole.WriteLine();
         }
 
-        internal static void not_found(string v, params string[] parameters)
+        public static void not_found(string v, params string[] parameters)
         {
             // NOT FOUND in orange , text in white, params in cyan
-            Console.Write($" \x1b[1;33mNOT FOUND\x1b[0m \x1b[1;33m{v}\x1b[0m");
+          AnsiConsole.MarkupInterpolated($"[orange] NOT FOUND[/] [white]{v}[/]");
             for (int i = 0; i < parameters.Length; i++)
             {
-                Console.Write($" \x1b[1;36m{parameters[i]}\x1b[0m");
+                AnsiConsole.MarkupInterpolated($"[yellow]{parameters[i]}[/]");
             }
-            Console.WriteLine();
+
+            AnsiConsole.WriteLine();
         }
 
-        internal static void error(string v, params string[] parameters)
+        public static void error(string v, params string[] parameters)
         {
             // ERROR in red , text in white, params in cyan
-            Console.Write($" \x1b[1;31mERROR\x1b[0m \x1b[1;33m{v}\x1b[0m");
+            AnsiConsole.MarkupInterpolated($"[red] ERROR[/] [white]{v}[/]");
             for (int i = 0; i < parameters.Length; i++)
             {
-                Console.Write($" \x1b[1;36m{parameters[i]}\x1b[0m");
+                AnsiConsole.MarkupInterpolated($"[yellow]{parameters[i]}[/]");
             }
-            Console.WriteLine();
+            AnsiConsole.WriteLine();
+
         }
 
         //action
         // ACTION in gray , text in white, params in cyan +1
         public static void action(string text, params string[] parameters)
         {
-            Console.Write($" \x1b[2mACTION\x1b[0m \x1b[1;33m{text}\x1b[0m");
+            AnsiConsole.MarkupInterpolated($"[gray] ACTION[/] [white]{text}[/]");
             for (int i = 0; i < parameters.Length; i++)
             {
-                Console.Write($" \x1b[1;36m{parameters[i]}\x1b[0m");
+                AnsiConsole.MarkupInterpolated($" [{color_sequence[i+1]}]{parameters[i]}[/]");
             }
-            Console.WriteLine();
+            AnsiConsole.WriteLine();
         }
 
 
         public static void success(string login)
         {
-            AnsiConsole.MarkupLine($"[gray]SUCCESS[/] [green]{login}[/]");
+            // SUCCESS in green , text in white, params in cyan
+            AnsiConsole.MarkupInterpolated($"[green] SUCCESS[/] [white]{login}[/]");
+            AnsiConsole.WriteLine();
         }
 
 
 
-        internal static void request(IRequest e)
+        internal static void request(params string[] parameters)
         {
             // print request and its properties in a
             // neat and structured way
-            AnsiConsole.MarkupLine($"╭─[gray] REQUEST[/] [green]{e.Method}[/] [yellow]{e.Url}[/]");
-            AnsiConsole.MarkupLine($"│ [gray]HEADERS[/]");
-            if (e.PostData != null)
+            //╭─ REQUEST /login POST
+            //│ HEADERS:
+            //│ POST DATA: username=123&password=123
+            //╰─ END
+
+            AnsiConsole.MarkupLineInterpolated($"[yellow]╭─[/][gray] REQUEST[/] [green]{parameters[0]}[/]");
+            for (int i = 1; i < parameters.Length; i++)
             {
-                AnsiConsole.MarkupLine($"│ [gray]POST DATA[/] [yellow]{e.PostData}[/]");
-
-
+                AnsiConsole.MarkupLineInterpolated($"[yellow]│[/][gray] {parameters[i]}[/]");
             }
-            
-
+            AnsiConsole.MarkupLineInterpolated($"[yellow]╰─[/][gray] END[/]");
         }
 
-        internal static void response(IResponse e)
+        public static void response(params string[] parameters)
         {
             // print response and its properties in a
             // neat and structured way
-            AnsiConsole.MarkupLine($"│ [gray]RESPONSE[/] [green]{e.Status}[/] [yellow]{e.Url}[/]");
-            AnsiConsole.MarkupLine($"│ [gray]HEADERS[/]");
-            foreach (var header in e.Headers)
+            //╭─ RESPONSE /login POST
+            //│ HEADERS:
+            //│ POST DATA: username=123&password=123
+            //╰─ END
+
+            AnsiConsole.MarkupLineInterpolated($"[yellow]╭─[/][gray] RESPONSE[/] [green]{parameters[0]}[/]");
+            for (int i = 1; i < parameters.Length; i++)
             {
-                AnsiConsole.MarkupLine($"│ [gray]{header.Key}[/] [yellow]{header.Value}[/]");
+                AnsiConsole.MarkupLineInterpolated($"[yellow]│[/][gray] {parameters[i]}[/]");
             }
-            AnsiConsole.MarkupLine($"╰─[gray] END[/]");
+            AnsiConsole.MarkupLineInterpolated($"[yellow]╰─[/][gray] END[/]");
+        }
+
+        public static void start(string item, params string[] parameters)
+        {
+            // print start and its properties in a
+            // neat and structured way
+            //╭─ START /login POST
+
+
+            AnsiConsole.MarkupInterpolated($"[yellow]╭─[/] [green]{item}[/]");
+            //each parameter is a color in sequence
+            for (int i = 0; i < parameters.Length; i++)
+            {
+                AnsiConsole.MarkupInterpolated($" [{color_sequence[i]}]{parameters[i]}[/]");
+            }
+            AnsiConsole.WriteLine();
+        }
+
+        public static void input(string label, bool v1, bool v2)
+        {
+
+            //│ INPUT username [RANGE] [MULTI]
+            AnsiConsole.MarkupInterpolated($"[yellow]│[/] [white]INPUT[/] [white]{label}[/]");
+            if (v1)
+                AnsiConsole.MarkupInterpolated($" [white]RANGE[/]");
+            if (v2)
+                AnsiConsole.MarkupInterpolated($" [white]MULTI[/]");
+
         }
     }
 }

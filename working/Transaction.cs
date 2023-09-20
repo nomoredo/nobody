@@ -62,7 +62,7 @@ public class Transaction
             var multi_button = multi_buttons.ElementAtOrDefault(_fields.Count);
             var input = new Input(label, handle, max_handle, multi_button);
             _fields[label] = input;
-            input.show();
+            termo.show.input(label, max_handle != null, multi_button != null);
         }
         termo.show.divider();
     }
@@ -245,9 +245,14 @@ public class Transaction
     {
         browser.page.Download += async (sender, e) =>
         {
-            termo.show.info("DOWNLOADING", e.SuggestedFilename);
             var dir = System.IO.Directory.GetCurrentDirectory();
-            var path = System.IO.Path.Combine(dir, e.SuggestedFilename);
+            var path = System.IO.Path.Combine(dir,"downloads");
+            if (!System.IO.Directory.Exists(path))
+            {
+                System.IO.Directory.CreateDirectory(path);
+            }
+            path = System.IO.Path.Combine(path, e.SuggestedFilename);
+            termo.show.info("DOWNLOADING", e.SuggestedFilename, "TO", path);
             await e.SaveAsAsync(path);
             
         };

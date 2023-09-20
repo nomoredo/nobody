@@ -77,7 +77,7 @@ public class SapWebUi
             {
                 throw new Exception("PASSWORD CANNOT BE NULL");
             }
-            Nowhere.Store(username, new Credentials { Password = password, Username = username });
+            Nowhere.Store(username, new Credentials { Password = password, Username = username }).Wait();
             return password;
         }
 
