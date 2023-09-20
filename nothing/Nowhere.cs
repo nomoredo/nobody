@@ -64,6 +64,17 @@ public class Nowhere
         return value;
     }
 
+    public static async Task<bool> Delete<T>(string key) where T : INothing
+    {
+        var path = await GetPath<T>(key);
+        if (path.Exists)
+        {
+            path.Delete();
+        }
+
+        return true;
+    }
+
 
 }
 

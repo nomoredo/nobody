@@ -1,5 +1,6 @@
 using nothing;
 using Spectre.Console;
+using working;
 namespace termo
 {
     public class ask
@@ -41,21 +42,19 @@ public class SapWebUi
             .wait_for("input[id='logonuidfield']")
             .type("input[id='logonuidfield']", username)
             .type("input[id='logonpassfield']", password, true)
-            .click("input[name='uidPasswordLogon']")
-            .when(
-                new check(
-                    x => x.has("span", has_text: "User authentication failed"),
-                    x =>
-                    {
-                        termo.show.error("LOGIN FAILED");
-                        login(username);
-                    }
-                ),
-                new check(
-                    x => x.wait_and_return(1000, true),
-                    x =>termo.show.success("LOGGED IN SUCCESSFULLY")
-                )
-                );
+            .click("input[name='uidPasswordLogon']");
+        // now chck if we are logged in
+        if (inner.has("span",has_text:"User authentication failed").Result)
+        {
+            //delete password from env
+            Nowhere.Delete<Credentials>(username);
+            termo.show.error("LOGIN FAILED");
+            login(username);
+        }
+        else {
+            termo.show.success("LOGIN SUCCESSFUL");
+        }
+  
 
 
         return this;
@@ -65,12 +64,23 @@ public class SapWebUi
 
     private String request_password(string username)
     {
-        var password = termo.ask.password(username);
-        if (password == null)
+        //check if password is in env
+        var pss = Nowhere.Get<Credentials>(username).Result;
+        if (pss != null)
         {
-            throw new Exception("PASSWORD CANNOT BE NULL");
+            return pss.Password;
         }
-        return password;
+        else
+        {
+            var password = termo.ask.password(username);
+            if (password == null)
+            {
+                throw new Exception("PASSWORD CANNOT BE NULL");
+            }
+            Nowhere.Store(username, new Credentials { Password = password, Username = username });
+            return password;
+        }
+
 
     }
 

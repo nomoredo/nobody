@@ -37,31 +37,24 @@ public class Online
         return this;
     }
 
-    public  Online when(params check[] pairs)
-    {
-        var tasks = pairs.Select(pair => pair.condition(this)).ToList();
 
-        var completedTask = Task.WhenAny(tasks).Result;
-
-        int completedTaskIndex = tasks.IndexOf(completedTask);
-
-        if (completedTask.Result)  // If the completed task returned true
-        {
-            pairs[completedTaskIndex].ifTrue(this);
-            return this;
-        }
-
-        throw new Exception("NO PREDICATE RETURNED TRUE");
-    }
 
 
 
     public async Task<bool> has(string selector, string has_text)
     {
-        show.action("CHECKING IF", selector, "EXISTS");
+       try
+       {
+         show.action("CHECKING IF", selector, "EXISTS");
         var locator = locate(selector, has_text);
         var res = await locator.CountAsync() > 0;
         return res;
+       }
+       catch (System.Exception)
+       {
+        
+      return false;
+       }
     }
 
     public Online type(string selector, string text, bool secret=false)
@@ -77,10 +70,11 @@ public class Online
         inner.CloseAsync().Wait();
     }
 
-    public Online wait_for(string selector, int timeout = 5)
+    public Online wait_for(string selector, int timeout = 5, string has_text = null)
     {
         show.action("WAITING FOR", selector);
-        execute_sync(page, (b) => b.WaitForSelectorAsync(selector, new PageWaitForSelectorOptions { Timeout = timeout * 60 * 1000 }));
+        var locator = locate(selector, has_text);
+        page.WaitForSelectorAsync(selector, new PageWaitForSelectorOptions { Timeout = timeout * 1000 }).Wait();
         return this;
     }
 
@@ -217,6 +211,8 @@ public class Online
         await Task.Delay(v1);
         return v2;
     }
+
+   
 }
 
 
