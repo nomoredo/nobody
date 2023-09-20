@@ -24,7 +24,7 @@ public class Online
     {
         if (!url.StartsWith("http"))
             url = "https://" + url;
-            show.action("VISITING", url);
+        show.action("VISITING", url);
         execute_sync(page, async (b) => await b.GotoAsync(url));
         execute_sync(page, async (b) => await b.WaitForLoadStateAsync(LoadState.NetworkIdle));
         return this;
@@ -37,9 +37,36 @@ public class Online
         return this;
     }
 
-    public Online type(string selector, string text)
+    public  Online when(params check[] pairs)
     {
-        show.action("TYPING", text, "IN", selector);
+        var tasks = pairs.Select(pair => pair.condition(this)).ToList();
+
+        var completedTask = Task.WhenAny(tasks).Result;
+
+        int completedTaskIndex = tasks.IndexOf(completedTask);
+
+        if (completedTask.Result)  // If the completed task returned true
+        {
+            pairs[completedTaskIndex].ifTrue(this);
+            return this;
+        }
+
+        throw new Exception("NO PREDICATE RETURNED TRUE");
+    }
+
+
+
+    public async Task<bool> has(string selector, string has_text)
+    {
+        show.action("CHECKING IF", selector, "EXISTS");
+        var locator = locate(selector, has_text);
+        var res = await locator.CountAsync() > 0;
+        return res;
+    }
+
+    public Online type(string selector, string text, bool secret=false)
+    {
+        show.action("TYPING", secret?"*********":text, "IN", selector);
         execute_sync(page, (b) => b.FillAsync(selector, text));
         return this;
     }
@@ -50,24 +77,24 @@ public class Online
         inner.CloseAsync().Wait();
     }
 
-    public Online wait_for(string selector, int timeout=5)
+    public Online wait_for(string selector, int timeout = 5)
     {
         show.action("WAITING FOR", selector);
-        execute_sync(page, (b) => b.WaitForSelectorAsync(selector, new PageWaitForSelectorOptions { Timeout = timeout *60*1000}));
+        execute_sync(page, (b) => b.WaitForSelectorAsync(selector, new PageWaitForSelectorOptions { Timeout = timeout * 60 * 1000 }));
         return this;
     }
 
     public Online wait_until_loaded()
     {
-        show.action("WAITING ","FOR PAGE"," TO LOAD");
+        show.action("WAITING ", "FOR PAGE", " TO LOAD");
         execute_sync(page, (b) => b.WaitForLoadStateAsync(LoadState.NetworkIdle));
         return this;
     }
 
-    public ILocator locate(string selector,string? has_text= null ,  string? has_not_text = null , ILocator? has = null , ILocator? has_not = null )
+    public ILocator locate(string selector, string? has_text = null, string? has_not_text = null, ILocator? has = null, ILocator? has_not = null)
     {
         show.action("LOCATING", selector);
-        return  page.Locator(selector, options: new PageLocatorOptions { HasText = has_text ,Has = has, HasNot = has_not, HasNotText = has_not_text });
+        return page.Locator(selector, options: new PageLocatorOptions { HasText = has_text, Has = has, HasNot = has_not, HasNotText = has_not_text });
 
     }
 
@@ -75,7 +102,7 @@ public class Online
 
 
     public Online wait_for_navigation(string url)
-    {   
+    {
         show.action("WAITING FOR NAVIGATION TO", url);
         execute_super(page, (b) => b.GotoAsync(url), (b) => b.WaitForLoadStateAsync(LoadState.NetworkIdle));
         return this;
@@ -139,7 +166,7 @@ public class Online
     {
         try
         {
-            
+
             await action(target);
             return target;
         }
@@ -183,5 +210,27 @@ public class Online
     {
         execute_sync(page, async (b) => await b.ClickAsync(table_selector2, new PageClickOptions { Button = MouseButton.Right }));
         return this;
+    }
+
+    internal async Task<bool> wait_and_return(int v1, bool v2)
+    {
+        await Task.Delay(v1);
+        return v2;
+    }
+}
+
+
+public delegate Task<bool> Predicate(Online x);
+
+
+
+public class check
+{
+    public Predicate condition;
+    public Action<Online> ifTrue;
+    public check(Predicate check, Action<Online> ifTrue)
+    {
+        this.condition = check;
+        this.ifTrue = ifTrue;
     }
 }

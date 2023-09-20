@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "working", "working\working.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "notest", "notest\notest.csproj", "{F5030CDF-B2CA-4331-8340-E63F3F4FD32A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "nothing", "nothing\nothing.csproj", "{3E164243-67F8-477C-98D5-C1A5C16C6F05}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{F5030CDF-B2CA-4331-8340-E63F3F4FD32A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F5030CDF-B2CA-4331-8340-E63F3F4FD32A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F5030CDF-B2CA-4331-8340-E63F3F4FD32A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E164243-67F8-477C-98D5-C1A5C16C6F05}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E164243-67F8-477C-98D5-C1A5C16C6F05}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E164243-67F8-477C-98D5-C1A5C16C6F05}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E164243-67F8-477C-98D5-C1A5C16C6F05}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

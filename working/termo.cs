@@ -1,5 +1,7 @@
 
 
+using Spectre.Console;
+
 namespace termo
 {
     public class show {
@@ -67,6 +69,10 @@ namespace termo
             Console.WriteLine();
         }
 
-        
+
+        public static void success(string login)
+        {
+           AnsiConsole.MarkupLine($"[gray]SUCCESS[/] [green]{login}[/]");
+        }
     }
 }
