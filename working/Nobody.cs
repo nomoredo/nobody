@@ -24,14 +24,15 @@ public static class nobody
 
 
 
-    public static async Task get_office()
+    public static async Task<Office> office()
     {
         if (_office == null)
         {
+            termo.show.start("OPENING", "OFFICE");
             _office = new Office();
+            await _office.login();
         }
-         await _office.login();
-         await _office.about_me();
+        return _office;
     }
 
     public static async Task<SapWebUi> sap(bool visible)

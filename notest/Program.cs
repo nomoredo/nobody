@@ -13,7 +13,11 @@ public class Program
     public static async Task email()
     {
 
-        await nobody.get_office();
+        var emails = await nobody.office()
+        .emails()
+        // .where_subject("SAP")
+        // .sent_to("amohandas")
+        .find();
 
         // nobody.read_email()
         // .where("Subject", "SAP")
@@ -58,5 +62,7 @@ public class Program
         .export_table("ar01.xlsx", timeout: 5);
     }
 }
+
+
 
 

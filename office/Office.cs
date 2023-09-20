@@ -27,10 +27,10 @@ public class Office
 
     public static string AcquiredToken { get; private set; }
 
-    private IPublicClientApplication app;
+    private static IPublicClientApplication app;
 
     // Static GraphServiceClient
-    public static GraphServiceClient? client { get; private set; }
+    public static GraphServiceClient? _client {  get; private set; }
 
     public Office()
     {
@@ -43,7 +43,21 @@ public class Office
         TokenCacheHelper.EnableSerialization(app.UserTokenCache);
     }
 
-    public async Task login()
+    public static GraphServiceClient get_client()
+    {
+        if (_client == null)
+        {
+            login().Wait();
+        }
+        return _client;
+    }
+
+   public EmailQuery emails()
+    {
+        return new EmailQuery(get_client());
+    }
+
+    public static async Task login()
     {
         IAccount firstAccount = (await app.GetAccountsAsync()).FirstOrDefault();
 
@@ -68,14 +82,14 @@ public class Office
         }
         // Initialize GraphServiceClient using BearerTokenAuthenticationProvider
         var accessTokenProvider = new BaseBearerTokenAuthenticationProvider(new TokenProvider());
-        client = new GraphServiceClient(accessTokenProvider);
+        _client = new GraphServiceClient(accessTokenProvider);
 
         AcquiredToken = authResult.AccessToken;
     }
 
     public async Task<User?> about_me()
     {
-        var me = await client?.Me.GetAsync();
+        var me = await _client?.Me.GetAsync();
         if (me != null)
         {
             termo.show.success("LOGGED IN AS", me.DisplayName.ToUpper(),  me.Mail);
@@ -83,6 +97,9 @@ public class Office
         }
         return me;
     }
+    
+
+    
 }
 
 // TokenCacheHelper class to handle token caching
@@ -114,14 +131,46 @@ public static class TokenCacheHelper
 
 
 
-public class TokenProvider : IAccessTokenProvider
+
+public class EmailQuery
 {
-    public Task<string> GetAuthorizationTokenAsync(Uri uri, Dictionary<string, object> additionalAuthenticationContext = default,
-        CancellationToken cancellationToken = default)
+    private GraphServiceClient _graphClient;
+    private string _subjectFilter;
+    private string _sentToFilter;
+
+    public EmailQuery(GraphServiceClient graphClient)
     {
-        // Return the actual acquired token
-        return Task.FromResult(Office.AcquiredToken);
+        _graphClient = graphClient;
     }
 
-    public AllowedHostsValidator AllowedHostsValidator { get; }
+    public EmailQuery where_subject(string subject)
+    {
+        _subjectFilter = subject;
+        return this;
+    }
+
+    public EmailQuery sent_to(string recipient)
+    {
+        _sentToFilter = recipient;
+        return this;
+    }
+
+    public async Task<IEnumerable<MailFolder>> find()
+    {
+        // Construct the OData filter based on the criteria
+        var filters = new List<string>();
+        if (!string.IsNullOrEmpty(_subjectFilter))
+        {
+            filters.Add($"contains(subject, '{_subjectFilter}')");
+        }
+        if (!string.IsNullOrEmpty(_sentToFilter))
+        {
+            filters.Add($"contains(toRecipients/emailAddress/address, '{_sentToFilter}')");
+        }
+        var filterQuery = string.Join(" and ", filters);
+
+        // Execute the query
+        var messages = await _graphClient.Me.MailFolders.GetAsync();
+        return messages?.Value ?? new List<MailFolder>();
+    }
 }
