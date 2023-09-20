@@ -13,6 +13,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\nowhere\nowhere.csproj" />
+      <ProjectReference Include="..\office\office.csproj" />
       <ProjectReference Include="..\termo\termo.csproj" />
     </ItemGroup>
 

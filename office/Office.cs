@@ -1,104 +1,127 @@
-﻿using Microsoft.Identity.Client;
-
-namespace office;
-
-///# office
-/// this library is used to interact with office 365 elements using
-/// microsoft graph api.
-/// we will be using Delegated permissions for this app to work
-/// with emails, calendars, contacts, sharepoint, onedrive, etc.
-/// example usage :
-/// var office = new Office();
-/// await office.login(); //uses oauth2 to login (displays a browser)
-/// var me = await office.me(); //gets the current user
-/// var emails = await office.find_emails("subject:hello"); //searches for emails
-/// client secret : koO8Q~-YsRwshXcGh~qsTUM0sZGO_KJFUbl0tcZE
-/// secret id : f81fda36-53e1-4bc5-8b24-ffc4b95154ae
+﻿using Azure.Identity;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Web; // For HttpUtility
+using Microsoft.Identity.Client;
+using Azure.Core;
+using office;
+using Microsoft.Graph.Auth;
+using Microsoft.Kiota.Abstractions;
+using Microsoft.Graph.Beta.Models.Networkaccess; // For token caching
+using Microsoft.Graph;
+using Microsoft.Kiota.Abstractions.Authentication;
+using Microsoft.Kiota.Authentication.Azure;
+using Microsoft.Graph.Models;
 
 public class Office
 {
-    string graphAPIEndpoint = "https://graph.microsoft.com/v1.0/me";
+    private const string ClientId = "f787c732-7cef-47fc-902d-fd888c3be457";
+    private const string TenantId = "c8cc3dc3-814b-48e7-a9b7-b0568a1b1019";
+    private const string ClientSecret = "fm88Q~PHyS0ekWJir5XUnZf7i3AcA3WqTtbB6ah8";
+    private const string RedirectUri = "http://localhost";
 
-    //Set the scope for API call to user.read
-    string[] scopes = new string[] { "user.read" };
+    private static readonly string[] scopes = new string[] { "user.read" };
 
-    IPublicClientApplication app;
+    public static GraphServiceClient GraphClient { get; private set; }
 
-    string? token;
+    public static string AcquiredToken { get; private set; }
 
-    public async Task<Office> login()
+    private IPublicClientApplication app;
+
+    // Static GraphServiceClient
+    public static GraphServiceClient? client { get; private set; }
+
+    public Office()
     {
-        AuthenticationResult authResult = null;
-         app = PublicClientApplicationBuilder.Create("f81fda36-53e1-4bc5-8b24-ffc4b95154ae")
-            .WithRedirectUri("http://localhost")
-            .Build();
+        app = PublicClientApplicationBuilder.Create(ClientId)
+                  .WithRedirectUri(RedirectUri)
+                  .WithAuthority(AzureCloudInstance.AzurePublic, TenantId)
+                  .Build();
 
-        IAccount firstAccount;
-
-        var accounts = await app.GetAccountsAsync();
-        firstAccount = accounts.FirstOrDefault();
-        try
-        {
-            authResult = await app.AcquireTokenSilent(scopes, firstAccount)
-                .ExecuteAsync();
-        }
-        catch (MsalUiRequiredException ex)
-        {
-            // A MsalUiRequiredException happened on AcquireTokenSilent. 
-            // This indicates you need to call AcquireTokenInteractive to acquire a token
-            System.Diagnostics.Debug.WriteLine($"MsalUiRequiredException: {ex.Message}");
-
-            try
-            {
-                authResult = await app.AcquireTokenInteractive(scopes)
-                    .WithAccount(firstAccount)// optional, used to center the browser on the window
-                    .WithPrompt(Prompt.SelectAccount)
-                    .ExecuteAsync();
-            }
-            catch (MsalException msalex)
-            {
-                termo.show.error($"Error Acquiring Token:{System.Environment.NewLine}{msalex}");
-            }
-        }
-        catch (Exception ex)
-        {
-            termo.show.error($"Error Acquiring Token Silently:{System.Environment.NewLine}{ex}");
-            return this;
-        }
-
-        if (authResult != null)
-        {
-            var res= await GetHttpContentWithToken(graphAPIEndpoint);
-            termo.show.info(res);
-        }
-
-
-        return this;
+        // Enable token caching
+        TokenCacheHelper.EnableSerialization(app.UserTokenCache);
     }
 
-
-    /// <summary>
-    /// Perform an HTTP GET request to a URL using an HTTP Authorization header
-    /// </summary>
-    /// <param name="url">The URL</param>
-    /// <param name="token">The token</param>
-    /// <returns>String containing the results of the GET operation</returns>
-    public async Task<string> GetHttpContentWithToken(string url)
+    public async Task login()
     {
-        var httpClient = new System.Net.Http.HttpClient();
-        System.Net.Http.HttpResponseMessage response;
+        IAccount firstAccount = (await app.GetAccountsAsync()).FirstOrDefault();
+
+        AuthenticationResult authResult;
+
         try
         {
-            var request = new System.Net.Http.HttpRequestMessage(System.Net.Http.HttpMethod.Get, url);
-            //Add the token in Authorization header
-            request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
-            response = await httpClient.SendAsync(request);
-            var content = await response.Content.ReadAsStringAsync();
-            return content;
+            // Try to get the token from the cache silently
+            termo.show.start("SIGNING","INTO", "OFFICE 365");
+            authResult = await app.AcquireTokenSilent(scopes, firstAccount).ExecuteAsync();
         }
-        catch (Exception ex)
+        catch (MsalUiRequiredException)
         {
-            return ex.ToString();
+            // If silent retrieval fails, prompt the user to login
+            termo.show.step("SILENT LOOGIN,","FAILED");
+            termo.show.step("STARTING", "INTERACTIVE LOGIN");
+            authResult = await app.AcquireTokenInteractive(scopes).ExecuteAsync();
+            if (authResult != null)
+            {
+                termo.show.end_success("LOGGED IN", authResult.Account.Username);
+            }
+        }
+        // Initialize GraphServiceClient using BearerTokenAuthenticationProvider
+        var accessTokenProvider = new BaseBearerTokenAuthenticationProvider(new TokenProvider());
+        client = new GraphServiceClient(accessTokenProvider);
+
+        AcquiredToken = authResult.AccessToken;
+    }
+
+    public async Task<User?> about_me()
+    {
+        var me = await client?.Me.GetAsync();
+        if (me != null)
+        {
+            termo.show.success("LOGGED IN AS", me.DisplayName.ToUpper(),  me.Mail);
+
+        }
+        return me;
+    }
+}
+
+// TokenCacheHelper class to handle token caching
+public static class TokenCacheHelper
+{
+    public static void EnableSerialization(ITokenCache tokenCache)
+    {
+        tokenCache.SetBeforeAccess(BeforeAccessNotification);
+        tokenCache.SetAfterAccess(AfterAccessNotification);
+    }
+
+    private static void BeforeAccessNotification(TokenCacheNotificationArgs args)
+    {
+        // Load the cache from the persistent store
+        args.TokenCache.DeserializeMsalV3(File.Exists(CacheFilePath) ? File.ReadAllBytes(CacheFilePath) : null);
+    }
+
+    private static void AfterAccessNotification(TokenCacheNotificationArgs args)
+    {
+        // Persist the cache to the persistent store
+        if (args.HasStateChanged)
+        {
+            File.WriteAllBytes(CacheFilePath, args.TokenCache.SerializeMsalV3());
         }
     }
+
+    private static readonly string CacheFilePath = System.Reflection.Assembly.GetExecutingAssembly().Location + ".msalcache.bin3";
+}
+
+
+
+public class TokenProvider : IAccessTokenProvider
+{
+    public Task<string> GetAuthorizationTokenAsync(Uri uri, Dictionary<string, object> additionalAuthenticationContext = default,
+        CancellationToken cancellationToken = default)
+    {
+        // Return the actual acquired token
+        return Task.FromResult(Office.AcquiredToken);
+    }
+
+    public AllowedHostsValidator AllowedHostsValidator { get; }
 }

@@ -1,13 +1,13 @@
 ﻿using Microsoft.Playwright;
 using System.Linq;
 using System.Threading.Tasks;
-
-
-
+using office;
+using Microsoft.Graph;
 
 
 public static class nobody
 {
+    private static Office _office;
     public static async Task<Online> online(bool visible)
     {
         termo.show.start("OPENING", "BROWSER");
@@ -22,6 +22,17 @@ public static class nobody
        return  sap(visible).Result;
     }
 
+
+
+    public static async Task get_office()
+    {
+        if (_office == null)
+        {
+            _office = new Office();
+        }
+         await _office.login();
+         await _office.about_me();
+    }
 
     public static async Task<SapWebUi> sap(bool visible)
     {

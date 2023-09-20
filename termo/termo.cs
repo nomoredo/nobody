@@ -23,7 +23,7 @@ namespace termo
             Console.WriteLine("────────────────────────────────────────────────────────────");
         }
 
-         static  string[] color_sequence = ["cyan", "magenta", "yellow", "green", "blue", "purple"];
+         static  string[] color_sequence = new string[] { "cyan", "magenta", "yellow", "green", "blue", "red" };
 
         // info
         // INFO in gray , text in white, params in cyan
@@ -76,10 +76,25 @@ namespace termo
         }
 
 
-        public static void success(string login)
+        public static void success(string login, params string[] parameters)
         {
             // SUCCESS in green , text in white, params in cyan
             AnsiConsole.MarkupInterpolated($"[green] SUCCESS[/] [white]{login}[/]");
+            for (int i = 0; i < parameters.Length; i++)
+            {
+                AnsiConsole.MarkupInterpolated($" [{color_sequence[i+1]}]{parameters[i]}[/]");
+            }
+            AnsiConsole.WriteLine();
+        }
+
+        public static void end_success(string v, params string[] parameters)
+        {
+            // END SUCCESS in green , text in white, params in cyan
+            AnsiConsole.MarkupInterpolated($"╰─[green] SUCCESS[/] [white]{v}[/]");
+            for (int i = 0; i < parameters.Length; i++)
+            {
+                AnsiConsole.MarkupInterpolated($" [{color_sequence[i+1]}]{parameters[i]}[/]");
+            }
             AnsiConsole.WriteLine();
         }
 
@@ -116,7 +131,7 @@ namespace termo
             {
                 AnsiConsole.MarkupLineInterpolated($"[yellow]│[/][gray] {parameters[i]}[/]");
             }
-            AnsiConsole.MarkupLineInterpolated($"[yellow]╰─[/][gray] END[/]");
+            AnsiConsole.MarkupLineInterpolated($"[yellow]┕─[/][gray] END[/]");
         }
 
         public static void start(string item, params string[] parameters)
@@ -126,7 +141,7 @@ namespace termo
             //╭─ START /login POST
 
 
-            AnsiConsole.MarkupInterpolated($"[yellow]╭─[/] [green]{item}[/]");
+            AnsiConsole.MarkupInterpolated($"[yellow][/] [cyan]{item}[/]");
             //each parameter is a color in sequence
             for (int i = 0; i < parameters.Length; i++)
             {
@@ -145,6 +160,17 @@ namespace termo
             if (v2)
                 AnsiConsole.MarkupInterpolated($" [white]MULTI[/]");
 
+        }
+
+        public static void step(string v1, params string[] parameters)
+        {
+            //│ STEP LOGIN
+            AnsiConsole.MarkupInterpolated($"[yellow]│[/] [white]STEP[/] [white]{v1}[/]");
+            for (int i = 0; i < parameters.Length; i++)
+            {
+                AnsiConsole.MarkupInterpolated($"│ [{color_sequence[i]}]{parameters[i]}[/]");
+            }
+            AnsiConsole.WriteLine();
         }
     }
 }

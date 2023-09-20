@@ -6,9 +6,21 @@ public class Program
 {
     public static async Task Main(string[] args)
     {
-        mb52();
+       await email();
     }
 
+
+    public static async Task email()
+    {
+
+        await nobody.get_office();
+
+        // nobody.read_email()
+        // .where("Subject", "SAP")
+        // .select("Subject", "Body")
+        // .export("email.xlsx");
+
+    }
 
 
     public static void me2n()
