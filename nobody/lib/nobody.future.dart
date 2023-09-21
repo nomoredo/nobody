@@ -31,6 +31,17 @@ extension ExOnline on Future<Online> {
     );
   }
 
+  Future<Online> set(
+    String selector,
+    String text,
+  ) async {
+    var Online = await this;
+    return Online.set(
+      selector,
+      text,
+    );
+  }
+
   Future<Online> click(
     String selector,
   ) async {

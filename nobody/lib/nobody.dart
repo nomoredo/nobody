@@ -6,28 +6,32 @@ import 'package:puppeteer/puppeteer.dart';
 import 'package:termo/termo.dart';
 
 class Nobody {
-  static Future<Online> online({bool visible = true}) async {
-    var browser = await puppeteer.launch(headless: !visible);
+  static Future<Online> online({bool visible = true, bool slow = false}) async {
+    var browser = await puppeteer.launch(
+        headless: !visible,
+        noSandboxFlag: true,
+        slowMo: Duration(milliseconds: slow ? 1000 : 0));
     var page = await browser.newPage();
-    return Online(browser, page);
+    return Online(page);
   }
 
   static Future<SapWebUi> sap(
       {bool visible = true,
       String? url,
-      String? username,
-      String? password}) async {
-    var inner = await online(visible: visible);
-    return SapWebUi(inner);
+      required String username,
+      String? password,
+      slow = false}) async {
+    var inner = await online(visible: visible, slow: slow);
+    return await SapWebUi.Login(inner, username);
   }
 }
 
 @NomoCode()
 class Online {
-  final Browser browser;
   final Page page;
+  Browser get browser => page.browser;
 
-  Online(this.browser, this.page);
+  Online(this.page);
 
   Future<Online> visit(String url) async {
     Show.action('VISITING', url);
@@ -39,6 +43,14 @@ class Online {
     Show.action('TYPING', text);
     await page.waitForSelector(selector);
     await page.type(selector, text);
+    return this;
+  }
+
+  Future<Online> set(String selector, String text) async {
+    Show.action('SETTING', text);
+    await page.waitForSelector(selector);
+    await page.$eval(selector, 'e => e.value = "$text"', args: [text]);
+
     return this;
   }
 
@@ -125,7 +137,7 @@ class Online {
   }
 }
 
-typedef Waitable = Future<bool> Function(Online);
+typedef Waitable<T> = Future<bool> Function(Online);
 
 //lets define some waitables
 //wait_for(Navigation)

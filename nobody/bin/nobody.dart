@@ -1,6 +1,5 @@
 import 'package:nobody/nobody.dart';
 import 'package:nobody/nobody.future.dart';
-import 'package:nobody/sap.future.dart';
 
 void main(List<String> arguments) async {
   // await run_GoogleSearch();
@@ -8,7 +7,7 @@ void main(List<String> arguments) async {
 }
 
 Future run_GoogleSearch() {
-  return Nobody.online()
+  return Nobody.online(slow: false)
       .visit('https://search.brave.com/')
       .type('input[id="searchbox"]', 'pretty girl')
       .click('button[id="submit-button"]')
@@ -21,10 +20,7 @@ Future run_GoogleSearch() {
 }
 
 Future run_ME2N() async {
-  var sap = await Nobody.sap(visible: true).login('amohandas');
+  var sap = await Nobody.sap(username: "amohandas");
 
-  sap.transaction('ME2N')
-  .input('EKPO-ERNAM', 'AMOHANDAS')
-  .input('EKPO-ERNAM', 'AMOHANDAS')
-  .input('EKPO-ERNAM', 'AMOHANDAS')
+  // sap.transaction('ME2N').waitFor(Seconds(10));
 }

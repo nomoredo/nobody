@@ -12,6 +12,7 @@ dependencies:
     path: ../codegen
   termo:
     path: ../termo
+  collection: ^1.18.0
 
 
 dev_dependencies:
