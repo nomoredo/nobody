@@ -95,7 +95,7 @@ class SapInput implements AbsractSelector {
 /// has role="button", class="lsButton and title="{label}"
 class SapButton implements AbsractSelector {
   final String label;
-  String get selector => 'div[role="button"][class="lsButton"][title="$label"]';
+  String get selector => 'div[role="button"][title="$label"]';
 
   const SapButton(this.label);
 }

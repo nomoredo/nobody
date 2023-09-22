@@ -19,13 +19,12 @@ Future run_GoogleSearch() {
 }
 
 Future run_ME2N() async {
-  return Nobody.online(slow: false)
+  return Nobody.online()
       .login(Sap('amohandas'))
       .goto(Transaction("ME2N"))
-      .set(SapInput("Selection variant"), "ZTEST")
-      .set(SapInput("Purchasing group"), "100")
-      .set(SapInput("Purchasing Document"), "4500000000")
-      .click(SapButton("Execute"))
+      .set(SapInput("Plant"), "2200")
+      .set(SapInput("Purchasing Group"), "100")
+      .click(SapButton("Execute (F8)"))
       .waitFor(SapTable("Purchase order"))
       // .export(
       //     SapTable("Purchase order"), "C:\\Users\\amohandas\\Desktop\\test.csv")
