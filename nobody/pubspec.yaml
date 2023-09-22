@@ -13,6 +13,7 @@ dependencies:
   termo:
     path: ../termo
   collection: ^1.18.0
+  flat_buffers: ^2.0.5
 
 
 dev_dependencies:

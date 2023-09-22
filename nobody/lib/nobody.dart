@@ -1,9 +1,141 @@
-import 'dart:io';
+import 'references.dart';
 
-import 'package:codegen/codegen.dart';
-import 'package:nobody/sap.dart';
-import 'package:puppeteer/puppeteer.dart';
-import 'package:termo/termo.dart';
+abstract class AbstractUrl {
+  String get url;
+}
+
+class Transaction implements AbstractUrl {
+  final String code;
+  String get url =>
+      'https://cbs.almansoori.biz/sap/bc/gui/sap/its/webgui/?sap-client=800&~TRANSACTION=$code#';
+  const Transaction(this.code);
+}
+
+class Url implements AbstractUrl {
+  final String url;
+
+  const Url(this.url);
+}
+
+abstract class AbsractSelector {
+  String get selector;
+}
+
+class Css implements AbsractSelector {
+  final String selector;
+
+  const Css(this.selector);
+}
+
+/// Button
+/// appends button to the selector
+class Button implements AbsractSelector {
+  final AbsractSelector? inner;
+  String get selector =>
+      inner == null ? 'button' : 'button[${inner!.selector}]';
+
+  const Button([this.inner]);
+
+  factory Button.WithId(String id) => Button(WithId(id));
+  factory Button.WithName(String name) => Button(WithName(name));
+  factory Button.WithClass(List<String> classes) => Button(WithClass(classes));
+}
+
+/// Input
+/// appends input to the selector
+class Input implements AbsractSelector {
+  final AbsractSelector? inner;
+  String get selector => inner == null ? 'input' : 'input[${inner!.selector}]';
+
+  const Input([this.inner]);
+
+  factory Input.WithId(String id) => Input(WithId(id));
+  factory Input.WithName(String name) => Input(WithName(name));
+  factory Input.WithClass(List<String> classes) => Input(WithClass(classes));
+}
+
+/// WithId
+/// appends id="{id}" to the selector
+class WithId implements AbsractSelector {
+  final String id;
+  String get selector => 'id="$id"';
+
+  const WithId(this.id);
+}
+
+/// WithName
+/// appends name="{name}" to the selector
+class WithName implements AbsractSelector {
+  final String name;
+  String get selector => 'name="$name"';
+
+  const WithName(this.name);
+}
+
+/// WithClass
+/// appends class="{class}" to the selector
+/// class can be a list of classes
+class WithClass implements AbsractSelector {
+  final List<String> classes;
+  String get selector => 'class="${classes.join(' ')}"';
+
+  const WithClass(this.classes);
+}
+
+/// SapInput
+/// has name="InputField" and title="{label}""
+class SapInput implements AbsractSelector {
+  final String label;
+  String get selector => 'input[name="InputField"][title="$label"]';
+
+  const SapInput(this.label);
+}
+
+/// SapButton
+/// has role="button", class="lsButton and title="{label}"
+class SapButton implements AbsractSelector {
+  final String label;
+  String get selector => 'div[role="button"][class="lsButton"][title="$label"]';
+
+  const SapButton(this.label);
+}
+
+/// SapTable
+/// role="grid" class="urSTCS lsSapTable--backgroundColor urHtmlTableReset lsSapTable--bs-disabled"
+class SapTable implements AbsractSelector {
+  final String label;
+  String get selector =>
+      'div[role="grid"][class="urSTCS lsSapTable--backgroundColor urHtmlTableReset lsSapTable--bs-disabled"]';
+
+  const SapTable(this.label);
+}
+
+/// SapTableRow
+/// a span with title="{label}" inside  role="row" aria-rowindex="{index}" inside a div with role="grid"
+class SapTableRow implements AbsractSelector {
+  final String label;
+  final int index;
+  String get selector =>
+      'div[role="grid"] > div[role="row"][aria-rowindex="$index"] > span[title="$label"]';
+
+  const SapTableRow(this.label, [this.index = 1]);
+}
+
+abstract class Text {
+  String get text;
+}
+
+abstract class Attribute {
+  String get attribute;
+}
+
+abstract class Timeout {
+  Duration get timeout;
+}
+
+abstract class X {
+  int get x;
+}
 
 class Nobody {
   static Future<Online> online({bool visible = true, bool slow = false}) async {
@@ -11,156 +143,6 @@ class Nobody {
         headless: !visible,
         noSandboxFlag: true,
         slowMo: Duration(milliseconds: slow ? 1000 : 0));
-    var page = await browser.newPage();
-    return Online(page);
-  }
-
-  static Future<SapWebUi> sap(
-      {bool visible = true,
-      String? url,
-      required String username,
-      String? password,
-      slow = false}) async {
-    var inner = await online(visible: visible, slow: slow);
-    return await SapWebUi.Login(inner, username);
+    return Online(browser);
   }
 }
-
-@NomoCode()
-class Online {
-  final Page page;
-  Browser get browser => page.browser;
-
-  Online(this.page);
-
-  Future<Online> visit(String url) async {
-    Show.action('VISITING', url);
-    await page.goto(url, wait: Until.load);
-    return this;
-  }
-
-  Future<Online> type(String selector, String text) async {
-    Show.action('TYPING', text);
-    await page.waitForSelector(selector);
-    await page.type(selector, text);
-    return this;
-  }
-
-  Future<Online> set(String selector, String text) async {
-    Show.action('SETTING', text);
-    await page.waitForSelector(selector);
-    await page.$eval(selector, 'e => e.value = "$text"', args: [text]);
-
-    return this;
-  }
-
-  Future<Online> click(String selector) async {
-    Show.action('CLICKING', selector);
-    var element = selector.startsWith('/')
-        ? await page.waitForXPath(selector)
-        : await page.waitForSelector(selector);
-    await element?.click();
-    return this;
-  }
-
-  //wait for should support:
-  //wait_for(20.seconds)
-  //wait_for('h3.LC20lb')
-  //wait_for(Navigation)
-  //uses Wait type
-  Future<Online> waitFor(Waitable waitable) async {
-    await waitable(this);
-    return this;
-  }
-
-  Future<bool> has(String selector, String text) async {
-    Show.action('CHECKING', 'IF', 'PAGE', 'HAS', text);
-    var element = await page.$(selector);
-    var elementText = await page
-        .evaluate('(element) => element.textContent', args: [element]);
-    return elementText != text;
-  }
-
-  Future<Online> close() async {
-    Show.action('CLOSING', 'BROWSER');
-    await browser.close();
-    return this;
-  }
-
-  Future<Online> screenshot(String path) async {
-    Show.action('TAKING SCREENSHOT', path);
-    var sc = await page.screenshot();
-    await File(path).writeAsBytes(sc);
-    return this;
-  }
-
-  Future<Online> scrollToElement(String selector) async {
-    Show.action('SCROLLING TO ELEMENT', selector);
-    var element = await page.$(selector);
-    await page.evaluate('''(element) => {
-      element.scrollIntoView();
-    }''', args: [element]);
-
-    return this;
-  }
-
-  Future<Online> scrollBy(int x, int y) async {
-    Show.action('SCROLLING BY', 'x: $x, y: $y');
-    await page.evaluate('''() => {
-      window.scrollBy($x, $y);
-    }''');
-    return this;
-  }
-
-  Future<String?> extractData(String selector, String attribute) async {
-    Show.action('EXTRACTING DATA', 'from: $selector, attribute: $attribute');
-    var element = await page.$(selector);
-    return await element.propertyValue(attribute);
-  }
-
-  Future<Online> switchToFrame(String selector) async {
-    Show.action('SWITCHING TO FRAME', selector);
-    var frameElement = await page.$(selector);
-    var frame = await this.page.evaluate('''(frameElement) => {
-      return frameElement.contentWindow;
-    }''', args: [frameElement]);
-
-    await page.evaluate('''(frame) => {
-      window = frame;
-    }''', args: [frame]);
-    return this;
-  }
-
-  Future<dynamic> evaluate(String script) async {
-    Show.action('EVALUATING JAVASCRIPT', script);
-    return await page.evaluate(script);
-  }
-}
-
-typedef Waitable<T> = Future<bool> Function(Online);
-
-//lets define some waitables
-//wait_for(Navigation)
-Waitable Navigation = (Online online) async {
-  Show.action('WAITING', 'FOR', "NAVIGATION");
-  await online.page.waitForNavigation();
-  return true;
-};
-
-Waitable PageLoad = (Online online) async {
-  Show.action('WAITING', 'FOR', "PAGE LOAD");
-  await online.page.waitForNavigation();
-  return true;
-};
-
-Waitable Seconds(int seconds) => (Online online) async {
-      Show.action('WAITING', 'FOR', seconds.toString(), 'SECONDS');
-      await Future.delayed(Duration(seconds: seconds));
-      return true;
-    };
-
-Waitable Element(String selector) => (Online online) async {
-      Show.action('WAITING', 'FOR', selector);
-      await online.page.waitForSelector(selector);
-      return true;
-    };

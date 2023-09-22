@@ -15,7 +15,9 @@
             "cwd": "nobody",
             "request": "launch",
             "type": "dart",
-            "program": "bin/nobody.dart"
+            "program": "bin/main.dart",
+            "console": "terminal",
+        
         },
         {
             "name": "termo",

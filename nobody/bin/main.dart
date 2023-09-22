@@ -1,5 +1,4 @@
-import 'package:nobody/nobody.dart';
-import 'package:nobody/nobody.future.dart';
+import 'package:nobody/references.dart';
 
 void main(List<String> arguments) async {
   // await run_GoogleSearch();
@@ -20,7 +19,17 @@ Future run_GoogleSearch() {
 }
 
 Future run_ME2N() async {
-  var sap = await Nobody.sap(username: "amohandas");
+  return Nobody.online(slow: false)
+      .login(Sap('amohandas'))
+      .goto(Transaction("ME2N"))
+      .set(SapInput("Selection variant"), "ZTEST")
+      .set(SapInput("Purchasing group"), "100")
+      .set(SapInput("Purchasing Document"), "4500000000")
+      .click(SapButton("Execute"))
+      .waitFor(SapTable("Purchase order"))
+      // .export(
+      //     SapTable("Purchase order"), "C:\\Users\\amohandas\\Desktop\\test.csv")
+      .close();
 
   // sap.transaction('ME2N').waitFor(Seconds(10));
 }
