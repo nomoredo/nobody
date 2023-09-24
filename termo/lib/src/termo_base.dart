@@ -167,6 +167,19 @@ class Show {
       }
     }
   }
+
+  static void title(String s) {
+    divider();
+    '${" " * ((60 - s.length) ~/ 2)}$s'.write(inYellow);
+    print("");
+    divider();
+  }
+
+  static void divider() {
+    "————————————————————————————————————————————————————————————"
+        .write(inGray);
+    print("");
+  }
 }
 
 class Ask {

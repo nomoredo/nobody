@@ -231,6 +231,7 @@ class Online {
 
     }''', args: [selector.selector]);
     //colorize the elements
+    Show.title("TRANSACTION DETAILS");
     Show.anything(elements);
 
     return this;
