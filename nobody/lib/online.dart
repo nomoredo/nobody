@@ -4,8 +4,9 @@ import 'references.dart';
 class Online {
   Future<Page> get page => lastPage();
   final Browser browser;
+  final Duration? default_timeout;
 
-  Online(this.browser);
+  Online(this.browser, {this.default_timeout});
 
   Future<Page> lastPage() async {
     var pages = await browser.pages;
@@ -29,12 +30,28 @@ class Online {
     return this;
   }
 
-  Future<Online> set(AbsractSelector selector, String text) async {
-    Show.action('SETTING', text);
-    await (await page).waitForSelector(selector.selector);
-    await (await page)
-        .$eval(selector.selector, 'e => e.value = "$text"', args: [text]);
+  Future<Online> set(AbstractSelector selector, String text,
+      {Duration? timeout = null, bool log = true, int index = 0}) async {
+    if (log) Show.action('SETTING', text);
+    await (await page).waitForSelector(selector.selector,
+        timeout: timeout ?? default_timeout);
+    await (await page).evaluate('''(selector, text, index) => {
+      document.querySelectorAll(selector)[index].value = text;
+    }''', args: [selector.selector, text, index]);
     return this;
+  }
+
+  Future<Online> set_range(
+    AbstractSelector selector,
+    String from,
+    String to, {
+    Duration? timeout = null,
+  }) async {
+    var Online = await this;
+    Show.action('SETTING', selector.selector, from, 'TO', to);
+    await Online.set(selector, from, timeout: timeout, log: false, index: 0);
+    await Online.set(selector, to, timeout: timeout, log: false, index: 1);
+    return Online;
   }
 
   Future<Online> type(String selector, String text) async {
@@ -44,10 +61,43 @@ class Online {
     return this;
   }
 
-  Future<Online> click(AbsractSelector selector) async {
+  //click
+  Future<Online> click(AbstractSelector selector) async {
     Show.action('CLICKING', selector.selector);
     await (await page).waitForSelector(selector.selector);
     await (await page).click(selector.selector);
+    return this;
+  }
+
+  //right click
+  Future<Online> right_click(AbstractSelector selector) async {
+    Show.action('RIGHT CLICKING', selector.selector);
+    await (await page).waitForSelector(selector.selector);
+    await (await page).click(selector.selector, button: MouseButton.right);
+    return this;
+  }
+
+  //double click
+  Future<Online> double_click(AbstractSelector selector) async {
+    Show.action('DOUBLE CLICKING', selector.selector);
+    await (await page).waitForSelector(selector.selector);
+    await (await page).click(selector.selector, clickCount: 2);
+    return this;
+  }
+
+  //hover
+  Future<Online> hover(AbstractSelector selector) async {
+    Show.action('HOVERING', selector.selector);
+    await (await page).waitForSelector(selector.selector);
+    await (await page).hover(selector.selector);
+    return this;
+  }
+
+  //middle click
+  Future<Online> middle_click(AbstractSelector selector) async {
+    Show.action('MIDDLE CLICKING', selector.selector);
+    await (await page).waitForSelector(selector.selector);
+    await (await page).click(selector.selector, button: MouseButton.middle);
     return this;
   }
 
@@ -56,7 +106,13 @@ class Online {
   //wait_for('h3.LC20lb')
   //wait_for(Navigation)
   //uses Wait type
-  Future<Online> waitFor(Waitable waitable) async {
+  Future<Online> waitFor(AbstractSelector waitable, {Duration? timeout}) async {
+    await (await page).waitForSelector(waitable.selector,
+        timeout: timeout ?? default_timeout);
+    return this;
+  }
+
+  Future<Online> wait(Waitable waitable) async {
     await waitable(this);
     return this;
   }
@@ -74,7 +130,14 @@ class Online {
     return this;
   }
 
-  Future<Online> scrollToElement(AbsractSelector selector) async {
+  Future<Online> download(
+      AbstractDownloadable downloadable, AbstractPath path) async {
+    Show.action('DOWNLOADING', downloadable.name);
+    await downloadable.download(this, path);
+    return this;
+  }
+
+  Future<Online> scrollToElement(AbstractSelector selector) async {
     Show.action('SCROLLING TO', selector.selector);
     await (await page).waitForSelector(selector.selector);
     await (await page).evaluate('''(selector) => {
@@ -91,7 +154,7 @@ class Online {
     return this;
   }
 
-  Future<String?> get_value(AbsractSelector selector, String property) async {
+  Future<String?> get_value(AbstractSelector selector, String property) async {
     Show.action('GETTING VALUE', property);
     await (await page).waitForSelector(selector.selector);
     var value = await (await page).evaluate('''(selector, property) => {
@@ -140,13 +203,92 @@ class Online {
     }
     return this;
   }
+
+  //list
+  //lists all elements matching the selector
+  Future<Online> list(AbstractSelector selector) async {
+    Show.action('LISTING', selector.selector);
+    await (await page).waitForSelector(selector.selector);
+    var elements = await (await page).evaluate('''(selector) => {
+      //query all elements matching the selector
+      var elements = document.querySelectorAll(selector);
+      //get all properties of each element
+      var elements_list = []
+      for (var element of elements) {
+        var element_properties = {};
+       //get all attributes of the element
+        for (var attribute of element.attributes) {
+          if (attribute.name =='title' || attribute.name=='type' || attribute.name=='name' || attribute.name=='id' || attribute.name=='class') {
+            element_properties[attribute.name] = attribute.value;
+          }
+        }
+        
+        elements_list[element.title] = element_properties;
+      }
+      return elements_list;
+
+    }''', args: [selector.selector]);
+    //colorize the elements
+    Show.anything(elements);
+
+    return this;
+  }
+
+  Future<Online> send_hotkey(Key key, {List<Key>? modifiers}) async {
+    if (modifiers != null) {
+      for (var modifier in modifiers) {
+        await (await page).keyboard.down(modifier);
+      }
+      await Future.delayed(Duration(milliseconds: 200));
+      await (await page).keyboard.press(key);
+      await Future.delayed(Duration(milliseconds: 200));
+
+      for (var modifier in modifiers) {
+        await (await page).keyboard.up(modifier);
+      }
+    } else {
+      await (await page).keyboard.press(key);
+    }
+
+    return this;
+  }
+
+  Future<Online> capture_download() async {
+    var page = await this.page;
+    //capture download and save it to test.xlsx
+    // await page.browser.connection.send(
+    //     'Page.setDownloadBehavior', {'behavior': 'allow', 'downloadPath': '.'});
+
+//event listener for download
+    var listner = await page.evaluateOnNewDocument('''() => {
+      document.addEventListener('download', event => {
+      // Extract url from event.detail.url
+      // event.detail.url is the url of the downloaded file
+      // event.detail.suggestedFilename is the filename suggested by the page
+      // event.detail.mime is the mime type of the download
+      // send all these information back to dart using cdp
+      //call exposed function download
+      download(event.detail);
+    });
+    }''');
+
+    //listen for download event
+    await page.exposeFunction('download', (Map<String, dynamic> data) async {
+      print(data);
+      //download the file
+      // var response = awai
+      // //save the file
+      // await File(data['suggestedFilename']).writeAsBytes(response.bodyBytes);
+    });
+    return this;
+  }
 }
 
 typedef Waitable<T> = Future<bool> Function(Online);
 
 //lets define some waitables
 //wait_for(Navigation)
-Waitable Navigation = (Online online) async {
+Waitable UntilPageLoaded = (Online online) async {
   Show.action('WAITING', 'FOR', "NAVIGATION");
   await (await online.page).waitForNavigation();
   return true;

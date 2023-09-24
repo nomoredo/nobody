@@ -43,4 +43,9 @@ abstract class AbstractPassword {
   }
 
   Future<bool> save(String password);
+
+  @override
+  String toString() {
+    return 'P*SSW*RD';
+  }
 }

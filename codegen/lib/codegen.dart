@@ -126,40 +126,54 @@ class FutureGenerator extends GeneratorForAnnotation<NomoCode> {
 
       final methodName = method.name;
       final methodReturnType = method.returnType;
-      final methodParameters = method.parameters;
+      final nonOptionalPositionalParameters =
+          method.parameters.where((p) => !p.isOptionalPositional && !p.isNamed);
+      final optionalPositionalParameters =
+          method.parameters.where((p) => p.isOptionalPositional);
+      final namedParameters = method.parameters.where((p) => p.isNamed);
 
       buffer.writeln();
       buffer.writeln(' $methodReturnType $methodName(');
-      // handle optional , positional and named parameters correctly
-      for (var parameter in methodParameters) {
-        final parameterName = parameter.name;
-        if (parameter.isOptionalPositional) {
-          buffer.writeln('      $parameterName,');
-        } else if (parameter.isNamed) {
-          buffer.writeln('      $parameterName: $parameterName,');
-        } else if (parameter.isRequiredPositional) {
-          buffer.writeln('      $parameterName,');
-        }
+      //normal parameters
+      for (var parameter in nonOptionalPositionalParameters) {
+        buffer.writeln('    ${parameter.type} ${parameter.name},');
       }
+      //optional positional parameters [type name = defaultValue]
+      if (optionalPositionalParameters.isNotEmpty) {
+        buffer.writeln('    [');
+        for (var parameter in optionalPositionalParameters) {
+          buffer.writeln(
+              '    ${parameter.type} ${parameter.name} = ${parameter.defaultValueCode},');
+        }
+        buffer.writeln('    ],');
+      }
+
+      //named parameters {type name = defaultValue}
+      if (namedParameters.isNotEmpty) {
+        buffer.writeln('    {');
+        for (var parameter in namedParameters) {
+          buffer.writeln(
+              '    ${parameter.type} ${parameter.name} = ${parameter.defaultValueCode},');
+        }
+        buffer.writeln('    }');
+      }
+
+      //remove the last comma if there is one
 
       buffer.writeln('  ) async {');
-      //handle static methods correctly
-      if (method.isStatic) {
-        buffer.writeln('    return $className.$methodName(');
-      } else {
-        buffer.writeln('    var $className = await this;');
-        buffer.writeln('    return $className.$methodName(');
+      buffer.writeln('    var $className = await this;');
+      buffer.writeln('    return $className.$methodName(');
+      //normal parameters
+      for (var parameter in nonOptionalPositionalParameters) {
+        buffer.writeln('    ${parameter.name},');
       }
-
-      for (var parameter in methodParameters) {
-        final parameterName = parameter.name;
-        if (parameter.isOptionalPositional) {
-          buffer.writeln('      $parameterName,');
-        } else if (parameter.isNamed) {
-          buffer.writeln('      $parameterName: $parameterName,');
-        } else if (parameter.isRequiredPositional) {
-          buffer.writeln('      $parameterName,');
-        }
+      //optional positional parameters  - value
+      for (var parameter in optionalPositionalParameters) {
+        buffer.writeln('    ${parameter.name},');
+      }
+      //named parameters - name: value
+      for (var parameter in namedParameters) {
+        buffer.writeln('    ${parameter.name}: ${parameter.name},');
       }
 
       buffer.writeln('    );');

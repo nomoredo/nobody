@@ -127,6 +127,46 @@ class Show {
     }
     print("");
   }
+
+  static void progress(String s, received, total) {
+    s.write(inGray);
+    " $received".write(inYellow);
+    " $total".write(inWhite);
+    print("");
+  }
+
+  static void anything(dynamic a, [int indent = 0]) {
+    //use dart 3.0 pattern matching to
+    // print anything in a colorized and indented way (tree like)
+    if (a is Map) {
+      a.forEach((key, value) {
+        if (value is Map) {
+          print("${"\x1B[32;5;240m${" " * indent}" + key}\x1B[0m");
+
+          anything(value, indent + 1);
+        } else if (value is List) {
+          print("${"\x1B[35;5;240m${" " * indent * 2}" + key}\x1B[0m");
+          anything(value, indent + 1);
+        } else {
+          print(
+              '${"\x1B[33;5;240m${" " * indent * 2}" + key}\x1B[0m:${"\x1B[31;5;240m $value\x1B[0m"}');
+        }
+      });
+    } else if (a is List) {
+      for (var element in a) {
+        if (element is Map) {
+          anything(element, indent + 1);
+        } else if (element is List) {
+          anything(element, indent + 1);
+        } else {
+          "".write(inGray);
+          " ".write(inGray);
+          element.write(inWhite);
+          print("");
+        }
+      }
+    }
+  }
 }
 
 class Ask {

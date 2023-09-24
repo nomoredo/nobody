@@ -1,6 +1,8 @@
-import 'dart:async';
-import 'dart:io';
+import 'dart:convert';
 import 'dart:typed_data';
+
+import 'package:encrypt/encrypt.dart' as encrypt;
+import 'package:nobody/references.dart';
 
 class Store<T> {
   final String storeName;
@@ -26,9 +28,8 @@ class Store<T> {
   }
 
   static Future<Directory> _getDocumentDirectory() async {
-    final directory = await Directory.systemTemp.createTemp();
-    final path = directory.path;
-    return Directory('$path/.nothing')..createSync();
+    final directory = await Directory.current;
+    return directory;
   }
 
   Future<void> set(String itemName, T value) async {
@@ -52,9 +53,35 @@ class Store<T> {
   }
 }
 
-///PasswordStore is a singleton that stores passwords in a file
+const key = 'your_key_here';
+
+String aesEncrypt(String plainText, String key) {
+  final keyBytes = utf8.encode(key);
+  final paddedKey = Uint8List.fromList(List<int>.from(keyBytes)
+    ..addAll(List<int>.filled(32 - keyBytes.length, 0)));
+  final encrypterKey = encrypt.Key(paddedKey);
+  final iv = encrypt.IV(Uint8List.fromList(List<int>.filled(16, 0)));
+  final encrypter = encrypt.Encrypter(encrypt.AES(encrypterKey));
+
+  final encrypted = encrypter.encrypt(plainText, iv: iv);
+  return base64.encode(encrypted.bytes);
+}
+
+String aesDecrypt(String encryptedText, String key) {
+  final keyBytes = utf8.encode(key);
+  final paddedKey = Uint8List.fromList(List<int>.from(keyBytes)
+    ..addAll(List<int>.filled(32 - keyBytes.length, 0)));
+  final encrypterKey = encrypt.Key(paddedKey);
+  final iv = encrypt.IV(Uint8List.fromList(List<int>.filled(16, 0)));
+  final encrypter = encrypt.Encrypter(encrypt.AES(encrypterKey));
+
+  final decrypted = encrypter
+      .decrypt(encrypt.Encrypted(base64.decode(encryptedText)), iv: iv);
+  return decrypted;
+}
+
 final passwordStore = Store<String>(
   storeName: 'passwords',
-  deserialize: (bytes) => String.fromCharCodes(bytes),
-  serialize: (value) => value.codeUnits,
+  deserialize: (bytes) => aesDecrypt(base64.encode(bytes), key),
+  serialize: (value) => base64.decode(aesEncrypt(value, key)),
 );

@@ -4,16 +4,17 @@ version: 1.0.0
 publish_to: none
 
 environment:
-  sdk: ^3.2.0-42.2.beta
+  sdk: ^3.2.0-4.2.2.beta
 
 dependencies:
-  puppeteer: any
+  puppeteer: ^3.4.0
   codegen: 
     path: ../codegen
   termo:
     path: ../termo
   collection: ^1.18.0
   flat_buffers: ^2.0.5
+  encrypt: ^5.0.3
 
 
 dev_dependencies:

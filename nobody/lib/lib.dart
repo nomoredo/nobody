@@ -1,7 +1,12 @@
 export 'authable.dart';
+export 'downloadable.dart';
 export 'extensions.dart';
 export 'nobody.dart';
 export 'online.dart';
+export 'online.future.dart';
 export 'password.dart';
+export 'path.dart';
 export 'references.dart';
+export 'selector.dart';
 export 'store.dart';
+export 'url.dart';

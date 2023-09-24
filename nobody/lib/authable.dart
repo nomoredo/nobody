@@ -2,6 +2,9 @@
 
 import 'package:nobody/references.dart';
 
+import 'selector.dart';
+import 'url.dart';
+
 abstract class Authable {
   AbstractUrl get url;
   String get username;
@@ -24,7 +27,6 @@ class Sap implements Authable {
         .set(Input.WithId('logonuidfield'), username)
         .set(Input.WithId('logonpassfield'), pss)
         .click(Input.WithName('uidPasswordLogon'))
-        .waitFor(Navigation)
-        .waitFor(Seconds(5));
+        .wait(UntilPageLoaded);
   }
 }
