@@ -2,8 +2,8 @@ import 'package:nobody/references.dart';
 
 void main(List<String> arguments) async {
   // await run_GoogleSearch();
-  await run_ME2N();
-  // await create_pr();
+  // await run_ME2N();
+  await create_pr();
 }
 
 Future run_GoogleSearch() {
@@ -43,6 +43,6 @@ Future create_pr() {
       .login(Sap('amohandas'))
       .goto(Transaction("ME51N"))
       .list(SapInput.All())
-      .wait(Seconds(5))
+      .wait(Seconds(20))
       .close();
 }

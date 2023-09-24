@@ -212,18 +212,20 @@ class Online {
     var elements = await (await page).evaluate('''(selector) => {
       //query all elements matching the selector
       var elements = document.querySelectorAll(selector);
+      var multiple = document.querySelectorAll('div[title="Multiple selection"][role="button"]');
       //get all properties of each element
-      var elements_list = []
+      var elements_list = {}
+      var i = 0;
       for (var element of elements) {
-        var element_properties = {};
-       //get all attributes of the element
-        for (var attribute of element.attributes) {
-          if (attribute.name =='title' || attribute.name=='type' || attribute.name=='name' || attribute.name=='id' || attribute.name=='class') {
-            element_properties[attribute.name] = attribute.value;
-          }
+        if (elements_list[element.title] == null) {
+          elements_list[element.title] = {"LOWER":element.id};
+
+        }else {
+          elements_list[element.title].UPPER = element.id;
+          elements_list[element.title].MULTI = multiple[i].id;     
+                  i++;   
         }
-        
-        elements_list[element.title] = element_properties;
+
       }
       return elements_list;
 
