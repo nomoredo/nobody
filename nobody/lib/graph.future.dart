@@ -12,11 +12,6 @@ import 'package:nobody/references.dart';
 
 /// GENERATED EXTENSION
 extension ExGraphServiceClient on Future<GraphServiceClient> {
-  Future<GraphServiceClient> about_me() async {
-    var GraphServiceClient = await this;
-    return GraphServiceClient.about_me();
-  }
-
   Future<GraphQuery> graph(
     String path,
   ) async {
@@ -26,12 +21,12 @@ extension ExGraphServiceClient on Future<GraphServiceClient> {
     );
   }
 
-  Future<GraphQuery> mail() async {
+  Future<MailQuery> read_mails() async {
     var GraphServiceClient = await this;
     return GraphServiceClient.read_mails();
   }
 
-  Future<GraphQuery> files() async {
+  Future<GraphQuery> find_files() async {
     var GraphServiceClient = await this;
     return GraphServiceClient.find_files();
   }

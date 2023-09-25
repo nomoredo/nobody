@@ -1,3 +1,4 @@
+import 'package:nobody/mail_query.future.dart';
 import 'package:nobody/references.dart';
 
 void main(List<String> arguments) async {
@@ -51,7 +52,8 @@ Future create_pr() {
 Future check_email() async {
   return await Nobody.at_office('amohandas')
       // .graph('/me/messages')
-      .mail()
-      .filter("subject eq 'test'")
+      .read_mails()
+      .with_subject('test')
+      .from('amohandas')
       .get();
 }

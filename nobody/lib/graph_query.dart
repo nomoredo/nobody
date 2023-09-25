@@ -7,6 +7,7 @@ const graph_root = "https://graph.microsoft.com/v1.0";
 class GraphQuery {
   final GraphServiceClient graph_client;
   Dio get client => graph_client.client;
+
   final String path;
   List<String> _filters = [];
   List<String> _select = [];
