@@ -180,6 +180,13 @@ class Show {
         .write(inGray);
     print("");
   }
+
+  static void request(String s, String string) {
+    "REQUEST".write(inGray);
+    " $s".write(inYellow);
+    " $string".write(inWhite);
+    print("");
+  }
 }
 
 class Ask {

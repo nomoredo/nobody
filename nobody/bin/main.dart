@@ -3,7 +3,8 @@ import 'package:nobody/references.dart';
 void main(List<String> arguments) async {
   // await run_GoogleSearch();
   // await run_ME2N();
-  await create_pr();
+  // await create_pr();
+  await check_email();
 }
 
 Future run_GoogleSearch() {
@@ -45,4 +46,11 @@ Future create_pr() {
       .list(SapInput.All())
       .wait(Seconds(20))
       .close();
+}
+
+Future check_email() async {
+  return await Nobody.office('amohandas')
+      .graph('/me/messages')
+      .filter("subject eq 'test'")
+      .get();
 }

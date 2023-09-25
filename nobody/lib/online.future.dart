@@ -49,6 +49,7 @@ extension ExOnline on Future<Online> {
     String text, {
     Duration? timeout = null,
     bool log = true,
+    int index = 0,
   }) async {
     var Online = await this;
     return Online.set(
@@ -56,6 +57,7 @@ extension ExOnline on Future<Online> {
       text,
       timeout: timeout,
       log: log,
+      index: index,
     );
   }
 
