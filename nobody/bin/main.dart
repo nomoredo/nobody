@@ -49,8 +49,9 @@ Future create_pr() {
 }
 
 Future check_email() async {
-  return await Nobody.office('amohandas')
-      .graph('/me/messages')
+  return await Nobody.at_office('amohandas')
+      // .graph('/me/messages')
+      .mail()
       .filter("subject eq 'test'")
       .get();
 }

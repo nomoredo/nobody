@@ -25,4 +25,14 @@ extension ExGraphServiceClient on Future<GraphServiceClient> {
       path,
     );
   }
+
+  Future<GraphQuery> mail() async {
+    var GraphServiceClient = await this;
+    return GraphServiceClient.read_mails();
+  }
+
+  Future<GraphQuery> files() async {
+    var GraphServiceClient = await this;
+    return GraphServiceClient.find_files();
+  }
 }

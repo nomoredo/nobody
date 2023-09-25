@@ -30,14 +30,26 @@ class GraphServiceClient {
   Future<GraphQuery> graph(String path) async {
     return GraphQuery(this, path);
   }
+
+  ///mail
+  ///direct method to get mail related information
+  /// routes to /me/messages
+  Future<GraphQuery> read_mails() async {
+    return GraphQuery(this, "/me/messages");
+  }
+
+  ///files
+  ///direct method to get files related information
+  /// routes to /me/drive/root/children
+  Future<GraphQuery> find_files() async {
+    return GraphQuery(this, "/me/drive/root/children");
+  }
 }
 
-
-
-  //mail
-  //GET https://graph.microsoft.com/v1.0/me/messages?$select=sender,subject
-  ///response:
-  /*
+//mail
+//GET https://graph.microsoft.com/v1.0/me/messages?$select=sender,subject
+///response:
+/*
       {
         "bccRecipients": [{"@odata.type": "microsoft.graph.recipient"}],
         "body": {"@odata.type": "microsoft.graph.itemBody"},
@@ -77,4 +89,3 @@ class GraphServiceClient {
         "singleValueExtendedProperties": [{"@odata.type": "microsoft.graph.singleValueLegacyExtendedProperty"}]
       }
   */
-

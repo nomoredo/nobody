@@ -13,7 +13,7 @@ class Nobody {
     return Online(browser, default_timeout: timeout ?? Duration(minutes: 5));
   }
 
-  static Future<GraphServiceClient> office(String username) async {
+  static Future<GraphServiceClient> at_office(String username) async {
     final built = await build_graph(username);
     return built;
   }
