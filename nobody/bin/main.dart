@@ -63,21 +63,10 @@ Future read_excel() async {
       await Nobody.open(ExcelFile(r"C:\Users\aghil\Downloads\EXPORT (10).xlsx"))
           .sheet("Sheet1")
           .rows((r) => r.cells.first != null)
-          .map<PurchaseOrder>((x) => PurchaseOrder(
-              number: x.string(0), date: x.string(1), vendor: x.string(2)));
+          .take(50)
+          .map((x) =>
+              {"po": x.string(0), "item": x.string(1), "qty": x.integer(2)});
   for (final po in purchase_orders) {
     print(po);
-  }
-}
-
-class PurchaseOrder {
-  final String number;
-  final String date;
-  final String vendor;
-  PurchaseOrder(
-      {required this.number, required this.date, required this.vendor});
-  @override
-  String toString() {
-    return "PurchaseOrder(number: $number, date: $date, vendor: $vendor)";
   }
 }

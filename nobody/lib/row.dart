@@ -5,6 +5,18 @@ import 'package:nobody/references.dart';
 class Row {
   final List<Data?> cells;
 
+  @override
+  noSuchMethod(Invocation invocation) {
+    if (invocation.isGetter) {
+      final name = invocation.memberName.toString();
+      final index = int.tryParse(name.substring(8, name.length - 2));
+      if (index != null) {
+        return this.cells.elementAt(index);
+      }
+    }
+    return super.noSuchMethod(invocation);
+  }
+
   const Row(this.cells);
 
   Cell operator [](int index) => Cell(cells[index]);
@@ -20,7 +32,7 @@ class Row {
       this.cells.elementAt(index)?.value ?? defaultValue;
 
   int? integer(int index) =>
-      int.tryParse(this.cells.elementAt(index)?.value ?? '');
+      int.tryParse(this.cells.elementAt(index)?.value.toString() ?? '');
 
   int integer_or(int index, int defaultValue) =>
       int.tryParse(this.cells.elementAt(index)?.value ?? '') ?? defaultValue;
