@@ -1,11 +1,11 @@
-import 'package:nobody/mail_query.future.dart';
 import 'package:nobody/references.dart';
 
 void main(List<String> arguments) async {
   // await run_GoogleSearch();
-  await run_ME2N();
+  // await po_export();
   // await create_pr();
   // await check_email();
+  read_excel();
 }
 
 Future run_GoogleSearch() {
@@ -21,14 +21,14 @@ Future run_GoogleSearch() {
       .close();
 }
 
-Future run_ME2N() async {
+Future po_export() async {
   return Nobody.online()
       // .capture_download()
       .login(Sap('amohandas'))
       .goto(Transaction("ME2N"))
       .list(SapInput.All())
       .set(SapInput('Purchasing organization'), '2200')
-      .set(SapInput('Purchasing Document Type'), 'ZC*')
+      // .set(SapInput('Purchasing Document Type'), 'ZC*')
       .set_range(
           SapInput('Purchasing Document Date'), '01.01.2023', '30.06.2023')
       .set(SapInput("Plant"), "22A2")
@@ -56,4 +56,28 @@ Future check_email() async {
       .with_subject('test')
       .from('amohandas')
       .get();
+}
+
+Future read_excel() async {
+  final purchase_orders =
+      await Nobody.open(ExcelFile(r"C:\Users\aghil\Downloads\EXPORT (10).xlsx"))
+          .sheet("Sheet1")
+          .rows((r) => r.cells.first != null)
+          .map<PurchaseOrder>((x) => PurchaseOrder(
+              number: x.string(0), date: x.string(1), vendor: x.string(2)));
+  for (final po in purchase_orders) {
+    print(po);
+  }
+}
+
+class PurchaseOrder {
+  final String number;
+  final String date;
+  final String vendor;
+  PurchaseOrder(
+      {required this.number, required this.date, required this.vendor});
+  @override
+  String toString() {
+    return "PurchaseOrder(number: $number, date: $date, vendor: $vendor)";
+  }
 }

@@ -17,6 +17,10 @@ class Nobody {
     final built = await build_graph(username);
     return built;
   }
+
+  static Future<T> open<T>(AbstractFile<T> file) async {
+    return file.open();
+  }
 }
 
 abstract class Text {
@@ -29,4 +33,13 @@ abstract class Attribute {
 
 abstract class Timeout {
   Duration get timeout;
+}
+
+abstract class AbstractFile<T> {
+  Future<T> open();
+}
+
+abstract class AbstractDocument {
+  final String path;
+  const AbstractDocument(this.path);
 }
