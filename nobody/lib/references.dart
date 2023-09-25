@@ -6,4 +6,4 @@ export 'package:puppeteer/puppeteer.dart';
 export 'package:termo/termo.dart';
 
 export 'lib.dart';
-export 'online.future.dart';
+export 'web/online.future.dart';

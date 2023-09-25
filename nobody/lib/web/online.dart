@@ -1,4 +1,4 @@
-import 'references.dart';
+import '../references.dart';
 
 @NomoCode()
 class Online {
