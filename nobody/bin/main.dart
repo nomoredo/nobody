@@ -14,7 +14,6 @@ Future run_GoogleSearch() {
       .type('input[id="searchbox"]', 'pretty girl')
       .click(Button.WithId('submit-button'))
       .wait(UntilPageLoaded)
-      // click on the <a> element with a child <span> element with text "Images"
       .click(XPath('/html/body/div/div[1]/div/nav/ul[1]/li[2]/a/span[2]'))
       .wait(UntilPageLoaded)
       .wait(Seconds(5))
@@ -23,12 +22,10 @@ Future run_GoogleSearch() {
 
 Future po_export() async {
   return Nobody.online()
-      // .capture_download()
       .login(Sap('amohandas'))
       .goto(Transaction("ME2N"))
       .list(SapInput.All())
       .set(SapInput('Purchasing organization'), '2200')
-      // .set(SapInput('Purchasing Document Type'), 'ZC*')
       .set_range(
           SapInput('Purchasing Document Date'), '01.01.2023', '30.06.2023')
       .set(SapInput("Plant"), "22A2")
@@ -36,8 +33,6 @@ Future po_export() async {
       .click(SapButton("Execute (F8)"))
       .download(DownloadableSapTable(), SimplePath("example.xlsx"))
       .wait(Seconds(20));
-
-  // sap.transaction('ME2N').waitFor(Seconds(10));
 }
 
 Future create_pr() {
@@ -51,7 +46,6 @@ Future create_pr() {
 
 Future check_email() async {
   return await Nobody.at_office('amohandas')
-      // .graph('/me/messages')
       .read_mails()
       .with_subject('test')
       .from('amohandas')
