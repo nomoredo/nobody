@@ -10,6 +10,9 @@ class Nobody {
         noSandboxFlag: true,
         timeout: timeout ?? Duration(minutes: 5),
         slowMo: slow);
+    //ensure that the browser is closed when the program exits
+    browser.process?.exitCode.then((value) => browser.close());
+
     return Online(browser, default_timeout: timeout ?? Duration(minutes: 5));
   }
 

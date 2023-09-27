@@ -2,9 +2,6 @@
 
 import 'package:nobody/references.dart';
 
-import 'selector.dart';
-import 'url.dart';
-
 abstract class Authable {
   AbstractUrl get url;
   String get username;
@@ -21,12 +18,17 @@ class Sap implements Authable {
 
   @override
   Future<Online> login(Online browser) async {
-    var pss = await password.password;
-    return browser
-        .visit(url.url)
-        .set(Input.WithId('logonuidfield'), username)
-        .set(Input.WithId('logonpassfield'), pss)
-        .click(Input.WithName('uidPasswordLogon'))
-        .wait(UntilPageLoaded);
+    try {
+      var pss = await password.password;
+      await browser
+          .visit(url.url)
+          .set(Input.WithId('logonuidfield'), username)
+          .set(Input.WithId('logonpassfield'), pss)
+          .click(Input.WithName('uidPasswordLogon'))
+          .wait(UntilPageLoaded);
+    } catch (e) {
+      print(e);
+    }
+    return browser;
   }
 }

@@ -163,9 +163,10 @@ class Online {
     return value;
   }
 
-  Future<dynamic> evaluate(String script) async {
-    Show.action('EVALUATING JAVASCRIPT', script);
-    return await (await page).evaluate(script);
+  Future<dynamic> evaluate(String script,
+      {List<dynamic>? properties, List<dynamic>? args}) async {
+    Show.action('EVALUATING', 'JAVASCRIPT\n', script);
+    return await (await page).evaluate(script, args: args);
   }
 
   Future<List<Page>> pages() async {
@@ -204,39 +205,21 @@ class Online {
     return this;
   }
 
-  //list
   //lists all elements matching the selector
-  Future<Online> list(AbstractSelector selector) async {
+  // all input fields have class containing 'lsField__input'
+  // all buttons have class containing 'lsButton'
+  // all dropdowns have class containing 'lsField__input' and aria-roledescription="Select"
+  Future<Online> list_all(AbstractSelector selector) async {
     Show.action('LISTING', selector.selector);
     await (await page).waitForSelector(selector.selector);
     var elements = await (await page).evaluate('''(selector) => {
-      //query all elements matching the selector
-      var elements = document.querySelectorAll(selector);
-      var multiple = document.querySelectorAll('div[title="Multiple selection"][role="button"]');
-      //get all properties of each element
-      var elements_list = {}
-      var i = 0;
-      for (var element of elements) {
-        if (elements_list[element.title] == null) {
-          elements_list[element.title] = {"LOWER":element.id};
-
-        }else {
-          elements_list[element.title].UPPER = element.id;
-          elements_list[element.title].MULTI = multiple[i].id;     
-                  i++;   
-        }
-
-      }
-      return elements_list;
-
+      return Array.from(document.querySelectorAll(selector)).map((e) => e.outerHTML);
     }''', args: [selector.selector]);
-    //colorize the elements
-    Show.title("TRANSACTION DETAILS");
     Show.anything(elements);
-
     return this;
   }
 
+  //lists all elements matching the selector
   Future<Online> send_hotkey(Key key, {List<Key>? modifiers}) async {
     if (modifiers != null) {
       for (var modifier in modifiers) {
@@ -256,61 +239,65 @@ class Online {
     return this;
   }
 
-  Future<Online> capture_download() async {
-    var page = await this.page;
-    //capture download and save it to test.xlsx
-    // await page.browser.connection.send(
-    //     'Page.setDownloadBehavior', {'behavior': 'allow', 'downloadPath': '.'});
 
-//event listener for download
-    var listner = await page.evaluateOnNewDocument('''() => {
-      document.addEventListener('download', event => {
-      // Extract url from event.detail.url
-      // event.detail.url is the url of the downloaded file
-      // event.detail.suggestedFilename is the filename suggested by the page
-      // event.detail.mime is the mime type of the download
-      // send all these information back to dart using cdp
-      //call exposed function download
-      download(event.detail);
-    });
-    }''');
+}
 
-    //listen for download event
-    await page.exposeFunction('download', (Map<String, dynamic> data) async {
-      print(data);
-      //download the file
-      // var response = awai
-      // //save the file
-      // await File(data['suggestedFilename']).writeAsBytes(response.bodyBytes);
-    });
+typedef MapFunc<T, R> = R Function(T);
+typedef AsyncMapFunc<T, R> = Future<R> Function(T);
+typedef MapManyFunc<T, R> = Iterable<R> Function(T);
+typedef AsyncMapManyFunc<T, R> = Future<Iterable<R>> Function(T);
+typedef Waitable<T> = Future<bool> Function(Online);
+
+extension OnlineMapEx on Online {
+  /// map
+  /// maps the elements matching the selector to a list of type R
+  /// to allow continuous chaining of methods, the return type is Online
+  /// to still allow access to the list of type R, the list is stored in the
+  /// out parameter can be accessed using the out parameter
+  /// if you just want to perform an action on the list, you can use the
+  /// transform parameter to perform the action
+  /// example:
+  /// var Online = await Nobody.online();
+  /// var list = <String>[];
+  /// await Online.map<String>(Css('h3.LC20lb'),(e) => e.text, ,out: list, transform: (list) => list.forEach(print));
+  /// print(list);
+  /// notice that out parameter is not required. if you dont need the list, you can just use the transform parameter
+  /// similarly, if you dont need to perform an action on the list, you can just use the out parameter
+  Future<Online> map<T, R>(AbstractSelector selector, MapFunc<T, R> mapFunc,
+      {List<R>? out,
+      MapManyFunc<T, R>? mapManyFunc,
+      MapFunc<T, R>? transform}) async {
+    Show.action('MAPPING', selector.selector);
+    await (await page).waitForSelector(selector.selector);
+    //execute javascript to get the elements matching the selector and return all their attributes and values as a list
+    var elements = await (await page).evaluate('''(selector) => {
+      return Array.from(document.querySelectorAll(selector)).map((e) => e);
+    }''', args: [selector.selector]);
+    var list = elements.map((e) => mapFunc(e as T)).toList();
+    if (out != null) {
+      out.addAll(list);
+    }
+    if (mapManyFunc != null) {
+      var many = list.map((e) => mapManyFunc(e)).toList();
+      if (out != null) {
+        out.addAll(many);
+      }
+    }
+    if (transform != null) {
+      transform(list);
+    }
     return this;
   }
 }
 
-typedef Waitable<T> = Future<bool> Function(Online);
-
-//lets define some waitables
-//wait_for(Navigation)
-Waitable UntilPageLoaded = (Online online) async {
-  Show.action('WAITING', 'FOR', "NAVIGATION");
-  await (await online.page).waitForNavigation();
-  return true;
-};
-
-Waitable PageLoad = (Online online) async {
-  Show.action('WAITING', 'FOR', "PAGE LOAD");
-  await (await online.page).waitForNavigation();
-  return true;
-};
-
-Waitable Seconds(int seconds) => (Online online) async {
-      Show.action('WAITING', 'FOR', seconds.toString(), 'SECONDS');
-      await Future.delayed(Duration(seconds: seconds));
-      return true;
-    };
-
-Waitable Element(String selector) => (Online online) async {
-      Show.action('WAITING', 'FOR', selector);
-      await (await online.page).waitForSelector(selector);
-      return true;
-    };
+extension OnlineMapAsyncEx on Future<Online> {
+  Future<Online> map<T, R>(AbstractSelector selector, MapFunc<T, R> mapFunc,
+      {List<R>? out,
+      MapManyFunc<T, R>? mapManyFunc,
+      MapFunc<T, R>? transform}) async {
+    var Online = await this;
+    await Online.map<T, R>(selector, mapFunc,
+        out: out, mapManyFunc: mapManyFunc, transform: transform);
+    return Online;
+  }
+}

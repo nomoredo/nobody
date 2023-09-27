@@ -209,11 +209,15 @@ extension ExOnline on Future<Online> {
   }
 
   Future<dynamic> evaluate(
-    String script,
-  ) async {
+    String script, {
+    List<dynamic>? properties = null,
+    List<dynamic>? args = null,
+  }) async {
     var Online = await this;
     return Online.evaluate(
       script,
+      properties: properties,
+      args: args,
     );
   }
 
@@ -255,11 +259,11 @@ extension ExOnline on Future<Online> {
     return Online.close_all_other_pages();
   }
 
-  Future<Online> list(
+  Future<Online> list_all(
     AbstractSelector selector,
   ) async {
     var Online = await this;
-    return Online.list(
+    return Online.list_all(
       selector,
     );
   }
@@ -275,8 +279,5 @@ extension ExOnline on Future<Online> {
     );
   }
 
-  Future<Online> capture_download() async {
-    var Online = await this;
-    return Online.capture_download();
-  }
+
 }

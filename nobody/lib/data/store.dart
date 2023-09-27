@@ -28,7 +28,10 @@ class Store<T> {
   }
 
   static Future<Directory> _getDocumentDirectory() async {
-    final directory = await Directory.current;
+    final current = await Directory.current.parent;
+    final directory =
+        await Directory('${current.path}/.nothing').create(recursive: true);
+
     return directory;
   }
 
@@ -58,7 +61,7 @@ class Store<T> {
   }
 }
 
-const key = 'your_key_here';
+const key = 'p03t5h3dv3l0p3r5r0ck0qoadcpjsag';
 
 String aesEncrypt(String plainText, String key) {
   final keyBytes = utf8.encode(key);

@@ -74,7 +74,7 @@ class WithClass implements AbstractSelector {
 class SapInput implements AbstractSelector {
   final String label;
   String get selector => 'input[name="InputField"][title="$label"]';
-  static AbstractSelector All() => Css('input[class="lsField__input"]');
+  static AbstractSelector All() => Css('input[class^="lsField__input"]');
   const SapInput(this.label);
 }
 

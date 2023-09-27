@@ -22,7 +22,29 @@ class DownloadableSapTable implements AbstractDownloadable {
         .click(Css('div[role="button"][title="Continue (Enter)"]'))
         .set(Css('input[name="popupDialogInputField"]'), tablePath)
         .click(Css('div[id="UpDownDialogChoose"]'))
-        .capture_download();
+        .listen_for_downloads();
+    return browser;
+  }
+}
+
+extension ExDownload on Future<Online> {
+  Future<Online> listen_for_downloads() async {
+    var browser = await this;
+    await (await browser.page).onRequest.listen((request) async {
+      if (request.url.contains('EXPORT.XLSX')) {
+        var response = await request.response;
+        await (await browser.page).onResponse.listen((response) async {
+          print(response);
+          if (response.url.contains('EXPORT.XLSX')) {
+            var content = await response.bytes;
+            var file = await File('export.xlsx');
+            await file.writeAsBytes(content);
+            print('Downloaded export.xlsx');
+          }
+        });
+      }
+    });
+
     return browser;
   }
 }

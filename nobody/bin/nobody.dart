@@ -5,7 +5,20 @@ void main(List<String> arguments) async {
   // await po_export();
   // await create_pr();
   // await check_email();
-  read_excel();
+  // read_excel();
+  await generate_trf_report();
+}
+
+//generate TRF report
+Future generate_trf_report() async {
+  return Nobody.online()
+      .login(Sap('amohandas'))
+      .goto(Transaction("ZTR01"))
+      .map(SapInputFields, Print)
+      .set(SapInput('Company Code'), '2200')
+      .click(SapButton("Execute (F8)"))
+      .download(DownloadableSapTable(), SimplePath("example.xlsx"))
+      .wait(Seconds(20));
 }
 
 Future run_GoogleSearch() {
@@ -24,7 +37,7 @@ Future po_export() async {
   return Nobody.online()
       .login(Sap('amohandas'))
       .goto(Transaction("ME2N"))
-      .list(SapInput.All())
+      .map(SapInputFields, Print)
       .set(SapInput('Purchasing organization'), '2200')
       .set_range(
           SapInput('Purchasing Document Date'), '01.01.2023', '30.06.2023')
@@ -39,7 +52,7 @@ Future create_pr() {
   return Nobody.online()
       .login(Sap('amohandas'))
       .goto(Transaction("ME51N"))
-      .list(SapInput.All())
+      .map(SapInputFields, Print)
       .wait(Seconds(20))
       .close();
 }
@@ -64,3 +77,11 @@ Future read_excel() async {
     print(po);
   }
 }
+
+final Print = (x) {
+  Show.anything(x);
+  return x;
+};
+
+// input fields have lsField__input in their class list
+final SapInputFields = Css('input.lsField__input');
