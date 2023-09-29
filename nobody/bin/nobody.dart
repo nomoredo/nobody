@@ -98,4 +98,4 @@ const banner = r"""
         /_/ /_/\____/_.___/\____/\__,_/\__, / """;
 
 const footer =
-    '                     \u001b[36mWORKS FOR YOU ❤️ \u001b[0m/____/  ';
+    '        \u001b[33mWORKS FOR Y🌘U                \u001b[0m/____/  ';
