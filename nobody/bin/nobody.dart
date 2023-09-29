@@ -1,6 +1,9 @@
 import 'package:nobody/references.dart';
 
 void main(List<String> arguments) async {
+  Show.banner(banner, footer);
+  Show.credits(
+      'DEVELOPED BY', 'AGHIL MOHANDAS', 'FOR', 'ALMANSOORI WIRELINE SERVICES');
   // await run_GoogleSearch();
   // await po_export();
   // await create_pr();
@@ -85,3 +88,14 @@ final Print = (x) {
 
 // input fields have lsField__input in their class list
 final SapInputFields = Css('input.lsField__input');
+
+// banner and footer has "works for you" in yellow
+const banner = r"""
+                        __              __      
+           ____  ____  / /_  ____  ____/ /_  __
+          / __ \/ __ \/ __ \/ __ \/ __  / / / /
+         / / / / /_/ / /_/ / /_/ / /_/ / /_/ / 
+        /_/ /_/\____/_.___/\____/\__,_/\__, / """;
+
+const footer =
+    '                     \u001b[36mWORKS FOR YOU ❤️ \u001b[0m/____/  ';

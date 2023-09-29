@@ -187,6 +187,22 @@ class Show {
     " $string".write(inWhite);
     print("");
   }
+
+  static void banner(String banner, String footer) {
+    print(banner);
+    print(footer);
+    divider();
+  }
+
+  ///[s](gray) [t](white) [u](gray) [v](white)
+  static void credits(String s, String t, String u, String v) {
+    s.write(inGray);
+    " $t".write(inWhite);
+    " $u".write(inGray);
+    " $v".write(inWhite);
+    print("");
+    divider();
+  }
 }
 
 class Ask {
