@@ -3,6 +3,6 @@
 /// More dartdocs go here.
 library;
 
-export 'src/termo_base.dart';
+export 'lib.dart';
 
 // TODO: Export any libraries intended for clients of this package.
