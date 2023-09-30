@@ -10,20 +10,17 @@ void main(List<String> arguments) async {
   // await check_email();
   // read_excel();
   // await generate_trf_report();
-  await generate_mb51_report();
+  // await generate_mb51_report();
+  await create_trip_request();
 }
+
+//create trip request
 
 //generate MB51 report
 Future generate_mb51_report() async {
   return Nobody.online()
       .login(Sap('amohandas'))
       .goto(Transaction("MB51"))
-      .fill({
-        "Plant": "22A2",
-        "Movement type": "101",
-        "Materia Group": "Z01",
-        "Material": "Z01",
-      })
       .click(SapButton("Execute (F8)"))
       .download(DownloadableSapTable(), SimplePath("example.xlsx"))
       .wait(Seconds(20));
@@ -116,3 +113,25 @@ const banner = r"""
 
 const footer =
     '        \u001b[33mWORKS FOR Y🌘U                \u001b[0m/____/  ';
+
+//create trip request.
+Future create_trip_request() async {
+  return Nobody.online()
+      .login(Sap('amohandas'))
+      .goto(Fuori("ZTRV_FORM_REQ"))
+      .click(XPath('//*[@id="__xmlview0--RB3-4"]/div'))
+      .click(XPath('//*[@id="__xmlview0--idEmpNo-inner"]'))
+      .set(XPath('//*[@id="__xmlview0--idEmpNo-inner"]'), '9711068')
+      .key_down(Key.enter)
+      .key_up(Key.enter)
+      .click(XPath('//*[@id="__item51-__clone0_cell0"]'))
+      .wait(ElementHidden(XPath('//*[@id="empfragment-searchField-I"]')))
+      .click(XPath('//*[@id="__xmlview0--GO-BDI-content"]'))
+      .click(XPath('//*[@id="__xmlview0--RB32"]/div/svg/circle[2]'))
+      .click(XPath('//*[@id="__xmlview0--idFocal-vhi"]'))
+      .click(XPath('//*[@id="__item51-__clone41"]'))
+      .click(XPath('//*[@id="__xmlview0--idRefNo-inner"]'))
+      .set(XPath('//*[@id="__xmlview0--idRefNo-inner"]'), 'mws/ar/ooo5')
+      .click(XPath('//*[@id="__xmlview0--idContact-inner"]'))
+      .wait(Seconds(1));
+}

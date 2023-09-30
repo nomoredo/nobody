@@ -97,6 +97,20 @@ class Online {
     return this;
   }
 
+  //key down
+  Future<Online> key_down(Key key) async {
+    Show.action('KEY DOWN', key.toString());
+    await (await page).keyboard.down(key);
+    return this;
+  }
+
+  //key up
+  Future<Online> key_up(Key key) async {
+    Show.action('KEY UP', key.toString());
+    await (await page).keyboard.up(key);
+    return this;
+  }
+
   Future<Online> fill(Map<String, dynamic> map,
       {AbstractSelector? form}) async {
     try {

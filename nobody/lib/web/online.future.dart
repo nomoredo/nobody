@@ -66,6 +66,7 @@ extension ExOnline on Future<Online> {
     String from,
     String to, {
     Duration? timeout = null,
+    bool log = true,
   }) async {
     var Online = await this;
     return Online.set_range(
@@ -73,6 +74,7 @@ extension ExOnline on Future<Online> {
       from,
       to,
       timeout: timeout,
+      log: log,
     );
   }
 
@@ -129,6 +131,24 @@ extension ExOnline on Future<Online> {
     var Online = await this;
     return Online.middle_click(
       selector,
+    );
+  }
+
+  Future<Online> key_down(
+    Key key,
+  ) async {
+    var Online = await this;
+    return Online.key_down(
+      key,
+    );
+  }
+
+  Future<Online> key_up(
+    Key key,
+  ) async {
+    var Online = await this;
+    return Online.key_up(
+      key,
     );
   }
 

@@ -25,3 +25,17 @@ Waitable Element(String selector) => (Online online) async {
       await (await online.page).waitForSelector(selector);
       return true;
     };
+
+Waitable ElementVisible(AbstractSelector selector) => (Online online) async {
+      Show.action('WAITING', 'FOR', selector.toString());
+      await (await online.page)
+          .waitForSelector(selector.toString(), visible: true);
+      return true;
+    };
+
+Waitable ElementHidden(AbstractSelector selector) => (Online online) async {
+      Show.action('WAITING', 'FOR', selector.toString());
+      await (await online.page)
+          .waitForSelector(selector.toString(), visible: false);
+      return true;
+    };

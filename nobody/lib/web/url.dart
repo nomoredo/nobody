@@ -9,8 +9,15 @@ class Transaction implements AbstractUrl {
   const Transaction(this.code);
 }
 
+class Fuori implements AbstractUrl {
+  final String code;
+  String get url =>
+      'https://cbs.almansoori.biz/sap/bc/ui5_ui5/ui2/ushell/shells/abap/FioriLaunchpad.html?sap-client=800&sap-language=EN#$code-display';
+  const Fuori(this.code);
+}
+
 class Url implements AbstractUrl {
   final String url;
 
-  const Url(this.url);
+  Url(this.url);
 }

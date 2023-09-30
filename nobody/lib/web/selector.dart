@@ -10,7 +10,7 @@ class Css implements AbstractSelector {
 
 class XPath implements AbstractSelector {
   final String internal;
-  String get selector => 'xpath="$internal"';
+  String get selector => 'xpath$internal';
   const XPath(this.internal);
 }
 
