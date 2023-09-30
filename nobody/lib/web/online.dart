@@ -41,14 +41,10 @@ class Online {
     return this;
   }
 
-  Future<Online> set_range(
-    AbstractSelector selector,
-    String from,
-    String to, {
-    Duration? timeout = null,
-  }) async {
+  Future<Online> set_range(AbstractSelector selector, String from, String to,
+      {Duration? timeout = null, bool log = true}) async {
     var Online = await this;
-    Show.action('SETTING', selector.selector, from, 'TO', to);
+    if (log) Show.action('SETTING', selector.selector, from, 'TO', to);
     await Online.set(selector, from, timeout: timeout, log: false, index: 0);
     await Online.set(selector, to, timeout: timeout, log: false, index: 1);
     return Online;
@@ -99,6 +95,27 @@ class Online {
     await (await page).waitForSelector(selector.selector);
     await (await page).click(selector.selector, button: MouseButton.middle);
     return this;
+  }
+
+  Future<Online> fill(Map<String, dynamic> map,
+      {AbstractSelector? form}) async {
+    try {
+      form ??= Css('#webguiform0');
+      var pageInstance = await page;
+      var selected = await pageInstance.waitForSelector(form.selector);
+      if (selected != null) {
+        var inputs = await selected.evaluate('''(form) => {
+          return Array.from(form.querySelectorAll('input')).map((e) => e);
+        }''');
+        print(inputs);
+      }
+      // Assume Online is a class, and it has a constructor that can be called without arguments
+      return this;
+    } catch (e) {
+      print('Error: $e');
+      // Handle error or rethrow
+      rethrow;
+    }
   }
 
   //wait for should support:
@@ -238,8 +255,6 @@ class Online {
 
     return this;
   }
-
-
 }
 
 typedef MapFunc<T, R> = R Function(T);

@@ -132,6 +132,17 @@ extension ExOnline on Future<Online> {
     );
   }
 
+  Future<Online> fill(
+    Map<String, dynamic> map, {
+    AbstractSelector? form = null,
+  }) async {
+    var Online = await this;
+    return Online.fill(
+      map,
+      form: form,
+    );
+  }
+
   Future<Online> waitFor(
     AbstractSelector waitable, {
     Duration? timeout = null,
@@ -278,6 +289,4 @@ extension ExOnline on Future<Online> {
       modifiers: modifiers,
     );
   }
-
-
 }

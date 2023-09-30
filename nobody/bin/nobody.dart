@@ -9,7 +9,24 @@ void main(List<String> arguments) async {
   // await create_pr();
   // await check_email();
   // read_excel();
-  await generate_trf_report();
+  // await generate_trf_report();
+  await generate_mb51_report();
+}
+
+//generate MB51 report
+Future generate_mb51_report() async {
+  return Nobody.online()
+      .login(Sap('amohandas'))
+      .goto(Transaction("MB51"))
+      .fill({
+        "Plant": "22A2",
+        "Movement type": "101",
+        "Materia Group": "Z01",
+        "Material": "Z01",
+      })
+      .click(SapButton("Execute (F8)"))
+      .download(DownloadableSapTable(), SimplePath("example.xlsx"))
+      .wait(Seconds(20));
 }
 
 //generate TRF report
