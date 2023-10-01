@@ -25,19 +25,44 @@ class Online {
   }
 
   Future<Online> goto(AbstractUrl url) async {
-    Show.action('VISITING', url.url);
-    await (await page).goto(url.url, wait: Until.load);
+    var clean_url = Uri.encodeFull(url.url);
+    Show.action('VISITING', clean_url);
+    await (await page).goto(clean_url, wait: Until.load);
+    return this;
+  }
+
+  //navigate
+  Future<Online> navigate(String url) async {
+    // clean up url to make sure it is valid
+    if (!url.startsWith('http')) {
+      url = 'https://$url';
+    }
+    //handle # ? and other special characters
+    url = Uri.encodeFull(url);
+
+    Show.action('NAVIGATING', url);
+    await (await page).goto(url, wait: Until.load);
     return this;
   }
 
   Future<Online> set(AbstractSelector selector, String text,
       {Duration? timeout = null, bool log = true, int index = 0}) async {
     if (log) Show.action('SETTING', text);
-    await (await page).waitForSelector(selector.selector,
-        timeout: timeout ?? default_timeout);
-    await (await page).evaluate('''(selector, text, index) => {
-      document.querySelectorAll(selector)[index].value = text;
-    }''', args: [selector.selector, text, index]);
+    if (selector is XPath) {
+      var selected = await (await page).waitForXPath(selector.selector);
+      if (selected != null) {
+        await selected.evaluateHandle('''(element, text) => {
+          element.value = text;
+        }''', args: [text]);
+      }
+    } else {
+      var selected = await (await page).waitForSelector(selector.selector);
+      if (selected != null) {
+        await selected.evaluateHandle('''(element, text) => {
+          element.value = text;
+        }''', args: [text]);
+      }
+    }
     return this;
   }
 
@@ -57,11 +82,77 @@ class Online {
     return this;
   }
 
+  //ex
+  // executes js and returns online
+  // ex('document.querySelector("input").value = "$text";', text: 'hello world');
+  Future<Online> ex(MapFunc<ElementHandle, dynamic> script,
+      {List<dynamic>? args}) async {
+    Show.action('EXECUTING', 'JAVASCRIPT\n', script.toString());
+    await (await page).evaluate(script.toString(), args: args);
+    return this;
+  }
+
+  //focus
+  Future<Online> focus(AbstractSelector selector) async {
+    Show.action('FOCUSING', selector.selector);
+    await (await page).waitForSelector(selector.selector);
+    await (await page).focus(selector.selector);
+    return this;
+  }
+
+  //when_contains
+  // finds he first div/span/p/li/ul/ol/a/h1/h2/h3/h4/h5/h6 with text containing the text
+  //and executes the action on it
+  //when_contains('hello world', (e) => e.click());
+  Future<Online> when_contains(
+    String selector,
+    String text,
+    MapFunc<ElementHandle, dynamic> action,
+  ) async {
+    Show.action('WHEN CONTAINS', text);
+    var page = await this.page;
+    await page.waitForSelector(selector);
+    var element = await page.$eval(selector, '''(element, text) => {
+      return Array.from(element.querySelectorAll('div,span,p,li,ul,ol,a,h1,h2,h3,h4,h5,h6')).find((e) => e.innerText.includes(text));
+    }''', args: [text]);
+    if (element != null) {
+      await action(element);
+    }
+    return this;
+  }
+
   //click
   Future<Online> click(AbstractSelector selector) async {
     Show.action('CLICKING', selector.selector);
+    if (selector is XPath) {
+      var selected = await (await page).waitForXPath(selector.selector);
+      if (selected != null) {
+        await selected.click();
+      }
+    } else {
+      var selected = await (await page).waitForSelector(selector.selector);
+      if (selected != null) {
+        await selected.click();
+      }
+    }
+    return this;
+  }
+
+  //press
+  Future<Online> press(Key key) async {
+    Show.action('PRESSING', key.toString());
+
+    await (await page).keyboard.press(key);
+    return this;
+  }
+
+  //submit form
+  Future<Online> submit(AbstractSelector selector) async {
+    Show.action('SUBMITTING', selector.selector);
     await (await page).waitForSelector(selector.selector);
-    await (await page).click(selector.selector);
+    await (await page).evaluate('''(selector) => {
+      document.querySelector(selector).submit();
+    }''', args: [selector.selector]);
     return this;
   }
 

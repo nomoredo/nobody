@@ -27,15 +27,22 @@ Waitable Element(String selector) => (Online online) async {
     };
 
 Waitable ElementVisible(AbstractSelector selector) => (Online online) async {
-      Show.action('WAITING', 'FOR', selector.toString());
+      Show.action('WAITING', 'FOR', selector.selector, 'TO BE VISIBLE');
       await (await online.page)
-          .waitForSelector(selector.toString(), visible: true);
+          .waitForSelector(selector.selector, visible: true);
       return true;
     };
 
 Waitable ElementHidden(AbstractSelector selector) => (Online online) async {
-      Show.action('WAITING', 'FOR', selector.toString());
+      Show.action('WAITING', 'FOR', selector.selector, 'TO BE HIDDEN');
       await (await online.page)
-          .waitForSelector(selector.toString(), visible: false);
+          .waitForSelector(selector.selector, hidden: true);
       return true;
     };
+
+Waitable Navigation = (Online online) async {
+  Show.action('WAITING', 'FOR', "NAVIGATION");
+
+  await (await online.page).waitForNavigation(wait: Until.domContentLoaded);
+  return true;
+};

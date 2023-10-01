@@ -44,6 +44,15 @@ extension ExOnline on Future<Online> {
     );
   }
 
+  Future<Online> navigate(
+    String url,
+  ) async {
+    var Online = await this;
+    return Online.navigate(
+      url,
+    );
+  }
+
   Future<Online> set(
     AbstractSelector selector,
     String text, {
@@ -89,11 +98,60 @@ extension ExOnline on Future<Online> {
     );
   }
 
+  Future<Online> ex(MapFunc<ElementHandle, dynamic> script,
+      {List<dynamic>? args}) async {
+    var Online = await this;
+    return Online.ex(
+      script,
+      args: args,
+    );
+  }
+
+  Future<Online> focus(
+    AbstractSelector selector,
+  ) async {
+    var Online = await this;
+    return Online.focus(
+      selector,
+    );
+  }
+
+  Future<Online> when_contains(
+    String selector,
+    String text,
+    dynamic Function(ElementHandle) action,
+  ) async {
+    var Online = await this;
+    return Online.when_contains(
+      selector,
+      text,
+      action,
+    );
+  }
+
   Future<Online> click(
     AbstractSelector selector,
   ) async {
     var Online = await this;
     return Online.click(
+      selector,
+    );
+  }
+
+  Future<Online> press(
+    Key key,
+  ) async {
+    var Online = await this;
+    return Online.press(
+      key,
+    );
+  }
+
+  Future<Online> submit(
+    AbstractSelector selector,
+  ) async {
+    var Online = await this;
+    return Online.submit(
       selector,
     );
   }
