@@ -1,0 +1,15 @@
+C:\repo\nobody\here\bin\Debug\net8.0\here.exe
+C:\repo\nobody\here\bin\Debug\net8.0\here.deps.json
+C:\repo\nobody\here\bin\Debug\net8.0\here.runtimeconfig.json
+C:\repo\nobody\here\bin\Debug\net8.0\here.dll
+C:\repo\nobody\here\bin\Debug\net8.0\here.pdb
+C:\repo\nobody\here\obj\Debug\net8.0\here.GeneratedMSBuildEditorConfig.editorconfig
+C:\repo\nobody\here\obj\Debug\net8.0\here.AssemblyInfoInputs.cache
+C:\repo\nobody\here\obj\Debug\net8.0\here.AssemblyInfo.cs
+C:\repo\nobody\here\obj\Debug\net8.0\here.csproj.CoreCompileInputs.cache
+C:\repo\nobody\here\obj\Debug\net8.0\here.sourcelink.json
+C:\repo\nobody\here\obj\Debug\net8.0\here.dll
+C:\repo\nobody\here\obj\Debug\net8.0\refint\here.dll
+C:\repo\nobody\here\obj\Debug\net8.0\here.pdb
+C:\repo\nobody\here\obj\Debug\net8.0\here.genruntimeconfig.cache
+C:\repo\nobody\here\obj\Debug\net8.0\ref\here.dll

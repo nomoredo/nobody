@@ -1,0 +1,12 @@
+C:\repo\nobody\console\bin\Debug\net8.0\console.deps.json
+C:\repo\nobody\console\bin\Debug\net8.0\console.dll
+C:\repo\nobody\console\bin\Debug\net8.0\console.pdb
+C:\repo\nobody\console\obj\Debug\net8.0\console.GeneratedMSBuildEditorConfig.editorconfig
+C:\repo\nobody\console\obj\Debug\net8.0\console.AssemblyInfoInputs.cache
+C:\repo\nobody\console\obj\Debug\net8.0\console.AssemblyInfo.cs
+C:\repo\nobody\console\obj\Debug\net8.0\console.csproj.CoreCompileInputs.cache
+C:\repo\nobody\console\obj\Debug\net8.0\console.sourcelink.json
+C:\repo\nobody\console\obj\Debug\net8.0\console.dll
+C:\repo\nobody\console\obj\Debug\net8.0\refint\console.dll
+C:\repo\nobody\console\obj\Debug\net8.0\console.pdb
+C:\repo\nobody\console\obj\Debug\net8.0\ref\console.dll
