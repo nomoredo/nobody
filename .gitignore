@@ -1,0 +1,11 @@
+# for dotnet projects
+**/bin/
+**/obj/
+**/*.user
+**/*.vspscc
+**/*.vssscc
+*.suo
+*.user
+
+# hide idea crap
+**/.idea/

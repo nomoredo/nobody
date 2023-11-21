@@ -10,3 +10,4 @@ C:\repo\nobody\office\obj\Debug\net8.0\office.dll
 C:\repo\nobody\office\obj\Debug\net8.0\refint\office.dll
 C:\repo\nobody\office\obj\Debug\net8.0\office.pdb
 C:\repo\nobody\office\obj\Debug\net8.0\ref\office.dll
+C:\repo\nobody\office\obj\Debug\net8.0\office.csproj.AssemblyReference.cache
