@@ -13,3 +13,16 @@ C:\repo\nobody\here\obj\Debug\net8.0\refint\here.dll
 C:\repo\nobody\here\obj\Debug\net8.0\here.pdb
 C:\repo\nobody\here\obj\Debug\net8.0\here.genruntimeconfig.cache
 C:\repo\nobody\here\obj\Debug\net8.0\ref\here.dll
+C:\repo\nobody\here\bin\Debug\net8.0\console.dll
+C:\repo\nobody\here\bin\Debug\net8.0\core.dll
+C:\repo\nobody\here\bin\Debug\net8.0\office.dll
+C:\repo\nobody\here\bin\Debug\net8.0\core.pdb
+C:\repo\nobody\here\bin\Debug\net8.0\console.pdb
+C:\repo\nobody\here\bin\Debug\net8.0\office.pdb
+C:\repo\nobody\here\obj\Debug\net8.0\here.csproj.AssemblyReference.cache
+C:\repo\nobody\here\obj\Debug\net8.0\here.csproj.CopyComplete
+C:\repo\nobody\here\bin\Debug\net8.0\Spectre.Console.dll
+C:\repo\nobody\here\bin\Debug\net8.0\Spectre.Console.Cli.dll
+C:\repo\nobody\here\bin\Debug\net8.0\Spectre.Console.Extensions.Progress.dll
+C:\repo\nobody\here\bin\Debug\net8.0\Spectre.Console.Extensions.Table.dll
+C:\repo\nobody\here\bin\Debug\net8.0\Spectre.Console.Json.dll

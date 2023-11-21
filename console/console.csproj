@@ -6,4 +6,17 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <!-- references to shared libraries -->
+  <ItemGroup>
+    <ProjectReference Include="..\core\core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Spectre.Console" Version="0.47.0" />
+    <PackageReference Include="Spectre.Console.Cli" Version="0.47.0" />
+    <PackageReference Include="Spectre.Console.Extensions.Progress" Version="1.0.0+build.60" />
+    <PackageReference Include="Spectre.Console.Extensions.Table" Version="1.0.0+build.60" />
+    <PackageReference Include="Spectre.Console.Json" Version="0.47.0" />
+    <PackageReference Include="xunit" Version="2.6.2" />
+  </ItemGroup>
+
 </Project>

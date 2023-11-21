@@ -9,14 +9,96 @@
       "here/1.0.0": {
         "dependencies": {
           "Microsoft.DotNet.ILCompiler": "8.0.0",
-          "Microsoft.NET.ILLink.Tasks": "8.0.0"
+          "Microsoft.NET.ILLink.Tasks": "8.0.0",
+          "console": "1.0.0",
+          "core": "1.0.0",
+          "office": "1.0.0"
         },
         "runtime": {
           "here.dll": {}
         }
       },
       "Microsoft.DotNet.ILCompiler/8.0.0": {},
-      "Microsoft.NET.ILLink.Tasks/8.0.0": {}
+      "Microsoft.NET.ILLink.Tasks/8.0.0": {},
+      "Spectre.Console/0.47.0": {
+        "dependencies": {
+          "System.Memory": "4.5.5"
+        },
+        "runtime": {
+          "lib/net7.0/Spectre.Console.dll": {
+            "assemblyVersion": "0.0.0.0",
+            "fileVersion": "0.47.0.0"
+          }
+        }
+      },
+      "Spectre.Console.Cli/0.47.0": {
+        "dependencies": {
+          "Spectre.Console": "0.47.0"
+        },
+        "runtime": {
+          "lib/net7.0/Spectre.Console.Cli.dll": {
+            "assemblyVersion": "0.0.0.0",
+            "fileVersion": "0.47.0.0"
+          }
+        }
+      },
+      "Spectre.Console.Extensions.Progress/1.0.0": {
+        "dependencies": {
+          "Spectre.Console": "0.47.0"
+        },
+        "runtime": {
+          "lib/net6.0/Spectre.Console.Extensions.Progress.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "Spectre.Console.Extensions.Table/1.0.0": {
+        "dependencies": {
+          "Spectre.Console": "0.47.0"
+        },
+        "runtime": {
+          "lib/net6.0/Spectre.Console.Extensions.Table.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "Spectre.Console.Json/0.47.0": {
+        "dependencies": {
+          "Spectre.Console": "0.47.0"
+        },
+        "runtime": {
+          "lib/net7.0/Spectre.Console.Json.dll": {
+            "assemblyVersion": "0.0.0.0",
+            "fileVersion": "0.47.0.0"
+          }
+        }
+      },
+      "System.Memory/4.5.5": {},
+      "console/1.0.0": {
+        "dependencies": {
+          "Spectre.Console": "0.47.0",
+          "Spectre.Console.Cli": "0.47.0",
+          "Spectre.Console.Extensions.Progress": "1.0.0",
+          "Spectre.Console.Extensions.Table": "1.0.0",
+          "Spectre.Console.Json": "0.47.0",
+          "core": "1.0.0"
+        },
+        "runtime": {
+          "console.dll": {}
+        }
+      },
+      "core/1.0.0": {
+        "runtime": {
+          "core.dll": {}
+        }
+      },
+      "office/1.0.0": {
+        "runtime": {
+          "office.dll": {}
+        }
+      }
     }
   },
   "libraries": {
@@ -38,6 +120,63 @@
       "sha512": "sha512-B3etT5XQ2nlWkZGO2m/ytDYrOmSsQG1XNBaM6ZYlX5Ch/tDrMFadr0/mK6gjZwaQc55g+5+WZMw4Cz3m8VEF7g==",
       "path": "microsoft.net.illink.tasks/8.0.0",
       "hashPath": "microsoft.net.illink.tasks.8.0.0.nupkg.sha512"
+    },
+    "Spectre.Console/0.47.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-wz8mszcZr0cSOo8GyoG9e2DFW0SkMT8/n78Q/lIXX7EbCtHNXOoOKWpJ9Str+rCYtmQOGGyDutZzubrUHK/XkA==",
+      "path": "spectre.console/0.47.0",
+      "hashPath": "spectre.console.0.47.0.nupkg.sha512"
+    },
+    "Spectre.Console.Cli/0.47.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-S2cZCbve4fAgRtigNUNZbF+NLQJcAapSqSbbDYqLtqXJcIZ6tKiRTveYe05d+oLY2bAmP7sgnLdzVknGXruy2Q==",
+      "path": "spectre.console.cli/0.47.0",
+      "hashPath": "spectre.console.cli.0.47.0.nupkg.sha512"
+    },
+    "Spectre.Console.Extensions.Progress/1.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-gQQoZxgOVk05LiX78X8mRePO5yjGgn3lOoOon1PHyIv9YHV30uqTHizD2rj52aYzVMrvIYf46Z7yvGOPkQ36eg==",
+      "path": "spectre.console.extensions.progress/1.0.0",
+      "hashPath": "spectre.console.extensions.progress.1.0.0.nupkg.sha512"
+    },
+    "Spectre.Console.Extensions.Table/1.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-T8zXVQ02zfWRV+frX3IRk2/RpNqrq4jmXByW86GKfh4qEP2aBoGIfAB2zIrZFFCJ2oU3Zta06pRaDgJaXDo1KA==",
+      "path": "spectre.console.extensions.table/1.0.0",
+      "hashPath": "spectre.console.extensions.table.1.0.0.nupkg.sha512"
+    },
+    "Spectre.Console.Json/0.47.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-6nq5sCmYViulDjdMsTUpc5xD++aEsAHy9s9LKc1geif8slK9zJtze1PCjRHj2sRVN/alwBbL9/IyELDK4wTkeQ==",
+      "path": "spectre.console.json/0.47.0",
+      "hashPath": "spectre.console.json.0.47.0.nupkg.sha512"
+    },
+    "System.Memory/4.5.5": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-XIWiDvKPXaTveaB7HVganDlOCRoj03l+jrwNvcge/t8vhGYKvqV+dMv6G4SAX2NoNmN0wZfVPTAlFwZcZvVOUw==",
+      "path": "system.memory/4.5.5",
+      "hashPath": "system.memory.4.5.5.nupkg.sha512"
+    },
+    "console/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "core/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "office/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
     }
   }
 }

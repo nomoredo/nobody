@@ -18,6 +18,7 @@
     <Import Project="$(NuGetPackageRoot)microsoft.dotnet.ilcompiler\8.0.0\build\Microsoft.DotNet.ILCompiler.props" Condition="Exists('$(NuGetPackageRoot)microsoft.dotnet.ilcompiler\8.0.0\build\Microsoft.DotNet.ILCompiler.props')" />
   </ImportGroup>
   <PropertyGroup Condition=" '$(ExcludeRestorePackageImports)' != 'true' ">
+    <Pkgxunit_analyzers Condition=" '$(Pkgxunit_analyzers)' == '' ">C:\Users\nobody\.nuget\packages\xunit.analyzers\1.6.0</Pkgxunit_analyzers>
     <PkgMicrosoft_NET_ILLink_Tasks Condition=" '$(PkgMicrosoft_NET_ILLink_Tasks)' == '' ">C:\Users\nobody\.nuget\packages\microsoft.net.illink.tasks\8.0.0</PkgMicrosoft_NET_ILLink_Tasks>
     <PkgMicrosoft_DotNet_ILCompiler Condition=" '$(PkgMicrosoft_DotNet_ILCompiler)' == '' ">C:\Users\nobody\.nuget\packages\microsoft.dotnet.ilcompiler\8.0.0</PkgMicrosoft_DotNet_ILCompiler>
   </PropertyGroup>

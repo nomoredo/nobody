@@ -9,4 +9,12 @@
     <InvariantGlobalization>true</InvariantGlobalization>
   </PropertyGroup>
 
+
+  <!-- references to shared libraries -->
+  <ItemGroup>
+    <ProjectReference Include="..\core\core.csproj" />
+    <ProjectReference Include="..\console\console.csproj" />
+    <ProjectReference Include="..\office\office.csproj" />
+  </ItemGroup>
+
 </Project>

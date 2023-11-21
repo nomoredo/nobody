@@ -10,3 +10,9 @@ C:\repo\nobody\console\obj\Debug\net8.0\console.dll
 C:\repo\nobody\console\obj\Debug\net8.0\refint\console.dll
 C:\repo\nobody\console\obj\Debug\net8.0\console.pdb
 C:\repo\nobody\console\obj\Debug\net8.0\ref\console.dll
+C:\repo\nobody\console\bin\Debug\net8.0\core.dll
+C:\repo\nobody\console\bin\Debug\net8.0\core.pdb
+C:\repo\nobody\console\obj\Debug\net8.0\console.csproj.AssemblyReference.cache
+C:\repo\nobody\console\obj\Debug\net8.0\console.csproj.CopyComplete
+C:\repo\nobody\console\bin\Debug\net8.0\console.runtimeconfig.json
+C:\repo\nobody\console\obj\Debug\net8.0\console.genruntimeconfig.cache
