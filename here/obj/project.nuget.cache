@@ -1,13 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "CjKawlv2CNrxn0ySyYAv1o0T+FpB7SeFHPtE3fEEn7tjTA4svZTxB8GaKtGptD14jajBsc0Ag59loB2jhAa5qg==",
+  "dgSpecHash": "q0uTW+fGFw93Z4DlDQPzY2FWjMAVi4P79jgdrcGgSgRydubBcmwP1Pl2OqWKLo5dluSezUqFb5fdtjuSPPQ6mg==",
   "success": true,
   "projectFilePath": "C:\\repo\\nobody\\here\\here.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\nobody\\.nuget\\packages\\azure.core\\1.36.0\\azure.core.1.36.0.nupkg.sha512",
     "C:\\Users\\nobody\\.nuget\\packages\\azure.identity\\1.10.4\\azure.identity.1.10.4.nupkg.sha512",
-    "C:\\Users\\nobody\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\1.1.1\\microsoft.bcl.asyncinterfaces.1.1.1.nupkg.sha512",
-    "C:\\Users\\nobody\\.nuget\\packages\\microsoft.dotnet.ilcompiler\\8.0.0\\microsoft.dotnet.ilcompiler.8.0.0.nupkg.sha512",
+    "C:\\Users\\nobody\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\6.0.0\\microsoft.bcl.asyncinterfaces.6.0.0.nupkg.sha512",
     "C:\\Users\\nobody\\.nuget\\packages\\microsoft.graph\\5.35.0\\microsoft.graph.5.35.0.nupkg.sha512",
     "C:\\Users\\nobody\\.nuget\\packages\\microsoft.graph.core\\3.1.2\\microsoft.graph.core.3.1.2.nupkg.sha512",
     "C:\\Users\\nobody\\.nuget\\packages\\microsoft.identity.client\\4.56.0\\microsoft.identity.client.4.56.0.nupkg.sha512",
@@ -25,10 +24,11 @@
     "C:\\Users\\nobody\\.nuget\\packages\\microsoft.kiota.serialization.json\\1.1.2\\microsoft.kiota.serialization.json.1.1.2.nupkg.sha512",
     "C:\\Users\\nobody\\.nuget\\packages\\microsoft.kiota.serialization.multipart\\1.1.1\\microsoft.kiota.serialization.multipart.1.1.1.nupkg.sha512",
     "C:\\Users\\nobody\\.nuget\\packages\\microsoft.kiota.serialization.text\\1.1.1\\microsoft.kiota.serialization.text.1.1.1.nupkg.sha512",
-    "C:\\Users\\nobody\\.nuget\\packages\\microsoft.net.illink.tasks\\8.0.0\\microsoft.net.illink.tasks.8.0.0.nupkg.sha512",
     "C:\\Users\\nobody\\.nuget\\packages\\microsoft.netcore.platforms\\5.0.0\\microsoft.netcore.platforms.5.0.0.nupkg.sha512",
     "C:\\Users\\nobody\\.nuget\\packages\\microsoft.netcore.targets\\1.1.0\\microsoft.netcore.targets.1.1.0.nupkg.sha512",
+    "C:\\Users\\nobody\\.nuget\\packages\\microsoft.playwright\\1.39.0\\microsoft.playwright.1.39.0.nupkg.sha512",
     "C:\\Users\\nobody\\.nuget\\packages\\netstandard.library\\2.0.3\\netstandard.library.2.0.3.nupkg.sha512",
+    "C:\\Users\\nobody\\.nuget\\packages\\serilog\\3.1.2-dev-02097\\serilog.3.1.2-dev-02097.nupkg.sha512",
     "C:\\Users\\nobody\\.nuget\\packages\\spectre.console\\0.47.0\\spectre.console.0.47.0.nupkg.sha512",
     "C:\\Users\\nobody\\.nuget\\packages\\spectre.console.cli\\0.47.0\\spectre.console.cli.0.47.0.nupkg.sha512",
     "C:\\Users\\nobody\\.nuget\\packages\\spectre.console.extensions.progress\\1.0.0\\spectre.console.extensions.progress.1.0.0.nupkg.sha512",
@@ -36,6 +36,7 @@
     "C:\\Users\\nobody\\.nuget\\packages\\spectre.console.json\\0.47.0\\spectre.console.json.0.47.0.nupkg.sha512",
     "C:\\Users\\nobody\\.nuget\\packages\\std.uritemplate\\0.0.46\\std.uritemplate.0.0.46.nupkg.sha512",
     "C:\\Users\\nobody\\.nuget\\packages\\system.collections\\4.3.0\\system.collections.4.3.0.nupkg.sha512",
+    "C:\\Users\\nobody\\.nuget\\packages\\system.componentmodel.annotations\\5.0.0\\system.componentmodel.annotations.5.0.0.nupkg.sha512",
     "C:\\Users\\nobody\\.nuget\\packages\\system.diagnostics.diagnosticsource\\6.0.1\\system.diagnostics.diagnosticsource.6.0.1.nupkg.sha512",
     "C:\\Users\\nobody\\.nuget\\packages\\system.globalization\\4.3.0\\system.globalization.4.3.0.nupkg.sha512",
     "C:\\Users\\nobody\\.nuget\\packages\\system.identitymodel.tokens.jwt\\7.0.3\\system.identitymodel.tokens.jwt.7.0.3.nupkg.sha512",
@@ -66,8 +67,7 @@
     "C:\\Users\\nobody\\.nuget\\packages\\xunit.assert\\2.6.2\\xunit.assert.2.6.2.nupkg.sha512",
     "C:\\Users\\nobody\\.nuget\\packages\\xunit.core\\2.6.2\\xunit.core.2.6.2.nupkg.sha512",
     "C:\\Users\\nobody\\.nuget\\packages\\xunit.extensibility.core\\2.6.2\\xunit.extensibility.core.2.6.2.nupkg.sha512",
-    "C:\\Users\\nobody\\.nuget\\packages\\xunit.extensibility.execution\\2.6.2\\xunit.extensibility.execution.2.6.2.nupkg.sha512",
-    "C:\\Users\\nobody\\.nuget\\packages\\runtime.win-x64.microsoft.dotnet.ilcompiler\\8.0.0\\runtime.win-x64.microsoft.dotnet.ilcompiler.8.0.0.nupkg.sha512"
+    "C:\\Users\\nobody\\.nuget\\packages\\xunit.extensibility.execution\\2.6.2\\xunit.extensibility.execution.2.6.2.nupkg.sha512"
   ],
   "logs": []
 }

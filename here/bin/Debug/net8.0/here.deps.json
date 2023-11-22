@@ -8,11 +8,14 @@
     ".NETCoreApp,Version=v8.0": {
       "here/1.0.0": {
         "dependencies": {
-          "Microsoft.DotNet.ILCompiler": "8.0.0",
-          "Microsoft.NET.ILLink.Tasks": "8.0.0",
-          "console": "1.0.0",
-          "core": "1.0.0",
-          "office": "1.0.0"
+          "nobody.console": "1.0.0",
+          "nobody.core": "1.0.0",
+          "nobody.office": "1.0.0",
+          "nobody.online": "1.0.0",
+          "nobody.console.Reference": "1.0.0.0",
+          "nobody.core.Reference": "1.0.0.0",
+          "nobody.office.Reference": "1.0.0.0",
+          "nobody.online.Reference": "1.0.0.0"
         },
         "runtime": {
           "here.dll": {}
@@ -20,7 +23,7 @@
       },
       "Azure.Core/1.36.0": {
         "dependencies": {
-          "Microsoft.Bcl.AsyncInterfaces": "1.1.1",
+          "Microsoft.Bcl.AsyncInterfaces": "6.0.0",
           "System.Diagnostics.DiagnosticSource": "6.0.1",
           "System.Memory.Data": "1.0.2",
           "System.Numerics.Vectors": "4.5.0",
@@ -52,15 +55,14 @@
           }
         }
       },
-      "Microsoft.Bcl.AsyncInterfaces/1.1.1": {
+      "Microsoft.Bcl.AsyncInterfaces/6.0.0": {
         "runtime": {
           "lib/netstandard2.1/Microsoft.Bcl.AsyncInterfaces.dll": {
-            "assemblyVersion": "1.0.0.0",
-            "fileVersion": "4.700.20.21406"
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.0.21.52210"
           }
         }
       },
-      "Microsoft.DotNet.ILCompiler/8.0.0": {},
       "Microsoft.Graph/5.35.0": {
         "dependencies": {
           "Microsoft.Graph.Core": "3.1.2"
@@ -264,12 +266,32 @@
           }
         }
       },
-      "Microsoft.NET.ILLink.Tasks/8.0.0": {},
       "Microsoft.NETCore.Platforms/5.0.0": {},
       "Microsoft.NETCore.Targets/1.1.0": {},
+      "Microsoft.Playwright/1.39.0": {
+        "dependencies": {
+          "Microsoft.Bcl.AsyncInterfaces": "6.0.0",
+          "System.ComponentModel.Annotations": "5.0.0",
+          "System.Text.Json": "6.0.0"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Microsoft.Playwright.dll": {
+            "assemblyVersion": "1.39.0.0",
+            "fileVersion": "1.39.0.0"
+          }
+        }
+      },
       "NETStandard.Library/2.0.3": {
         "dependencies": {
           "Microsoft.NETCore.Platforms": "5.0.0"
+        }
+      },
+      "Serilog/3.1.2-dev-02097": {
+        "runtime": {
+          "lib/net7.0/Serilog.dll": {
+            "assemblyVersion": "2.0.0.0",
+            "fileVersion": "3.1.2.0"
+          }
         }
       },
       "Spectre.Console/0.47.0": {
@@ -342,6 +364,7 @@
           "System.Runtime": "4.3.0"
         }
       },
+      "System.ComponentModel.Annotations/5.0.0": {},
       "System.Diagnostics.DiagnosticSource/6.0.1": {
         "dependencies": {
           "System.Runtime.CompilerServices.Unsafe": "6.0.0"
@@ -553,32 +576,76 @@
           }
         }
       },
-      "console/1.0.0": {
+      "nobody.console/1.0.0": {
         "dependencies": {
           "Spectre.Console": "0.47.0",
           "Spectre.Console.Cli": "0.47.0",
           "Spectre.Console.Extensions.Progress": "1.0.0",
           "Spectre.Console.Extensions.Table": "1.0.0",
           "Spectre.Console.Json": "0.47.0",
-          "core": "1.0.0",
+          "nobody.core": "1.0.0",
           "xunit": "2.6.2"
         },
         "runtime": {
-          "console.dll": {}
+          "nobody.console.dll": {}
         }
       },
-      "core/1.0.0": {
+      "nobody.core/1.0.0": {
+        "dependencies": {
+          "Serilog": "3.1.2-dev-02097"
+        },
         "runtime": {
-          "core.dll": {}
+          "nobody.core.dll": {}
         }
       },
-      "office/1.0.0": {
+      "nobody.office/1.0.0": {
         "dependencies": {
           "Azure.Identity": "1.10.4",
           "Microsoft.Graph": "5.35.0"
         },
         "runtime": {
-          "office.dll": {}
+          "nobody.office.dll": {}
+        }
+      },
+      "nobody.online/1.0.0": {
+        "dependencies": {
+          "Microsoft.Playwright": "1.39.0",
+          "nobody.core": "1.0.0"
+        },
+        "runtime": {
+          "nobody.online.dll": {}
+        }
+      },
+      "nobody.console.Reference/1.0.0.0": {
+        "runtime": {
+          "nobody.console.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "nobody.core.Reference/1.0.0.0": {
+        "runtime": {
+          "nobody.core.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "nobody.office.Reference/1.0.0.0": {
+        "runtime": {
+          "nobody.office.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "nobody.online.Reference/1.0.0.0": {
+        "runtime": {
+          "nobody.online.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
         }
       }
     }
@@ -603,19 +670,12 @@
       "path": "azure.identity/1.10.4",
       "hashPath": "azure.identity.1.10.4.nupkg.sha512"
     },
-    "Microsoft.Bcl.AsyncInterfaces/1.1.1": {
+    "Microsoft.Bcl.AsyncInterfaces/6.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-yuvf07qFWFqtK3P/MRkEKLhn5r2UbSpVueRziSqj0yJQIKFwG1pq9mOayK3zE5qZCTs0CbrwL9M6R8VwqyGy2w==",
-      "path": "microsoft.bcl.asyncinterfaces/1.1.1",
-      "hashPath": "microsoft.bcl.asyncinterfaces.1.1.1.nupkg.sha512"
-    },
-    "Microsoft.DotNet.ILCompiler/8.0.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-zuTbpcWDCCvESnOAvpHuwum1C3jJIeDl+grYcRDqyoHsPAUutIB6wb7iJV3Y2Q96crKC6cObqf92eOVEiG7keQ==",
-      "path": "microsoft.dotnet.ilcompiler/8.0.0",
-      "hashPath": "microsoft.dotnet.ilcompiler.8.0.0.nupkg.sha512"
+      "sha512": "sha512-UcSjPsst+DfAdJGVDsu346FX0ci0ah+lw3WRtn18NUwEqRt70HaOQ7lI72vy3+1LxtqI3T5GWwV39rQSrCzAeg==",
+      "path": "microsoft.bcl.asyncinterfaces/6.0.0",
+      "hashPath": "microsoft.bcl.asyncinterfaces.6.0.0.nupkg.sha512"
     },
     "Microsoft.Graph/5.35.0": {
       "type": "package",
@@ -736,13 +796,6 @@
       "path": "microsoft.kiota.serialization.text/1.1.1",
       "hashPath": "microsoft.kiota.serialization.text.1.1.1.nupkg.sha512"
     },
-    "Microsoft.NET.ILLink.Tasks/8.0.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-B3etT5XQ2nlWkZGO2m/ytDYrOmSsQG1XNBaM6ZYlX5Ch/tDrMFadr0/mK6gjZwaQc55g+5+WZMw4Cz3m8VEF7g==",
-      "path": "microsoft.net.illink.tasks/8.0.0",
-      "hashPath": "microsoft.net.illink.tasks.8.0.0.nupkg.sha512"
-    },
     "Microsoft.NETCore.Platforms/5.0.0": {
       "type": "package",
       "serviceable": true,
@@ -757,12 +810,26 @@
       "path": "microsoft.netcore.targets/1.1.0",
       "hashPath": "microsoft.netcore.targets.1.1.0.nupkg.sha512"
     },
+    "Microsoft.Playwright/1.39.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-XOqEt0LMTrMZz4gpUXUnKHl6VFXwNDdkM7Ced1+wkc3C2Ejb4rZwKDbBGjpEgwbqGCpfgE8w19X/Sgd4SyjqNg==",
+      "path": "microsoft.playwright/1.39.0",
+      "hashPath": "microsoft.playwright.1.39.0.nupkg.sha512"
+    },
     "NETStandard.Library/2.0.3": {
       "type": "package",
       "serviceable": true,
       "sha512": "sha512-st47PosZSHrjECdjeIzZQbzivYBJFv6P2nv4cj2ypdI204DO+vZ7l5raGMiX4eXMJ53RfOIg+/s4DHVZ54Nu2A==",
       "path": "netstandard.library/2.0.3",
       "hashPath": "netstandard.library.2.0.3.nupkg.sha512"
+    },
+    "Serilog/3.1.2-dev-02097": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-1kANtrvBOCcB/+rUuwCEoeDOdNhwjE1Rtk2AS+MF34DRhxxOjm5tTUbudWTvlBcIChmbQxW3K4Yr0dOn3+hcGA==",
+      "path": "serilog/3.1.2-dev-02097",
+      "hashPath": "serilog.3.1.2-dev-02097.nupkg.sha512"
     },
     "Spectre.Console/0.47.0": {
       "type": "package",
@@ -812,6 +879,13 @@
       "sha512": "sha512-3Dcj85/TBdVpL5Zr+gEEBUuFe2icOnLalmEh9hfck1PTYbbyWuZgh4fmm2ysCLTrqLQw6t3TgTyJ+VLp+Qb+Lw==",
       "path": "system.collections/4.3.0",
       "hashPath": "system.collections.4.3.0.nupkg.sha512"
+    },
+    "System.ComponentModel.Annotations/5.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-dMkqfy2el8A8/I76n2Hi1oBFEbG1SfxD2l5nhwXV3XjlnOmwxJlQbYpJH4W51odnU9sARCSAgv7S3CyAFMkpYg==",
+      "path": "system.componentmodel.annotations/5.0.0",
+      "hashPath": "system.componentmodel.annotations.5.0.0.nupkg.sha512"
     },
     "System.Diagnostics.DiagnosticSource/6.0.1": {
       "type": "package",
@@ -1030,18 +1104,43 @@
       "path": "xunit.extensibility.execution/2.6.2",
       "hashPath": "xunit.extensibility.execution.2.6.2.nupkg.sha512"
     },
-    "console/1.0.0": {
+    "nobody.console/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "core/1.0.0": {
+    "nobody.core/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
     },
-    "office/1.0.0": {
+    "nobody.office/1.0.0": {
       "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "nobody.online/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "nobody.console.Reference/1.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "nobody.core.Reference/1.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "nobody.office.Reference/1.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "nobody.online.Reference/1.0.0.0": {
+      "type": "reference",
       "serviceable": false,
       "sha512": ""
     }

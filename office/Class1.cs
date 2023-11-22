@@ -1,4 +1,4 @@
-﻿namespace office
+﻿namespace nobody.office
 {
     public class Class1
     {

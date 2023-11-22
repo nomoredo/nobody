@@ -1,95 +1,46 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
 namespace nobody.core
 {
-
-
     /// <summary>
     /// Nobody is the master class to start all fluent functions
     /// </summary>
-    public class Nobody
+    public class Nobody : Anybody
     {
-        public Ctx ctx = new Ctx();
+        public static Ctx ctx_static = new Ctx();
+
+
+        public Nobody()
+        {
+                //register auto installers
+                register_capabilities();
+        }
+
+
+        private void register_capabilities()
+        {
+            //register auto installers
+            var autoInstallers = AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(x => x.GetTypes())
+                .Where(x => typeof(AnyPlugin).IsAssignableFrom(x) && !x.IsInterface && !x.IsAbstract)
+                .Select(x => (AnyPlugin)Activator.CreateInstance(x)!);
+            foreach (var autoInstaller in autoInstallers)
+            {
+                autoInstaller.register(this);
+            }
+        }
+
+        private void cleanup()
+        {
+            //register auto installers
+            var autoInstallers = AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(x => x.GetTypes())
+                .Where(x => typeof(AnyPlugin).IsAssignableFrom(x) && !x.IsInterface && !x.IsAbstract)
+                .Select(x => (AnyPlugin)Activator.CreateInstance(x)!);
+            foreach (var autoInstaller in autoInstallers)
+            {
+                autoInstaller.cleanup(this);
+            }
+        }
+
+
     }
-
-    
-
-    public static class CtxExt
-    {
-        public static Ctx set(this Ctx ctx, string key, object value)
-        {
-            ctx[key] = value;
-            return ctx;
-        }
-
-        public static Ctx set(this Ctx ctx, Dictionary<string, object> values)
-        {
-            foreach (var item in values)
-            {
-                ctx[item.Key] = item.Value;
-            }
-            return ctx;
-        }
-
-        public static Ctx set(this Ctx ctx, object value)
-        {
-            ctx["value"] = value;
-            return ctx;
-        }
-
-        public static Ctx set(this Ctx ctx, params object[] values)
-        {
-            for (int i = 0; i < values.Length; i++)
-            {
-                ctx[i.ToString()] = values[i];
-            }
-            return ctx;
-        }
-
-        public static Ctx set(this Ctx ctx, Func<Ctx, object> value)
-        {
-            ctx["value"] = value(ctx);
-            return ctx;
-        }
-
-        public static Ctx set(this Ctx ctx, string key, Func<Ctx, object> value)
-        {
-            ctx[key] = value(ctx);
-            return ctx;
-        }
-
-        public static Ctx set(this Ctx ctx, Dictionary<string, Func<Ctx, object>> values)
-        {
-            foreach (var item in values)
-            {
-                ctx[item.Key] = item.Value(ctx);
-            }
-            return ctx;
-        }
-
-        public static Ctx set(this Ctx ctx, params Func<Ctx, object>[] values)
-        {
-            for (int i = 0; i < values.Length; i++)
-            {
-                ctx[i.ToString()] = values[i](ctx);
-            }
-            return ctx;
-        }
-
-        public static Ctx set(this Ctx ctx, string key, params Func<Ctx, object>[] values)
-        {
-            for (int i = 0; i < values.Length; i++)
-            {
-                ctx[key] = values[i](ctx);
-            }
-            return ctx;
-        }
-
-        
-    }
-
-   
 }

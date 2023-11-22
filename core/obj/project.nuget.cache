@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "9B8IZUjItbxg5ZwX0kCBg/UwsfXUYDHyP+kemcvlJ6PROnzNooZghPuf23Vs+Ntqewq2Lg5Mjb0dIeiXl6V7TQ==",
+  "dgSpecHash": "7cEu5dk7xf41wPFg92W3d79I8JKQ15iXo2kI/1u4B1eFwwqK/WA1A/YjDlF8zeIzgI8QRHGQMDeZlhVL/xUQjw==",
   "success": true,
   "projectFilePath": "C:\\repo\\nobody\\core\\core.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\nobody\\.nuget\\packages\\serilog\\3.1.2-dev-02097\\serilog.3.1.2-dev-02097.nupkg.sha512"
+  ],
   "logs": []
 }

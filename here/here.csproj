@@ -5,7 +5,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <PublishAot>true</PublishAot>
+<!--    <PublishAot>true</PublishAot>-->
     <InvariantGlobalization>true</InvariantGlobalization>
   </PropertyGroup>
 
@@ -15,6 +15,9 @@
     <ProjectReference Include="..\core\core.csproj" />
     <ProjectReference Include="..\console\console.csproj" />
     <ProjectReference Include="..\office\office.csproj" />
+    <ProjectReference Include="..\online\online.csproj" />
   </ItemGroup>
+
+
 
 </Project>

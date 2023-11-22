@@ -1,7 +1,9 @@
-using nobody.console;
 using nobody.core;
 using Xunit;
+
 //tests
+namespace nobody.console;
+
 public class ShowTests
 {
     [Fact]

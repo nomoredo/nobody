@@ -8,7 +8,7 @@
       "version": "1.0.0",
       "restore": {
         "projectUniqueName": "C:\\repo\\nobody\\office\\office.csproj",
-        "projectName": "office",
+        "projectName": "nobody.office",
         "projectPath": "C:\\repo\\nobody\\office\\office.csproj",
         "packagesPath": "C:\\Users\\nobody\\.nuget\\packages\\",
         "outputPath": "C:\\repo\\nobody\\office\\obj\\",

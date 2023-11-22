@@ -1,6 +1,14 @@
-﻿namespace nobody.core;
+﻿using Serilog.Events;
 
-public interface Anybody
+namespace nobody.core;
+
+public abstract class Anybody
 {
-    Ctx ctx { get; }
+     public Ctx ctx => Nobody.ctx_static;
+    protected  AnyLogger log => ctx.maybe_service<AnyLogger>("logger") ?? new NoLog();
+
+     protected Anybody()
+     {
+         log.Information("Anybody created");
+     }
 }

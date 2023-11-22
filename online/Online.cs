@@ -3,17 +3,29 @@ using nobody.core;
 
 namespace nobody.online;
 
-public class Online
+public interface AnyPluginOnline
+{
+    Online visit(string url);
+    Online fill(string value, string selector);
+    Online fill(Func<Ctx,string> value, string selector);
+    Online click(string selector);
+    Online wait(Func<IPage, Task> condition);
+    Online wait(int milliseconds);
+    Online wait_for_navigation();
+    Online wait_for_navigation(string url);
+}
+
+public class Online :Anybody, AnyPluginOnline
 {
     private IBrowser? _browser;
     private IPage? _active_page;
-    private Ctx _ctx;
+    
 
-
-    public Online(IBrowser browser, Ctx ctx)
+    public Online(IBrowser browser)
     {
+
         _browser = browser;
-        _ctx = ctx;
+
     }
 
 
@@ -23,6 +35,7 @@ public class Online
         {
             await visit_async(url);
         }).Wait();
+
         return this;
     }
 
@@ -30,6 +43,8 @@ public class Online
     {
         _active_page = await _browser!.NewPageAsync();
         await _active_page.GotoAsync(url);
+
+        // log.Information("VISITED {url}",url);
         return this;
     }
 
@@ -39,26 +54,22 @@ public class Online
         {
             await fill_async(value, selector);
         }).Wait();
+
         return this;
     }
 
     public Online fill(Func<Ctx,string> value, string selector)
     {
-        var val =value.Invoke(_ctx);
+        var val =value.Invoke(ctx);
         fill(val,selector);
         return this;
     }
 
-    public Online fill(Func<Ctx,int> value, string selector)
-    {
-        var val =value.Invoke(_ctx);
-        fill(val.ToString(),selector);
-        return this;
-    }
 
     public async Task<Online> fill_async(string value, string selector)
     {
         await _active_page!.FillAsync(selector, value);
+        log.Information("FILLED {value} INTO {selector}",value,selector);
         return this;
     }
 
@@ -74,6 +85,7 @@ public class Online
     public async Task<Online> click_async(string selector)
     {
         await _active_page!.ClickAsync(selector);
+        log.Information("CLICKED {selector}",selector);
         return this;
     }
 
@@ -89,6 +101,7 @@ public class Online
     public async Task<Online> wait_async(Func<IPage, Task> condition)
     {
         await condition(_active_page!);
+        log.Information("WAITED FOR CONDITION");
         return this;
     }
 
@@ -104,6 +117,7 @@ public class Online
     public async Task<Online> wait_async(int milliseconds)
     {
         await Task.Delay(milliseconds);
+        log.Information("WAITED FOR {milliseconds} MILLISECONDS",milliseconds);
         return this;
     }
 
@@ -119,6 +133,7 @@ public class Online
     public async Task<Online> wait_for_navigation_async()
     {
         await _active_page!.WaitForNavigationAsync();
+        log.Information("WAITED UNTIL {status}","NAVIGATION COMPLETE");
         return this;
     }
 
@@ -134,6 +149,10 @@ public class Online
     public async Task<Online> wait_for_navigation_async(string url)
     {
         await _active_page!.WaitForNavigationAsync(new() {UrlString = url});
+        log.Information("WAITED UNTIL {status}","NAVIGATION COMPLETE");
         return this;
     }
+
+
+
 }

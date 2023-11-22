@@ -3,17 +3,10 @@ using Spectre.Console;
 
 namespace nobody.console;
 
-public static class AnybodyAsk
+public static class Ask
 {
 
-    public static Object AskFor(this Nobody nobody, string key)
-    {
-        var question = $"[yellow]PLEASE PROVIDE A VALUE FOR [/][bold cyan]{key}[/]";
-        var q = new TextPrompt<string>($"{question}");
-        q.PromptStyle = new Style(Color.Magenta1);
-        var answer = AnsiConsole.Prompt(q);
-        return answer;
-    }
+   
 
     public static T ask<T>(this T nobody,string key, string? question = null, Action<TextPrompt<string>>? questionAction = null) where T : Anybody
     {

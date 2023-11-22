@@ -1,6 +1,6 @@
 ﻿namespace nobody.core;
 
-public static class Set
+public static class SetCtxExt
 {
     public static Ctx set(this Ctx ctx, string key, object value)
     {
