@@ -5,6 +5,11 @@ using nobody.console;
 using nobody.core;
 using nobody.online;
 
+using Microsoft.Playwright;
+using System;
+using System.Threading.Tasks;
+
+
 var nobody = new Nobody(); // find a way to avoid this
 
 var online =nobody.online()

@@ -2,61 +2,44 @@
 using PlaywrightExtraSharp;
 using PlaywrightExtraSharp.Models;
 using PlaywrightExtraSharp.Plugins.ExtraStealth;
+using System.Threading.Tasks;
 
-/// <summary>
-/// Basic Test Runner
-/// </summary>
-/// provides access to page and browser
-/// uses headful browser, edge installed on machine
-/// and persists context in between tests
-public class NoTestBrowser
+namespace nobody.echo
 {
-    internal PlaywrightExtraSharp.PlaywrightExtra playwright;
-    internal IBrowser browser;
-    internal IBrowserContext context;
-    internal IPage page;
-
-    public NoTestBrowser()
+    /// <summary>
+    /// Basic Test Runner
+    /// </summary>
+    /// Provides access to page and browser.
+    /// Uses headful browser, Edge installed on machine,
+    /// and persists context in between tests.
+    public class NoTestBrowser
     {
-        Scaffold();
-        Run();
-        Teardown();
-    }
-
-    public virtual void Run()
-    {
-        //run tests
-    }
-
-    public virtual void Scaffold()
-    {
-        playwright = new PlaywrightExtra(BrowserTypeEnum.Chromium);
-        //ensure playwright is installed
-        // Install browser
-        playwright.Install();
-        // use stealth plugin
-        playwright.Use(new StealthExtraPlugin());
+        internal PlaywrightExtraSharp.PlaywrightExtra Play { get; private set; }
+        internal IBrowser Browser { get; private set; }
+        // internal IBrowserContext BrowserCtx { get; private set; }
+        internal IPage Page { get; private set; }
 
 
-        browser = playwright.LaunchPersistentAsync(new BrowserTypeLaunchPersistentContextOptions()
+
+        protected NoTestBrowser()
         {
-            Headless = false,
-        }).Result;
-        context = browser.NewContextAsync(new BrowserNewContextOptions
+            Play = new PlaywrightExtra(BrowserTypeEnum.Chromium);
+            Play.Install();
+            Play.Use(new StealthExtraPlugin());
+            Browser = Play.LaunchPersistentAsync(new BrowserTypeLaunchPersistentContextOptions
+            {
+                Headless = false
+            }).Result;
+            Page = Browser.NewPageAsync().Result;
+
+        }
+
+
+
+        public virtual async Task TeardownAsync()
         {
-            AcceptDownloads = true,
-            BypassCSP = true,
-            JavaScriptEnabled = true,
-            RecordVideoDir = "videos",
-        }).Result;
-        page = context.NewPageAsync().Result;
-    }
-
-
-    public virtual void Teardown()
-    {
-        page.CloseAsync().Wait();
-        context.CloseAsync().Wait();
-        browser.CloseAsync().Wait();
+            await Page.CloseAsync();
+            await Browser.CloseAsync();
+        }
     }
 }

@@ -12,3 +12,4 @@ public abstract class Anybody
          log.Information("Anybody created");
      }
 }
+
