@@ -7,13 +7,23 @@ using nobody.online;
 
 var nobody = new Nobody(); // find a way to avoid this
 
-nobody.online()
+var online =nobody.online()
     .visit("https://cbs.almansoori.biz")
-    .fill("username".get_string(), "#logonuidfield")
-    .fill("password".get_string(), "#logonpassfield")
+    .fill("username".get_string("amohandas"), "#logonuidfield")
+    .fill("password".get_string("D@d5m4gaav009"), "#logonpassfield")
     .click("input[type='submit']")
-    .show("info", "Logged in")
-    .wait_for_navigation();
+    .wait_for_navigation()
+    .show("Logged in");
+
+
+// navigate to a sap transaction
+online.visit("https://cbs.almansoori.biz/sap/bc/gui/sap/its/webgui?sap-client=100&sap-language=EN")
+    .ask("transaction", "Enter transaction code")
+    .fill("transaction".get_string(), "#sap-user")
+    .click("input[type='submit']")
+    .wait_for_navigation()
+    .show("Logged in");
+
 
 
 //test console logging
