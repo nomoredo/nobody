@@ -27,19 +27,6 @@ public class Online : Anybody, AnyPluginOnline
     }
 
 
-    /// <summary>
-    /// visit a url
-    /// </summary>
-    /// <param name="url"></param>
-    /// <returns>
-    /// returns the current instance of Online
-    /// </returns>
-    /// <example>
-    /// <code>
-    /// nobody.online()
-    ///     .visit("https://google.com");
-    /// </code>
-    /// </example>
     public Online visit(string url)
     {
         Task.Run(async () => { await visit_async(url); }).Wait();
@@ -50,29 +37,17 @@ public class Online : Anybody, AnyPluginOnline
 
     public async Task<Online> visit_async(string url)
     {
-        _activePage = await _browser!.NewPageAsync();
+        if (_activePage == null)
+        {
+            _activePage = await _browser!.NewPageAsync();
+        }
         await _activePage.GotoAsync(url);
-
-        // log.Information("VISITED {url}",url);
+        log.Information("VISITED {url}", url);
         return this;
     }
 
 
-    /// <summary>
-    ///  fill a value into a selector
-    /// </summary>
-    /// <param name="value"></param>
-    /// <param name="selector"></param>
-    /// <returns>
-    ///   returns the current instance of Online
-    /// </returns>
-    /// <example>
-    ///  <code>
-    ///  nobody.online()
-    ///   .visit("https://google.com")
-    ///  .fill("nobody","input[type='text']");
-    ///  </code>
-    ///  </example>
+
     public Online fill(string value, string selector)
     {
         Task.Run(async () => { await fill_async(value, selector); }).Wait();
@@ -81,21 +56,7 @@ public class Online : Anybody, AnyPluginOnline
     }
 
 
-    /// <summary>
-    ///     fill a value into a selector
-    /// </summary>
-    /// <param name="value"></param>
-    /// <param name="selector"></param>
-    /// <returns>
-    ///   returns the current instance of Online
-    /// </returns>
-    /// <example>
-    ///  <code>
-    ///  nobody.online()
-    ///   .visit("https://google.com")
-    ///  .fill((ctx)=>ctx.get("username"), "input[type='text']");
-    ///  </code>
-    ///  </example>
+
     public Online fill(Func<Ctx, string> value, string selector)
     {
         var val = value.Invoke(ctx);
@@ -111,12 +72,6 @@ public class Online : Anybody, AnyPluginOnline
         return this;
     }
 
-
-    /// <summary>
-    ///   click a selector
-    /// </summary>
-    /// <param name="selector"></param>
-    /// <returns></returns>
     public Online click(string selector)
     {
         Task.Run(async () => { await click_async(selector); }).Wait();
@@ -131,11 +86,6 @@ public class Online : Anybody, AnyPluginOnline
     }
 
 
-    /// <summary>
-    ///  wait for a condition to be true
-    /// </summary>
-    /// <param name="condition"></param>
-    /// <returns></returns>
     public Online wait(Func<IPage, Task> condition)
     {
         Task.Run(async () => { await wait_async(condition); }).Wait();
@@ -149,12 +99,6 @@ public class Online : Anybody, AnyPluginOnline
         return this;
     }
 
-
-    /// <summary>
-    ///  wait for a number of milliseconds
-    /// </summary>
-    /// <param name="milliseconds"></param>
-    /// <returns></returns>
     public Online wait(int milliseconds)
     {
         Task.Run(async () => { await wait_async(milliseconds); }).Wait();
@@ -168,11 +112,6 @@ public class Online : Anybody, AnyPluginOnline
         return this;
     }
 
-
-    /// <summary>
-    ///  wait for navigation to complete
-    /// </summary>
-    /// <returns></returns>
     public Online wait_for_navigation()
     {
         Task.Run(async () => { await wait_for_navigation_async(); }).Wait();
@@ -187,11 +126,6 @@ public class Online : Anybody, AnyPluginOnline
     }
 
 
-    /// <summary>
-    ///  wait for navigation to a specific url
-    /// </summary>
-    /// <param name="url"></param>
-    /// <returns></returns>
     public Online wait_for_navigation(string url)
     {
         Task.Run(async () => { await wait_for_navigation_async(url); }).Wait();
@@ -206,12 +140,6 @@ public class Online : Anybody, AnyPluginOnline
     }
 
 
-    /// <summary>
-    ///  select a dropdown value
-    /// </summary>
-    /// <param name="selector"></param>
-    /// <param name="value"></param>
-    /// <returns></returns>
     public Online pick_from_dropdown(string selector, string value)
     {
         Task.Run(async () => { await pick_from_dropdown_async(selector, value); }).Wait();

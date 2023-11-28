@@ -2,7 +2,6 @@
 using PlaywrightExtraSharp;
 using PlaywrightExtraSharp.Models;
 using PlaywrightExtraSharp.Plugins.ExtraStealth;
-using System.Threading.Tasks;
 
 namespace nobody.echo
 {

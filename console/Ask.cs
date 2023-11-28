@@ -5,69 +5,91 @@ namespace nobody.console;
 
 public static class Ask
 {
-
-   
-
-    public static T ask<T>(this T nobody,string key, string? question = null, Action<TextPrompt<string>>? questionAction = null) where T : Anybody
+    public static T prompt<T>(this T nobody, string key, IPrompt<T> prompt) where T : Anybody
     {
-        question ??= $"[yellow]PLEASE PROVIDE A VALUE FOR [/][bold cyan]{key}[/]";
-        var q = new TextPrompt<string>($"{question}");
-        q.PromptStyle = new Style(Color.Magenta1);
-        questionAction?.Invoke(q);
-        var answer = AnsiConsole.Prompt(q);
-        nobody.ctx[key] = answer;
+        var result = AnsiConsole.Prompt(prompt);
+        return result;
+    }
+
+    public static T ask<T, U>(this T nobody, string key, TextPrompt<U> prompt, bool remember = false,bool secret = false) where T : Anybody
+    {
+        if (secret) prompt.IsSecret = true;
+        var result = AnsiConsole.Prompt(prompt);
+        if (remember) nobody.set(key, result);
+        return nobody;
+    }
+
+    public static T ask<T,U>(this T nobody, string key, Action<TextPrompt<U>>? options = null, bool remember = false,bool secret = false) where T : Anybody
+    {
+        var prompt = new TextPrompt<U>($"[yellow]PLEASE PROVIDE A VALUE FOR [/][bold cyan]{key}[/]");
+        options?.Invoke(prompt);
+        return nobody.ask<T, U>(key, prompt, remember,secret);
+    }
+
+    public static T ask_string<T>(this T nobody, string key, Action<TextPrompt<string>>? options = null, bool remember = false,bool secret = false) where T : Anybody
+    {
+        var prompt = new TextPrompt<string>($"[yellow]PLEASE PROVIDE A VALUE FOR [/][bold cyan]{key}[/]");
+        options?.Invoke(prompt);
+        return nobody.ask<T, string>(key, prompt, remember,secret);
+    }
+
+    public static T ask_string<T>(this T nobody, string key, string? question = null) where T : Anybody
+    {
+        var prompt = new TextPrompt<string>($"[yellow]PLEASE PROVIDE A VALUE FOR [/][bold cyan]{key}[/]");
+        var result = AnsiConsole.Prompt(prompt);
+        nobody.set(key, result);
+        return nobody;
+    }
+
+    public static T ask_int<T>(this T nobody, string key, Action<TextPrompt<int>>? options = null, bool remember = false) where T : Anybody
+    {
+        var prompt = new TextPrompt<int>($"[yellow]PLEASE PROVIDE A VALUE FOR [/][bold cyan]{key}[/]");
+        options?.Invoke(prompt);
+        var result = AnsiConsole.Prompt(prompt);
+        nobody.set(key, result);
+        return nobody;
+    }
+
+    public static T ask_bool<T>(this T nobody, string key, Action<ConfirmationPrompt>? options = null, bool remember = false) where T : Anybody
+    {
+        var prompt = new ConfirmationPrompt($"[yellow]PLEASE PROVIDE A VALUE FOR [/][bold cyan]{key}[/]");
+        options?.Invoke(prompt);
+        var result = AnsiConsole.Prompt(prompt);
+        nobody.set(key, result);
         return nobody;
     }
 
 
-    public static T ask_number<T>(this T nobody, string key, string? question = null, Action<TextPrompt<int>>? questionAction = null)where T : Anybody
+
+    public static U get_or_ask<T, U>(this T nobody, string key, TextPrompt<U> prompt, bool remember = false) where T : Anybody
     {
-        question ??= $"Please provide a value for [bold]{key}[/]?";
-        var q = new TextPrompt<int>($"{question} ");
-        q.PromptStyle = new Style(Color.Magenta1);
-        questionAction?.Invoke(q);
-        var answer = AnsiConsole.Prompt(q);
-        nobody.ctx[key] = answer;
-        return nobody;
+        if (nobody.has(key))
+        {
+            return nobody.get<U>(key)!;
+        }
+        else
+        {
+            var result = AnsiConsole.Prompt(prompt);
+            if (remember) nobody.set(key, result);
+            return result;
+        }
     }
 
-    public static T ask_bool<T>(this T nobody, string key, string? question = null, Action<ConfirmationPrompt>? questionAction = null)where T : Anybody
+    public static U ask_choice<T, U>(this T nobody, string key, SelectionPrompt<U> prompt, bool remember = false) where T : Anybody
     {
-        question ??= $"Please provide a value for [bold]{key}[/]?";
-        var q = new ConfirmationPrompt($"{question} ");
-        // q.PromptStyle = new Style(Color.Magenta1);
-        questionAction?.Invoke(q);
-        var answer = AnsiConsole.Prompt(q);
-        nobody.ctx[key] = answer;
-        return nobody;
+        var result = AnsiConsole.Prompt(prompt);
+        if (remember) nobody.set(key, result);
+        return result;
     }
 
-
-    public static T ask_secret<T>(this T nobody, string key, string? question = null, Action<TextPrompt<String>>? questionAction = null)where T : Anybody
+    public static U ask_choice<T, U>(this T nobody, string key, List<U> choices, bool remember = false) where T : Anybody
     {
-        question ??= $"Please provide a value for [bold]{key}[/]?";
-        var q = new TextPrompt<string>($"{question} ");
-        q.PromptStyle = new Style(Color.Magenta3);
-        q.Mask = '*';
-        q.IsSecret = true;
-        questionAction?.Invoke(q);
-        var answer = AnsiConsole.Prompt(q);
-        nobody.ctx[key] = answer;
-        return nobody;
+        var prompt = new SelectionPrompt<U>();
+        prompt.AddChoices(choices);
+        var result = AnsiConsole.Prompt(prompt);
+        if (remember) nobody.set(key, result);
+        return result;
     }
-
-    public static T ask_choice<T>(this T nobody, string key,string[] choices,string? question = null, Action<SelectionPrompt<string>>? questionAction = null)where T : Anybody
-    {
-        question ??= $"Please provide a value for [bold]{key}[/]?";
-        var q = new SelectionPrompt<string>();
-        q.Title = question;
-        q.AddChoices(choices);
-        questionAction?.Invoke(q);
-        var answer = AnsiConsole.Prompt(q);
-        nobody.ctx[key] = answer;
-        return nobody;
-    }
-
 
 
 }

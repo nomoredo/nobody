@@ -3,17 +3,8 @@ using Spectre.Console;
 
 namespace nobody.console;
 
-public class NobodyConsole : AnyPlugin
+public class NobodyConsole
 {
-    public void register(Nobody nobody)
-    {
-        nobody.ctx.HandleVariableNotAvailable(ask);
-    }
-
-    public void cleanup(Nobody nobody)
-    {
-
-    }
 
     private Object ask( string key)
     {

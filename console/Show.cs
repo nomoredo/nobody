@@ -19,7 +19,7 @@ public static class Show
     /// </summary>
     public static T show<T>(this T nobody, Func<Ctx,object> message) where T : Anybody
     {
-        var msg = message(nobody.ctx);
+        var msg = message(Anybody.ctx);
         AnsiConsole.MarkupLine(Pigments.patch(msg));
 
         return nobody;
@@ -33,18 +33,10 @@ public static class Show
 }
 
 
-public class SomeLogger : AnyLogger
+public class SomeLogger : ILogger
 {
 
-    public void register(Nobody nobody)
-    {
-        nobody.ctx.register("logger", this);
-    }
 
-    public void cleanup(Nobody nobody)
-    {
-
-    }
 
 
 

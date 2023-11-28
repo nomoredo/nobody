@@ -12,12 +12,6 @@ namespace nobody.core
         private Func<string, object>? AskHandler { get; set; }
         private Dictionary<string, object> Variables { get; set; } = new Dictionary<string, object>();
 
-        private Dictionary<string, Func<object[], object>> Functions { get; set; } =
-            new Dictionary<string, Func<object[], object>>();
-
-        private Dictionary<string, AnyPlugin> services = new Dictionary<string, AnyPlugin>();
-
-
         public Ctx()
         {
         }
@@ -32,13 +26,13 @@ namespace nobody.core
             AskHandler = askFor;
         }
 
-        public object this[string key]
+        public object? this[string key]
         {
             get
             {
-                if (Variables.ContainsKey(key))
+                if (Variables.TryGetValue(key, out var item))
                 {
-                    return Variables[key];
+                    return item;
                 }
                 else
                 {
@@ -49,56 +43,53 @@ namespace nobody.core
             {
                 if (Variables.ContainsKey(key))
                 {
-                    Variables[key] = value;
+                    if (value == null)
+                    {
+                        Variables.Remove(key);
+                    }
+                    else
+                    {
+                        Variables[key] = value;
+                    }
                 }
                 else
+                {
+                    if (value != null)
+                    {
+                        Variables.Add(key, value);
+                    }
+                }
+            }
+        }
+
+
+        public void set(string key, object? value)
+        {
+            if (Variables.ContainsKey(key) )
+            {
+                if (value == null)
+                {
+                    Variables.Remove(key);
+                }
+                else
+                {
+                    Variables[key] = value;
+                }
+            }
+            else
+            {
+                if (value != null)
                 {
                     Variables.Add(key, value);
                 }
             }
         }
 
-        public object call(string key, params object[] args)
+        public T? get<T>(string key)
         {
-            if (Functions.ContainsKey(key))
+            if (Variables.TryGetValue(key, out var variable))
             {
-                return Functions[key](args);
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-        public void set(string key, Func<object[], object> func)
-        {
-            if (Functions.ContainsKey(key))
-            {
-                Functions[key] = func;
-            }
-            else
-            {
-                Functions.Add(key, func);
-            }
-        }
-
-        public void set(string key, object value)
-        {
-            if (Variables.ContainsKey(key))
-            {
-                Variables[key] = value;
-            }
-            else
-            {
-                Variables.Add(key, value);
-            }
-        }
-
-        public T get<T>(string key)
-        {
-            if (Variables.ContainsKey(key))
-            {
-                return (T)Variables[key];
+                return (T)variable;
             }
             else
             {
@@ -106,11 +97,26 @@ namespace nobody.core
             }
         }
 
+        public T get_or<T>(string key, Func<string, T> defaultValue)
+        {
+            if (Variables.TryGetValue(key, out var variable))
+            {
+                return (T)variable;
+            }
+            else
+            {
+                return defaultValue(key);
+            }
+        }
+
+
+
+
         public String get_string(string key)
         {
-            if (Variables.ContainsKey(key))
+            if (Variables.TryGetValue(key, out var variable))
             {
-                return (String)Variables[key];
+                return (String)variable;
             }
             else
             {
@@ -131,70 +137,6 @@ namespace nobody.core
                 Variables.Remove(key);
             }
         }
-
-
-        public void clear()
-        {
-            Variables.Clear();
-            Functions.Clear();
-        }
-
-        public Ctx register(string key, AnyPlugin service)
-        {
-           if (services.ContainsKey(key))
-            {
-                services[key] = service;
-            }
-            else
-            {
-                services.Add(key, service);
-            }
-            return this;
-        }
-
-        public T service<T>(string key) where T : AnyPlugin
-        {
-            if (services.ContainsKey(key))
-            {
-                return (T)services[key];
-            }
-            else
-            {
-                return default(T);
-            }
-        }
-
-        public T? maybe_service<T>(string key) where T : AnyPlugin
-        {
-            if (services.ContainsKey(key))
-            {
-                return (T)services[key];
-            }
-            else
-            {
-                return default(T);
-            }
-        }
-
-        public void cleanup()
-        {
-            services.Clear();
-        }
     }
 }
 
-public class NoLog : AnyLogger
-{
-    public void Write(LogEvent logEvent)
-    {
-    }
-
-    public void register(Nobody nobody)
-    {
-        nobody.ctx.register("logger", this);
-    }
-
-    public void cleanup(Nobody nobody)
-    {
-    }
-}

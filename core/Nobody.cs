@@ -5,9 +5,6 @@ namespace nobody.core
     /// </summary>
     public class Nobody : Anybody
     {
-        public static Ctx ctx_static = new Ctx();
-
-
         public Nobody()
         {
                 //register auto installers
@@ -18,27 +15,27 @@ namespace nobody.core
         private void register_capabilities()
         {
             //register auto installers
-            var autoInstallers = AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(x => x.GetTypes())
-                .Where(x => typeof(AnyPlugin).IsAssignableFrom(x) && !x.IsInterface && !x.IsAbstract)
-                .Select(x => (AnyPlugin)Activator.CreateInstance(x)!);
-            foreach (var autoInstaller in autoInstallers)
-            {
-                autoInstaller.register(this);
-            }
+            // var autoInstallers = AppDomain.CurrentDomain.GetAssemblies()
+            //     .SelectMany(x => x.GetTypes())
+            //     .Where(x => typeof(AnyPlugin).IsAssignableFrom(x) && !x.IsInterface && !x.IsAbstract)
+            //     .Select(x => (AnyPlugin)Activator.CreateInstance(x)!);
+            // foreach (var autoInstaller in autoInstallers)
+            // {
+            //     autoInstaller.register(this);
+            // }
         }
 
         private void cleanup()
         {
             //register auto installers
-            var autoInstallers = AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(x => x.GetTypes())
-                .Where(x => typeof(AnyPlugin).IsAssignableFrom(x) && !x.IsInterface && !x.IsAbstract)
-                .Select(x => (AnyPlugin)Activator.CreateInstance(x)!);
-            foreach (var autoInstaller in autoInstallers)
-            {
-                autoInstaller.cleanup(this);
-            }
+            // var autoInstallers = AppDomain.CurrentDomain.GetAssemblies()
+            //     .SelectMany(x => x.GetTypes())
+            //     .Where(x => typeof(AnyPlugin).IsAssignableFrom(x) && !x.IsInterface && !x.IsAbstract)
+            //     .Select(x => (AnyPlugin)Activator.CreateInstance(x)!);
+            // foreach (var autoInstaller in autoInstallers)
+            // {
+            //     autoInstaller.cleanup(this);
+            // }
         }
 
 
