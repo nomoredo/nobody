@@ -98,8 +98,10 @@ extension ExOnline on Future<Online> {
     );
   }
 
-  Future<Online> ex(MapFunc<ElementHandle, dynamic> script,
-      {List<dynamic>? args}) async {
+  Future<Online> ex(
+    dynamic Function(ElementHandle) script, {
+    List<dynamic>? args = null,
+  }) async {
     var Online = await this;
     return Online.ex(
       script,
