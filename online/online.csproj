@@ -6,6 +6,10 @@
         <Nullable>enable</Nullable>
         <AssemblyName>nobody.online</AssemblyName>
         <RootNamespace>nobody.online</RootNamespace>
+            <RootNamespace>nobody.console</RootNamespace>
+    <PublishDir>../packages/$(AssemblyName)/</PublishDir>
+    <AssemblyVersion>1.0.*</AssemblyVersion>
+    <Deterministic>false</Deterministic>
     </PropertyGroup>
 
     <ItemGroup>

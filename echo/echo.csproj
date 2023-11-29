@@ -7,6 +7,9 @@
         <Nullable>enable</Nullable>
         <AssemblyName>nobody.echo</AssemblyName>
         <RootNamespace>nobody.echo</RootNamespace>
+        <PublishDir>../packages/$(AssemblyName)/</PublishDir>
+        <AssemblyVersion>1.0.*</AssemblyVersion>
+        <Deterministic>false</Deterministic>
     </PropertyGroup>
 
     <ItemGroup>

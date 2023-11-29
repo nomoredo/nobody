@@ -6,6 +6,9 @@
     <Nullable>enable</Nullable>
     <AssemblyName>nobody.console</AssemblyName>
     <RootNamespace>nobody.console</RootNamespace>
+    <PublishDir>../packages/$(AssemblyName)/</PublishDir>
+    <AssemblyVersion>1.0.*</AssemblyVersion>
+    <Deterministic>false</Deterministic>
   </PropertyGroup>
 
   <!-- references to shared libraries -->
