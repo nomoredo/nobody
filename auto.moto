@@ -24,6 +24,8 @@
 // tasks are defined like this:
 // task <task_name>:
    
+
+
 task gen:
     description: generate code
     actions: {
@@ -57,12 +59,7 @@ task get:
     description: get dart packages
     actions: {
         echo "retrieving dart packages..."
-        echo "getting packages for codegen..."
-        cd codegen && dart pub get && cd ..
-        echo "getting packages for core..."
-        cd nobody && dart pub get && cd ..
-        echo "getting packages for termo..."
-        cd termo && dart pub get && cd ..
+        dart pub get
         echo "done!"
     }
 
@@ -70,11 +67,6 @@ task upgrade:
     description: upgrade dart packages
     actions: {
         echo "upgrading dart packages..."
-        echo "upgrading packages for codegen..."
-        cd codegen && dart pub upgrade && cd ..
-        echo "upgrading packages for core..."
-        cd nobody && dart pub upgrade && cd ..
-        echo "upgrading packages for termo..."
-        cd termo && dart pub upgrade && cd ..
+        dart pub upgrade
         echo "done!"
     }
