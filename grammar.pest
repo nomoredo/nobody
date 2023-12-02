@@ -1,0 +1,124 @@
+
+/*
+
+task wash [the:thing=car] [in | in the:place=house] {
+    show "washing the $thing in the $place"
+}
+
+task show | display [:message] {
+    print "$message"
+}
+
+task summer [is:status=here] {
+    if $status == here {
+        show "summer is here"
+    } else {
+        show "summer is not here"
+    }
+}
+
+let school = ["students", "teachers", "janitors"]
+
+task call everyone [from:place=school] {
+    for $person in $place {
+        show "calling $person"
+    }
+}
+
+// Define a list of items
+let fruits = ["apple", "banana", "cherry"]
+
+// Task to list all items
+task list_items [from:collection=fruits] {
+    for $item in $collection {
+        show "Item: $item"
+    }
+}
+
+// Display message
+task show [:message] {
+    print "$message"
+}
+
+// Usage
+list_items // outputs: Item: apple, Item: banana, Item: cherry
+
+// Task to display weather condition
+task weather [is:condition=sunny] {
+    if $condition == sunny {
+        show "It's a bright sunny day!"
+    } else {
+        show "It's not sunny today."
+    }
+}
+
+// Show message
+task show [:message] {
+    print "$message"
+}
+
+// Usage
+weather // outputs: It's a bright sunny day!
+weather is:rainy // outputs: It's not sunny today.
+
+// Task for adding two numbers
+task add [num1:number=0] [num2:number=0] {
+    let result = $num1 + $num2
+    show "Result: $result"
+}
+
+// Display message
+task show [:message] {
+    print "$message"
+}
+
+// Usage
+add num1:5 num2:3 // outputs: Result: 8
+
+*/
+
+// Basic elements
+identifier = { ASCII_ALPHANUMERIC+ }
+number = { ASCII_DIGIT+ }
+string = { "\"" ~ (!"\"" ~ ANY)* ~ "\"" }
+
+// Value types including lists
+value = { number | string | list }
+list = { "[" ~ (value ~ ("," ~ value)*)? ~ "]" }
+
+// Default value for parameters
+default_value = { "=" ~ (identifier | number | string | list) }
+
+// Task and parameter definitions
+alternative = { "|" ~ identifier }
+alternative_identifier = { identifier ~ alternative* }
+simple_parameter = { ":" ~ identifier }
+precurse_parameter = { alternative_identifier ~ ":" ~ identifier }
+parameter = { "[" ~ (simple_parameter | precurse_parameter) ~ default_value? ~ "]" }
+task_declaration = { "task" ~ alternative_identifier ~ parameter* }
+task = { task_declaration ~ task_body }
+
+// Expressions and commands
+dollar_expression = { "$" ~ identifier }
+command = { identifier ~ (argument)* }
+argument = { identifier | number | string | dollar_expression }
+
+// Control structures
+conditional_statement = { "if" ~ condition ~ task_body ~ ("else" ~ task_body)? }
+condition = { "(" ~ (identifier | number | string) ~ (operator ~ (identifier | number | string))* ~ ")" }
+operator = { "==" | "!=" | "<" | ">" | "<=" | ">=" }
+loop_statement = { "for" ~ identifier ~ "in" ~ identifier ~ task_body }
+task_body = { "{" ~ (command | conditional_statement | loop_statement | variable_declaration)* ~ "}" }
+
+// Variable declarations
+variable_declaration = { "let" ~ identifier ~ "=" ~ value }
+
+// Comments
+comment = { "//" ~ (!"\n" ~ ANY)* ~ "\n" }
+comment_block = { "/*" ~ (!"*/" ~ ANY)* ~ "*/" }
+
+// Complete script
+script = { (comment | comment_block | task | variable_declaration)* }
+
+// Whitespace handling
+WHITESPACE = _{ " " | "\t" | "\r" | "\n" }
