@@ -30,7 +30,7 @@ task gen:
     description: generate code
     actions: {
         echo "generating code..."
-        dart pub run build_runner build --delete-conflicting-outputs
+        cd nobody && dart pub run build_runner build --delete-conflicting-outputs && cd ..
         echo "done!"
     }
 
@@ -58,9 +58,12 @@ task clean:
 task get:
     description: get dart packages
     actions: {
-        echo "retrieving dart packages..."
-        dart pub get
-        echo "done!"
+        echo "retrieving dart packages for codegen..."
+        cd codegen && dart pub get && cd ..
+        echo "retrieving dart packages for nobody..."
+        cd nobody && dart pub get && cd ..
+        echo "retrieving dart packages for termo..."
+        cd termo && dart pub get && cd ..
     }
 
 task upgrade:
