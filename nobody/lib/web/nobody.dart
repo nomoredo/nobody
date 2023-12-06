@@ -1,7 +1,11 @@
 import '../references.dart';
 
 class Nobody {
-  static Future<Online> online(
+  Nobody() {
+    showBanner();
+  }
+
+  Future<Online> online(
       {bool visible = true,
       Duration? slow = null,
       Duration? timeout = null}) async {
@@ -16,12 +20,12 @@ class Nobody {
     return Online(browser, default_timeout: timeout ?? Duration(minutes: 5));
   }
 
-  static Future<GraphServiceClient> at_office(String username) async {
+  Future<GraphServiceClient> at_office(String username) async {
     final built = await build_graph(username);
     return built;
   }
 
-  static Future<T> open<T>(AbstractFile<T> file) async {
+  Future<T> open<T>(AbstractFile<T> file) async {
     return file.open();
   }
 }

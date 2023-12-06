@@ -32,3 +32,6 @@ class Sap implements Authable {
     return browser;
   }
 }
+
+// input fields have lsField__input in their class list
+final SapInputFields = Css('input.lsField__input');

@@ -7,3 +7,4 @@ export 'password.dart';
 export 'path.dart';
 export 'selector.dart';
 export 'url.dart';
+export 'waitable.dart';

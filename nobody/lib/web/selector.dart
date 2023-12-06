@@ -78,6 +78,16 @@ class SapInput implements AbstractSelector {
   const SapInput(this.label);
 }
 
+void Print(dynamic text) {
+  if (text is Map<String, dynamic>) {
+    for (var entry in text.entries) {
+      print('${entry.key} : ${entry.value}');
+    }
+  } else {
+    print(text);
+  }
+}
+
 /// SapButton
 /// has role="button", class="lsButton and title="{label}"
 class SapButton implements AbstractSelector {
