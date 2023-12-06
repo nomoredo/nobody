@@ -10,6 +10,12 @@
 
   <ItemGroup>
     <PackageReference Include="Serilog" Version="3.1.2-dev-02097" />
+    <PackageReference Include="Spectre.Console" Version="0.48.1-preview.0.5" />
+    <PackageReference Include="Spectre.Console.Cli" Version="0.48.1-preview.0.5" />
+    <PackageReference Include="Spectre.Console.Cli.Extensions.DependencyInjection" Version="0.2.0" />
+    <PackageReference Include="Spectre.Console.Extensions.Progress" Version="1.0.0" />
+    <PackageReference Include="Spectre.Console.Extensions.Table" Version="1.0.0" />
+    <PackageReference Include="Spectre.Console.ImageSharp" Version="0.48.1-preview.0.5" />
   </ItemGroup>
 
 </Project>

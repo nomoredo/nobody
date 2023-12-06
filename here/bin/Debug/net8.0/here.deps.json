@@ -12,10 +12,10 @@
           "nobody.core": "1.0.0",
           "nobody.office": "1.0.0",
           "nobody.online": "1.0.0",
-          "nobody.console.Reference": "1.0.0.0",
+          "nobody.console.Reference": "1.0.8740.15360",
           "nobody.core.Reference": "1.0.0.0",
           "nobody.office.Reference": "1.0.0.0",
-          "nobody.online.Reference": "1.0.0.0"
+          "nobody.online.Reference": "1.0.8740.15360"
         },
         "runtime": {
           "here.dll": {}
@@ -616,10 +616,10 @@
           "nobody.online.dll": {}
         }
       },
-      "nobody.console.Reference/1.0.0.0": {
+      "nobody.console.Reference/1.0.8740.15360": {
         "runtime": {
           "nobody.console.dll": {
-            "assemblyVersion": "1.0.0.0",
+            "assemblyVersion": "1.0.8740.15360",
             "fileVersion": "1.0.0.0"
           }
         }
@@ -640,10 +640,10 @@
           }
         }
       },
-      "nobody.online.Reference/1.0.0.0": {
+      "nobody.online.Reference/1.0.8740.15360": {
         "runtime": {
           "nobody.online.dll": {
-            "assemblyVersion": "1.0.0.0",
+            "assemblyVersion": "1.0.8740.15360",
             "fileVersion": "1.0.0.0"
           }
         }
@@ -1124,7 +1124,7 @@
       "serviceable": false,
       "sha512": ""
     },
-    "nobody.console.Reference/1.0.0.0": {
+    "nobody.console.Reference/1.0.8740.15360": {
       "type": "reference",
       "serviceable": false,
       "sha512": ""
@@ -1139,7 +1139,7 @@
       "serviceable": false,
       "sha512": ""
     },
-    "nobody.online.Reference/1.0.0.0": {
+    "nobody.online.Reference/1.0.8740.15360": {
       "type": "reference",
       "serviceable": false,
       "sha512": ""

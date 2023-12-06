@@ -1,7 +1,7 @@
 ﻿using Microsoft.Playwright;
 using nobody.core;
 
-namespace nobody.online;
+namespace nobody.console;
 
 public interface AnyPluginOnline
 {

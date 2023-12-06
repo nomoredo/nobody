@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "core", "core\core.csproj", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "office", "office\office.csproj", "{57E662F0-EC89-4825-B58B-ADF511536894}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "console", "console\console.csproj", "{D86CFAA0-9167-4832-BC18-E17DF8B2C90D}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "here", "here\here.csproj", "{266DC850-0D7E-4F98-9527-E09588B15EB3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "online", "online\online.csproj", "{0A06C715-8DFC-464E-A96E-DDADD9FB0D03}"
@@ -29,10 +27,6 @@ Global
 		{57E662F0-EC89-4825-B58B-ADF511536894}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{57E662F0-EC89-4825-B58B-ADF511536894}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{57E662F0-EC89-4825-B58B-ADF511536894}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D86CFAA0-9167-4832-BC18-E17DF8B2C90D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D86CFAA0-9167-4832-BC18-E17DF8B2C90D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D86CFAA0-9167-4832-BC18-E17DF8B2C90D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D86CFAA0-9167-4832-BC18-E17DF8B2C90D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{266DC850-0D7E-4F98-9527-E09588B15EB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{266DC850-0D7E-4F98-9527-E09588B15EB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{266DC850-0D7E-4F98-9527-E09588B15EB3}.Release|Any CPU.ActiveCfg = Release|Any CPU

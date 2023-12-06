@@ -21,8 +21,8 @@ public abstract class Anybody
      public void set(string key, object? value) => _ctx.set(key, value);
 
      public T get_or<T>(string key, Func<string, T> defaultValue) => _ctx.get_or(key, defaultValue);
-
-
+     public string get_string(string key) => _ctx.get_string(key);
+     public string get_string(string key, string defaultValue) => _ctx.get_string(key, defaultValue);
 
 }
 

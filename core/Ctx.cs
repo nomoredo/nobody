@@ -124,6 +124,20 @@ namespace nobody.core
             }
         }
 
+        public String get_string(string key, string defaultValue)
+        {
+            if (Variables.TryGetValue(key, out var variable))
+            {
+                return (String)variable;
+            }
+            else
+            {
+                return defaultValue;
+            }
+        }
+
+
+
         public bool has(string key)
         {
             return Variables.ContainsKey(key);

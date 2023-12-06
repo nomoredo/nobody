@@ -3,14 +3,13 @@
 
 using nobody.console;
 using nobody.core;
-using nobody.online;
 
 
 var nobody = new Nobody(); // find a way to avoid this
 
 var online =nobody.online()
     .visit("https://cbs.almansoori.biz")
-    .fill("username".get<string>(), "#logonuidfield")
+    .fill("username".get_string(), "#logonuidfield")
     .fill("password", "#logonpassfield")
     .click("input[type='submit']")
     .wait_for_navigation()

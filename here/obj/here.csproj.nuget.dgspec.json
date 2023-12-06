@@ -4,96 +4,6 @@
     "C:\\repo\\nobody\\here\\here.csproj": {}
   },
   "projects": {
-    "C:\\repo\\nobody\\console\\console.csproj": {
-      "version": "1.0.0",
-      "restore": {
-        "projectUniqueName": "C:\\repo\\nobody\\console\\console.csproj",
-        "projectName": "nobody.console",
-        "projectPath": "C:\\repo\\nobody\\console\\console.csproj",
-        "packagesPath": "C:\\Users\\nobody\\.nuget\\packages\\",
-        "outputPath": "C:\\repo\\nobody\\console\\obj\\",
-        "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
-        "configFilePaths": [
-          "C:\\Users\\nobody\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
-        ],
-        "originalTargetFrameworks": [
-          "net8.0"
-        ],
-        "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
-          "https://api.nuget.org/v3/index.json": {}
-        },
-        "frameworks": {
-          "net8.0": {
-            "targetAlias": "net8.0",
-            "projectReferences": {
-              "C:\\repo\\nobody\\core\\core.csproj": {
-                "projectPath": "C:\\repo\\nobody\\core\\core.csproj"
-              }
-            }
-          }
-        },
-        "warningProperties": {
-          "warnAsError": [
-            "NU1605"
-          ]
-        }
-      },
-      "frameworks": {
-        "net8.0": {
-          "targetAlias": "net8.0",
-          "dependencies": {
-            "Spectre.Console": {
-              "target": "Package",
-              "version": "[0.47.0, )"
-            },
-            "Spectre.Console.Cli": {
-              "target": "Package",
-              "version": "[0.47.0, )"
-            },
-            "Spectre.Console.Extensions.Progress": {
-              "target": "Package",
-              "version": "[1.0.0, )"
-            },
-            "Spectre.Console.Extensions.Table": {
-              "target": "Package",
-              "version": "[1.0.0, )"
-            },
-            "Spectre.Console.Json": {
-              "target": "Package",
-              "version": "[0.47.0, )"
-            },
-            "xunit": {
-              "target": "Package",
-              "version": "[2.6.2, )"
-            }
-          },
-          "imports": [
-            "net461",
-            "net462",
-            "net47",
-            "net471",
-            "net472",
-            "net48",
-            "net481"
-          ],
-          "assetTargetFallback": true,
-          "warn": true,
-          "frameworkReferences": {
-            "Microsoft.NETCore.App": {
-              "privateAssets": "all"
-            }
-          },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100/PortableRuntimeIdentifierGraph.json"
-        }
-      }
-    },
     "C:\\repo\\nobody\\core\\core.csproj": {
       "version": "1.0.0",
       "restore": {
@@ -138,6 +48,30 @@
             "Serilog": {
               "target": "Package",
               "version": "[3.1.2-dev-02097, )"
+            },
+            "Spectre.Console": {
+              "target": "Package",
+              "version": "[0.48.1-preview.0.5, )"
+            },
+            "Spectre.Console.Cli": {
+              "target": "Package",
+              "version": "[0.48.1-preview.0.5, )"
+            },
+            "Spectre.Console.Cli.Extensions.DependencyInjection": {
+              "target": "Package",
+              "version": "[0.2.0, )"
+            },
+            "Spectre.Console.Extensions.Progress": {
+              "target": "Package",
+              "version": "[1.0.0, )"
+            },
+            "Spectre.Console.Extensions.Table": {
+              "target": "Package",
+              "version": "[1.0.0, )"
+            },
+            "Spectre.Console.ImageSharp": {
+              "target": "Package",
+              "version": "[0.48.1-preview.0.5, )"
             }
           },
           "imports": [
@@ -189,9 +123,6 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\repo\\nobody\\console\\console.csproj": {
-                "projectPath": "C:\\repo\\nobody\\console\\console.csproj"
-              },
               "C:\\repo\\nobody\\core\\core.csproj": {
                 "projectPath": "C:\\repo\\nobody\\core\\core.csproj"
               },
