@@ -34,13 +34,9 @@ extension ExDownload on Future<Online> {
       if (request.url.contains('EXPORT.XLSX')) {
         var response = await request.response;
         await (await browser.page).onResponse.listen((response) async {
-          print(response);
-          if (response.url.contains('EXPORT.XLSX')) {
-            var content = await response.bytes;
-            var file = await File('export.xlsx');
-            await file.writeAsBytes(content);
-            print('Downloaded export.xlsx');
-          }
+          //capture octet stream and save to file
+          var data = await response.content?.asStream().drain();
+          await File('example.xlsx').writeAsBytes(data);
         });
       }
     });

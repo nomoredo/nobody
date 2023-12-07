@@ -7,9 +7,9 @@ void main() async {
 Future generate_mb51_report() async {
   return Nobody()
       .online()
-      .login(Sap('amohandas'))
-      .goto(Transaction("MB51"))
-      .click(SapButton("Execute (F8)"))
+      .login(Sap.User('amohandas'))
+      .goto(SapTransaction("MB51"))
+      .click(Sap.Execute)
       .download(DownloadableSapTable(), SimplePath("example.xlsx"))
       .wait(Seconds(20));
 }

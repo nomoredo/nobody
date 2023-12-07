@@ -41,6 +41,21 @@ class Input implements AbstractSelector {
   factory Input.WithClass(List<String> classes) => Input(WithClass(classes));
 }
 
+/// TextArea
+/// appends textarea to the selector
+class TextArea implements AbstractSelector {
+  final AbstractSelector? inner;
+  String get selector =>
+      inner == null ? 'textarea' : 'textarea[${inner!.selector}]';
+
+  const TextArea([this.inner]);
+
+  factory TextArea.WithId(String id) => TextArea(WithId(id));
+  factory TextArea.WithName(String name) => TextArea(WithName(name));
+  factory TextArea.WithClass(List<String> classes) =>
+      TextArea(WithClass(classes));
+}
+
 /// WithId
 /// appends id="{id}" to the selector
 class WithId implements AbstractSelector {

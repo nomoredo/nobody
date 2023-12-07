@@ -13,6 +13,21 @@ class Online {
     return pages.last;
   }
 
+  Future<Online> listen() async {
+    //listen and log all requests and responses
+    await (await page).onRequest.listen((request) async {
+      print("REQUEST: ${request.method} ${request.url}");
+      if (request.postData != null) {
+        print("POST DATA: ${request.postData}");
+      }
+    });
+
+    await (await page).onResponse.listen((event) {
+      print("RESPONSE: ${event.status} ${event.url}");
+    });
+    return this;
+  }
+
   Future<Online> login(Authable authable) async {
     Show.action('LOGGING IN', authable.username);
     return await authable.login(this);
@@ -20,14 +35,43 @@ class Online {
 
   Future<Online> visit(String url) async {
     Show.action('VISITING', url);
-    await (await page).goto(url, wait: Until.load);
+    await (await page).goto(url, wait: Until.domContentLoaded);
     return this;
   }
 
   Future<Online> goto(AbstractUrl url) async {
     var clean_url = Uri.encodeFull(url.url);
     Show.action('VISITING', clean_url);
-    await (await page).goto(clean_url, wait: Until.load);
+    await (await page).goto(clean_url, wait: Until.domContentLoaded);
+    return this;
+  }
+
+
+  Future<Online> list_forms() async {
+    Show.action('LISTING', 'FORMS AND INPUTS');
+    var page = await this.page;
+
+    final List<ElementHandle> forms = await page.$$('form');
+    Show.info('FORMS', forms.length.toString());
+    Show.elements(forms);
+    final List<ElementHandle> inputs = await page.$$('input');
+    Show.info('INPUTS', inputs.length.toString());
+    Show.elements(inputs);
+    final List<ElementHandle> textareas = await page.$$('textarea');
+    Show.info('TEXTAREAS', textareas.length.toString());
+    Show.elements(textareas);
+    final List<ElementHandle> buttons = await page.$$('button');
+    Show.info('BUTTONS', buttons.length.toString());
+    Show.elements(buttons);
+    final List<ElementHandle> selects = await page.$$('select');
+    Show.info('SELECTS', selects.length.toString());
+    Show.elements(selects);
+    final List<ElementHandle> links = await page.$$('a');
+    Show.info('LINKS', links.length.toString());
+    Show.elements(links);
+
+
+
     return this;
   }
 
@@ -47,7 +91,7 @@ class Online {
 
   Future<Online> set(AbstractSelector selector, String text,
       {Duration? timeout = null, bool log = true, int index = 0}) async {
-    if (log) Show.action('SETTING', text);
+    if (log) Show.action('SETTING VALUE', text);
     if (selector is XPath) {
       var selected = await (await page).waitForXPath(selector.selector);
       if (selected != null) {
@@ -360,6 +404,123 @@ class Online {
 
     return this;
   }
+
+  List<Map<String, String>> recordedActions = [];
+
+  // Start recording user actions
+  Future<Online> start_record() async {
+    Show.action('INJECTING RECORD BUTTON AND LIST',
+        'Injecting record button and action list...');
+
+    // Inject JavaScript code to create the record button and action list
+    await (await page).evaluate('''() => {
+      // Create a container for the record button and action list
+      const container = document.createElement('div');
+      container.style.display = 'flex';
+      container.style.height = '100%';
+
+      // Create a div for the current view (shrink to the left)
+      const currentView = document.createElement('div');
+      currentView.style.flex = '1';
+      currentView.style.overflow = 'auto';
+      container.appendChild(currentView);
+
+      // Create a div for the record button and action list (on the right)
+      const rightPanel = document.createElement('div');
+      rightPanel.style.width = '300px'; // Adjust the width as needed
+      rightPanel.style.overflow = 'auto';
+      container.appendChild(rightPanel);
+
+      // Create the record button
+      const recordButton = document.createElement('button');
+      recordButton.innerText = 'Record';
+      recordButton.id = 'recordButton';
+      rightPanel.appendChild(recordButton);
+
+      // Create an ordered list for displaying recorded actions
+      const actionList = document.createElement('ol');
+      actionList.id = 'actionList';
+      rightPanel.appendChild(actionList);
+
+      // Initialize a variable to track recording state
+      let isRecording = false;
+
+      // Function to start recording
+      async function start_record() {
+        isRecording = true;
+        recordButton.innerText = 'Stop Recording';
+        console.log('Recording started...');
+
+        // Your existing code for recording actions here...
+      }
+
+      // Function to stop recording
+      async function stop_record() {
+        if (isRecording) {
+          isRecording = false;
+          recordButton.innerText = 'Record';
+          console.log('Recording stopped...');
+
+          // Your existing code for stopping and exporting actions here...
+        }
+      }
+
+      // Function to add an action to the action list
+      function addActionToUI(action, details) {
+        const listItem = document.createElement('li');
+        listItem.innerText = `\${action}: \${details}`;
+        actionList.appendChild(listItem);
+      }
+
+      // Add click event listener to the record button
+      recordButton.addEventListener('click', () => {
+        if (isRecording) {
+          stop_record();
+        } else {
+          start_record();
+        }
+      });
+
+      // Function to record actions and add them to the action list
+      function recordAction(action, details) {
+        if (isRecording) {
+          addActionToUI(action, details);
+        }
+      }
+
+      // Replace your existing event listeners with recordAction calls
+      document.addEventListener('click', (event) => {
+        const selector = getOptimalSelector(event.target);
+        recordAction('CLICK', selector);
+        // Your existing code for click actions...
+      });
+
+      document.addEventListener('input', (event) => {
+        const selector = getOptimalSelector(event.target);
+        recordAction('INPUT', selector);
+        // Your existing code for input actions...
+      });
+
+      // Add more event listeners for other actions (e.g., hover, keypress) as needed
+    }''');
+
+    return this;
+  }
+
+  // Stop recording and export actions
+  Future<Online> stop_record(String outputFilePath) async {
+    // Export the recorded actions to a script file
+    var exportedActions = await (await page).evaluate('''() => {
+      return JSON.stringify(window.recordedActions);
+    }''');
+
+    final scriptContent = exportedActions.toString();
+    await File(outputFilePath).writeAsString(scriptContent);
+
+    Show.action('RECORDING ACTIONS',
+        'Recording completed. Script exported to $outputFilePath');
+    return this;
+  }
 }
 
 typedef MapFunc<T, R> = R Function(T);
@@ -368,56 +529,19 @@ typedef MapManyFunc<T, R> = Iterable<R> Function(T);
 typedef AsyncMapManyFunc<T, R> = Future<Iterable<R>> Function(T);
 typedef Waitable<T> = Future<bool> Function(Online);
 
-extension OnlineMapEx on Online {
-  /// map
-  /// maps the elements matching the selector to a list of type R
-  /// to allow continuous chaining of methods, the return type is Online
-  /// to still allow access to the list of type R, the list is stored in the
-  /// out parameter can be accessed using the out parameter
-  /// if you just want to perform an action on the list, you can use the
-  /// transform parameter to perform the action
-  /// example:
-  /// var Online = await Nobody.online();
-  /// var list = <String>[];
-  /// await Online.map<String>(Css('h3.LC20lb'),(e) => e.text, ,out: list, transform: (list) => list.forEach(print));
-  /// print(list);
-  /// notice that out parameter is not required. if you dont need the list, you can just use the transform parameter
-  /// similarly, if you dont need to perform an action on the list, you can just use the out parameter
-  Future<Online> map<T, R>(AbstractSelector selector, MapFunc<T, R> mapFunc,
-      {List<R>? out,
-      MapManyFunc<T, R>? mapManyFunc,
-      MapFunc<T, R>? transform}) async {
-    Show.action('MAPPING', selector.selector);
-    await (await page).waitForSelector(selector.selector);
-    //execute javascript to get the elements matching the selector and return all their attributes and values as a list
-    var elements = await (await page).evaluate('''(selector) => {
-      return Array.from(document.querySelectorAll(selector)).map((e) => e);
-    }''', args: [selector.selector]);
-    var list = elements.map((e) => mapFunc(e as T)).toList();
-    if (out != null) {
-      out.addAll(list);
-    }
-    if (mapManyFunc != null) {
-      var many = list.map((e) => mapManyFunc(e)).toList();
-      if (out != null) {
-        out.addAll(many);
-      }
-    }
-    if (transform != null) {
-      transform(list);
-    }
-    return this;
-  }
-}
+UntilVisible(AbstractSelector selector) => (Online browser) async {
+      await browser.evaluate('''(selector) => {
+        //wait for selector to be visible
+        return new Promise((resolve, reject) => {
+          const interval = setInterval(() => {
+            const element = document.querySelector(selector);
+            if (element) {
+              clearInterval(interval);
+              resolve(true);
+            }
+          }, 500);
+        });
+      }''', args: [selector.selector]);
 
-extension OnlineMapAsyncEx on Future<Online> {
-  Future<Online> map<T, R>(AbstractSelector selector, MapFunc<T, R> mapFunc,
-      {List<R>? out,
-      MapManyFunc<T, R>? mapManyFunc,
-      MapFunc<T, R>? transform}) async {
-    var Online = await this;
-    await Online.map<T, R>(selector, mapFunc,
-        out: out, mapManyFunc: mapManyFunc, transform: transform);
-    return Online;
-  }
-}
+      return true;
+    };

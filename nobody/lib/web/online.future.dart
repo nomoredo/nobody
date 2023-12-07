@@ -17,6 +17,11 @@ extension ExOnline on Future<Online> {
     return Online.lastPage();
   }
 
+  Future<Online> listen() async {
+    var Online = await this;
+    return Online.listen();
+  }
+
   Future<Online> login(
     Authable authable,
   ) async {
@@ -42,6 +47,11 @@ extension ExOnline on Future<Online> {
     return Online.goto(
       url,
     );
+  }
+
+  Future<Online> list_forms() async {
+    var Online = await this;
+    return Online.list_forms();
   }
 
   Future<Online> navigate(
@@ -367,6 +377,20 @@ extension ExOnline on Future<Online> {
     return Online.send_hotkey(
       key,
       modifiers: modifiers,
+    );
+  }
+
+  Future<Online> start_record() async {
+    var Online = await this;
+    return Online.start_record();
+  }
+
+  Future<Online> stop_record(
+    String outputFilePath,
+  ) async {
+    var Online = await this;
+    return Online.stop_record(
+      outputFilePath,
     );
   }
 }

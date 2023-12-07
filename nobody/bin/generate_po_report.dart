@@ -7,9 +7,8 @@ void main() async {
 Future po_export() async {
   return Nobody()
       .online()
-      .login(Sap('amohandas'))
-      .goto(Transaction("ME2N"))
-      .map(SapInputFields, Print)
+      .login(Sap.User('amohandas'))
+      .goto(Sap.Transaction("ME2N"))
       .set(SapInput('Purchasing organization'), '2200')
       .set_range(
           SapInput('Purchasing Document Date'), '01.01.2023', '30.06.2023')

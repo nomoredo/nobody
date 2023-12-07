@@ -24,6 +24,7 @@ Future create_trip_request() async {
           empno)
       .click(Button.WithId(
           "application-ZFOC_TRIP_FORM-display-component---object--gobtn"))
+      .list_forms()
       .set(
           Input.WithId(
               "application-ZFOC_TRIP_FORM-display-component---object--tripType-hiddenInput"),

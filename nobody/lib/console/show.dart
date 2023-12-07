@@ -1,4 +1,5 @@
 import 'package:coco/coco.dart';
+import 'package:nobody/lib.dart';
 
 class Show {
   //INFO
@@ -166,12 +167,38 @@ class Show {
     }
   }
 
-  static void title(String s) {
-    divider();
-    '${" " * ((60 - s.length) ~/ 2)}$s'.write(inYellow);
-    print("");
-    divider();
+  static Future elements(List<ElementHandle> elements) async{
+    for (var e in elements) {
+      await element(e);
+    }
   }
+  ///[e](gray) ─╮ [tagName](yellow)
+  ///            ╰ [remote](white)
+  ///            ╰ [local](gray)
+  static Future element(ElementHandle e) async{
+    var properties = await e.evaluate('''e => {
+  return {
+    className: e.className,
+    title: e.title,
+    id: e.id,
+    // Add other properties you need
+  };
+}''');
+      for (var p in properties.entries) {
+        "".write(inGray);
+        " ─╮ ".write(inGray);
+        print(p.key);
+        " ".write(inGray);
+        " ╰ ${p.value}".write(inYellow);  
+        print("");
+      }
+
+  }
+
+
+
+
+
 
   static void divider() {
     "————————————————————————————————————————————————————————————"

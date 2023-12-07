@@ -7,8 +7,9 @@ import 'show.dart';
 class Ask {
   static Future<String> password(String scope, String key) async {
     Show.pleaseEnter("PLEASE ENTER", scope, "PASSWORD", "FOR", key);
-    var password = await prompt('PASSWORD', hideInput: true);
+     var password = await prompt('PASSWORD', hideInput: true);
     return password;
+
   }
 
   static Future<String> input(String scope, String key) async {
@@ -26,22 +27,22 @@ class Ask {
     while (true) {
       var char = stdin.readByteSync();
       if (char == 127) {
-        if (input.isNotEmpty) {
+        if (input.length > 0) {
           input = input.substring(0, input.length - 1);
-          stdout.write('\b \b');
+          stdout.write("\b \b");
         }
       } else if (char == 10 || char == 13) {
         break;
       } else {
         input += String.fromCharCode(char);
         if (hideInput) {
-          stdout.write('*');
+          stdout.write("*");
         } else {
           stdout.write(String.fromCharCode(char));
         }
       }
     }
-    print("");
+    stdout.writeln();
     return input;
   }
 }
