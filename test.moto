@@ -1,68 +1,23 @@
-task wash [the:thing=car] [on | the:place=house] {
-    show "washing the $thing in the $place"
+// Open a page
+task visit [url:url] {
+    webdriver post "/session/{session_id}/$url"
 }
 
-task show | display [:message] {
-    print "$message"
+// Click an element
+task click [on:element] {
+    webdriver post "/session/{session_id}/element/$element_id/click"
 }
 
-task summer [is:status=here] {
-    if $status == here {
-        show "summer is here"
-    } else {
-        show "summer is not here"
-    }
+// below is a mapping of an emo task to rust code
+// the rust code is compiled into a library and loaded by the emo runtime
+// when the compiler comes accross a task matching "type" [:text] [on:element] it will
+// call the rust function with the same name and pass in the context and the arguments
+// the rust function must return a Result<(), String> where the error is a string
+// this way we are able to easily add new capabilities to the language
+// eg: type "hello world" on "input[name='q']"
+define type [:text] [on:element] {
+    let web_driver = ctx.get_web_driver()
+    let element = web_driver.find_element_by_id(element_id)
+    element.send_keys(text)
+    Ok(())
 }
-
-let school = ["students", "teachers", "janitors"]
-
-task call everyone [from:place=school] {
-    for person in $place {
-        show "calling $person"
-    }
-}
-
-// Define a list of items
-let fruits = ["apple", "banana", "cherry"]
-
-// Task to list all items
-task list_items [from:collection=fruits] {
-    for item in $collection {
-        show "Item: $item"
-    }
-}
-
-// Display message
-task show [:message] {
-    print "$message"
-}
-
-// Usage
-list_items // outputs: Item: apple, Item: banana, Item: cherry
-
-// Task to display weather condition
-task weather [is:condition=sunny] {
-    if $condition == sunny {
-        show "It's a bright sunny day!"
-    } else {
-        show "It's not sunny today."
-    }
-}
-
-// Show message
-task show [:message] {
-    print "$message"
-}
-
-
-// Task for adding two numbers
-task add [num1:number=0] [num2:number=0] {
-    let result = $num1 + $num2
-    show "Result: $result"
-}
-
-// Display message
-task show [:message] {
-    print "$message"
-}
-
