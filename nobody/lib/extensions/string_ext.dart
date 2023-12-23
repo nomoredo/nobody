@@ -121,6 +121,41 @@ extension ExString on String? {
     return this!.replaceAll(remove, '');
   }
 
+  String? clean_url() {
+    return this.remove('http://').remove('https://').remove('www.').shorten(50);
+  }
+
+  /// shorten a string to a given length
+  /// split the string in half and add ... in the middle
+  /// e.g. "1234567890" -> "123...890"
+  String? shorten(int length) {
+    if (this == null) return null;
+    if (this!.isEmpty) return this;
+    if (this!.length <= length) return this;
+    var half = length ~/ 2;
+    return this!.substring(0, half) +
+        '...' +
+        this!.substring(this!.length - half);
+  }
+
+  bool is_longer_than(int length) {
+    return this.len > length;
+  }
+
+  bool is_shorter_than(int length) {
+    return this.len < length;
+  }
+
+  bool is_length(int length) {
+    return this.len == length;
+  }
+
+  bool is_length_between(int min, int max) {
+    return this.len >= min && this.len <= max;
+  }
+
+  int get len => this?.length ?? 0;
+
   String? removeFirst(String remove) {
     if (this == null) return null;
     if (this!.isEmpty) return this;
@@ -167,4 +202,30 @@ extension ExString on String? {
     obscured += this!.substring(this!.length - end);
     return obscured;
   }
+}
+
+/// Number extensions
+extension ExNumber on num? {
+  num get orZero => this ?? 0;
+  bool get isZero => this?.toInt() == 0;
+  bool get isNotZero => !isZero;
+  bool get isMoreThanZero => isNotZero;
+  bool get isLessThanZero => this.orZero < 0;
+  bool get isMoreThanOne => this.orZero > 1;
+  bool get isLessThanOne => this.orZero < 1;
+  bool get isOne => this.orZero == 1;
+
+  bool isMoreThan(num? other) => this.orZero > other.orZero;
+  bool isLessThan(num? other) => this.orZero < other.orZero;
+  bool isMoreThanOrEqualTo(num? other) => this.orZero >= other.orZero;
+  bool isLessThanOrEqualTo(num? other) => this.orZero <= other.orZero;
+
+  num? get abs => this?.abs();
+  num? get ceil => this?.ceil();
+  num? get floor => this?.floor();
+  num? get round => this?.round();
+  num? get truncate => this?.truncate();
+  num? get toDouble => this?.toDouble();
+  num? get toInt => this?.toInt();
+  num? get toNum => this?.toDouble();
 }

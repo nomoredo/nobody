@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:coco/coco.dart';
 import 'package:nobody/lib.dart';
 
@@ -226,23 +228,85 @@ class Show {
     divider();
   }
 
-  static void table(List<List<String>> table) {
-    var max = 0;
-    for (var row in table) {
-      for (var cell in row) {
-        if (cell.length > max) {
-          max = cell.length;
-        }
+  /// show the data as a table
+  /// using box drawing characters like ─╮ ╰ ╭ ╯ │ ─ or sharp corners like ┌ ┐ └ ┘
+  /// ┌──────────── Title ─────────────┐
+  /// ┌────────────────────────────────┐
+  /// │ 1        │ 2        │ 3        │
+  /// ├──────────┼──────────┼──────────┤
+  /// │ 4        │ 5        │ 6        │
+  /// └──────────┴──────────┴──────────┘
+  /// borders are in gray and data is in white
+  /// the first row is title and is in yellow
+  /// second row is header and is in white
+  /// the rest of the rows are in white
+  /// automatically takes care of dynamic data checking if it is a map or a list or just a toString of the data
+  /// automatically wraps each cell content to fit the width of the cell
+  /// automatically calculates the width of each column based on the data
+
+  static void table(Iterable<dynamic> data, {String title = "Title"}) {
+    const int totalWidth = 80; // Total width of the table.
+
+    // Convert all data to a list of maps for uniform processing.
+    List<Map<String, dynamic>> rows =
+        data.map<Map<String, dynamic>>((dynamic row) {
+      if (row is Map) {
+        return row
+            .map((key, value) => MapEntry(key.toString(), value.toString()));
+      } else if (row is Iterable) {
+        // Convert Iterable to Map with string keys.
+        return Map.fromIterables(
+            Iterable<String>.generate(row.length, (i) => i.toString()),
+            row.map((e) => e.toString()));
+      } else {
+        return {'Value': row.toString()};
       }
+    }).toList();
+
+    // Define the max key and value widths based on the data.
+    int maxKeyWidth = 'Key'.length;
+    int maxValueWidth = 'Value'.length;
+    rows.forEach((Map<String, dynamic> row) {
+      row.forEach((key, value) {
+        maxKeyWidth = max(maxKeyWidth, key.length);
+        maxValueWidth = max(maxValueWidth, value.length);
+      });
+    });
+
+    // Adjust the key and value widths based on the total width.
+    if (maxKeyWidth + maxValueWidth + 3 > totalWidth) {
+      maxKeyWidth =
+          (maxKeyWidth / (maxKeyWidth + maxValueWidth) * (totalWidth - 3))
+              .floor();
+      maxValueWidth = totalWidth - 3 - maxKeyWidth;
     }
-    for (var row in table) {
-      for (var cell in row) {
-        "".write(inGray);
-        " ".write(inGray);
-        cell.write(inWhite);
-        (" " * (max - cell.length)).write(inGray);
+
+    // Function to generate horizontal border lines.
+    String horizontalLine(String left, String right, String fill) {
+      return left + fill * (totalWidth - 2) + right;
+    }
+
+    // Function to print a single row of key-value.
+    printRow(String key, String value) {
+      key = key.padRight(maxKeyWidth);
+      value = value.padRight(maxValueWidth);
+      print('│ $key │ $value │');
+    }
+
+    // Print the table with transposed key-value pairs.
+    print(horizontalLine('╭', '╮', '─')); // Top border
+    print('│ ${title.padRight(totalWidth - 4)} │'); // Title
+    print(horizontalLine('├', '┤', '─')); // Separator
+
+    // Iterate through each row and print key-value pairs.
+    for (var row in rows) {
+      for (var entry in row.entries) {
+        printRow(entry.key, entry.value);
       }
-      print("");
+      // Separator between data entries.
+      print(horizontalLine('├', '┤', '─'));
     }
+
+    print(horizontalLine('╰', '╯', '─')); // Bottom border
   }
 }

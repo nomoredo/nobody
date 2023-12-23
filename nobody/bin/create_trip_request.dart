@@ -18,6 +18,7 @@ Future create_trip_request() async {
       .online()
       .login(Sap.User('amohandas'))
       .visit(TripRequestOnBehalfOf)
+      .list_inputs()
       .set(
           Input.WithId(
               "application-ZFOC_TRIP_FORM-display-component---object--Pernr-inner"),

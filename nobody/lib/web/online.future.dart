@@ -54,11 +54,6 @@ extension ExOnline on Future<Online> {
     );
   }
 
-  Future<Online> print_input_fields() async {
-    var Online = await this;
-    return Online.print_input_fields();
-  }
-
   Future<Online> navigate(
     String url,
   ) async {
@@ -376,6 +371,20 @@ extension ExOnline on Future<Online> {
   Future<Online> close_all_other_pages() async {
     var Online = await this;
     return Online.close_all_other_pages();
+  }
+
+  Future<Online> list_elements(
+    AbstractSelector selector,
+  ) async {
+    var Online = await this;
+    return Online.list_elements(
+      selector,
+    );
+  }
+
+  Future<Online> list_inputs() async {
+    var Online = await this;
+    return Online.list_inputs();
   }
 
   Future<Online> list_all(

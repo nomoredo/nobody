@@ -40,35 +40,15 @@ class Online {
   }
 
   Future<Online> visit(String url) async {
-    Show.action('visiting', url.remove('https://'));
+    Show.action('visiting', url.clean_url());
     await (await page).goto(url, wait: Until.domContentLoaded);
     return this;
   }
 
   Future<Online> goto(AbstractUrl url) async {
     var clean_url = Uri.encodeFull(url.url);
-    Show.action('visiting', clean_url.remove('https://'));
+    Show.action('visiting', clean_url.clean_url());
     await (await page).goto(clean_url, wait: Until.domContentLoaded);
-    return this;
-  }
-
-  Future<Online> print_input_fields() async {
-    Show.action('printing', 'input fields');
-    var page = await this.page;
-    final List<ElementHandle> inputs = await page.$$('input');
-    Show.info('inputs', inputs.length.toString());
-    //get properties of each input
-    for (var input in inputs) {
-      var properties = await input.evaluate('''e => {
-        return {
-          className: e.className,
-          title: e.title,
-          id: e.id,
-          // Add other properties you need
-        };
-      }''');
-      Show.info('INPUT', properties.toString());
-    }
     return this;
   }
 
@@ -388,6 +368,37 @@ class Online {
     }
     return this;
   }
+
+  /// List elements matching the selector
+  Future<Online> list_elements(AbstractSelector selector) async {
+    await (await page).waitForSelector(selector.selector);
+    var elements = await (await page).evaluate('''(selector) => {
+      return Array.from(document.querySelectorAll(selector)).map((e) => e.outerHTML);
+    }''', args: [selector.selector]);
+    Show.table(elements);
+    return this;
+  }
+
+  /// List inputs
+  Future<Online> list_inputs() async {
+    Show.action(
+        'listing', 'input elements', 'in', (await page).url.clean_url());
+    await (await page).waitForSelector('input');
+    //return a list of all input elements each as a map of properties
+    var elements = await (await page).evaluate('''() => {
+      return Array.from(document.querySelectorAll('input')).map((e) => {
+       // list all attributes and their values
+        return Array.from(e.attributes).reduce((map, attribute) => {
+          map[attribute.name] = attribute.value;
+          return map;
+        }, {});
+      });
+    }''');
+    Show.table(elements);
+    return this;
+  }
+
+  /// List forms
 
   //lists all elements matching the selector
   // all input fields have class containing 'lsField__input'
