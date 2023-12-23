@@ -6,6 +6,8 @@ class Sap {
   static final Cancel = Sap.Button("Cancel (F12)");
   static final Save = Sap.Button("Save (Ctrl+S)");
   static final Enter = Sap.Button("Enter (Enter)");
+  static final Exit = Sap.Button("Exit (Shift+F3)");
+  static final CreateNew = Sap.Button("Create New Items (F7)");
 
   static AbstractSelector Button(String label) =>
       Css('div[role="button"][title="$label"]');
@@ -46,7 +48,8 @@ class SapUser implements Authable {
           .set(Input.WithId('logonpassfield'), pss)
           .click(Input.WithName('uidPasswordLogon'))
           .wait(UntilPageLoaded)
-          .wait(ElementVisible(Css('span[class="sapUshellAppTitle sapUshellAppTitleClickable"]')));
+          .wait(ElementVisible(Css(
+              'span[class="sapUshellAppTitle sapUshellAppTitleClickable"]')));
     } catch (e) {
       print(e);
     }

@@ -4,3 +4,5 @@
 **/local_chromium/**
 **/.local-chrome/**
 /.local-chrome/
+**/.nothing**
+/nobody/.local-chrome/

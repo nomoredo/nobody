@@ -1,6 +1,8 @@
 import 'package:nobody/references.dart';
 
 void main(List<String> arguments) async {
+  // create reservation
+  await create_reservation();
   // await run_GoogleSearch();
   // await po_export();
   // await create_pr();
@@ -11,11 +13,23 @@ void main(List<String> arguments) async {
   // await create_trip_request();
 }
 
-//create trip request
-
-//generate MB51 report
-
-//generate TRF report
+//create reservation
+Future create_reservation() async {
+  return Nobody()
+      .online()
+      .login(Sap.User('amohandas'))
+      .goto(SapTransaction("MB21"))
+      .set(Sap.Input("Movement type (inventory management)"), "221")
+      .set(Sap.Input("Plant"), "22A1")
+      .click(Sap.CreateNew)
+      .set(Sap.Input("Work Breakdown Structure Element (WBS Element)"),
+          "MWS-AE-0017.01.001")
+      .set(
+          XPath(
+              "/html/body/table/tbody/tr/td/div/form/div/div[4]/div/div[9]/table/tbody/tr[2]/td/table/tbody/tr/td/div/div/div/div[9]/div/div[2]/table/tbody/tr/td/input"),
+          "1000004543")
+      .wait(Seconds(10));
+}
 
 Future run_GoogleSearch() {
   return Nobody()

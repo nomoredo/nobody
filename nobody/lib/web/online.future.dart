@@ -17,9 +17,14 @@ extension ExOnline on Future<Online> {
     return Online.lastPage();
   }
 
-  Future<Online> listen() async {
+  Future<Online> log_requests() async {
     var Online = await this;
-    return Online.listen();
+    return Online.log_requests();
+  }
+
+  Future<Online> log_responses() async {
+    var Online = await this;
+    return Online.log_responses();
   }
 
   Future<Online> login(
@@ -49,9 +54,9 @@ extension ExOnline on Future<Online> {
     );
   }
 
-  Future<Online> list_forms() async {
+  Future<Online> print_input_fields() async {
     var Online = await this;
-    return Online.list_forms();
+    return Online.print_input_fields();
   }
 
   Future<Online> navigate(
@@ -67,7 +72,6 @@ extension ExOnline on Future<Online> {
     AbstractSelector selector,
     String text, {
     Duration? timeout = null,
-    bool log = true,
     int index = 0,
   }) async {
     var Online = await this;
@@ -75,7 +79,21 @@ extension ExOnline on Future<Online> {
       selector,
       text,
       timeout: timeout,
-      log: log,
+      index: index,
+    );
+  }
+
+  Future<Online> set_secret(
+    AbstractSelector selector,
+    String text, {
+    Duration? timeout = null,
+    int index = 0,
+  }) async {
+    var Online = await this;
+    return Online.set_secret(
+      selector,
+      text,
+      timeout: timeout,
       index: index,
     );
   }

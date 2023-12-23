@@ -167,15 +167,16 @@ class Show {
     }
   }
 
-  static Future elements(List<ElementHandle> elements) async{
+  static Future elements(List<ElementHandle> elements) async {
     for (var e in elements) {
       await element(e);
     }
   }
+
   ///[e](gray) ─╮ [tagName](yellow)
   ///            ╰ [remote](white)
   ///            ╰ [local](gray)
-  static Future element(ElementHandle e) async{
+  static Future element(ElementHandle e) async {
     var properties = await e.evaluate('''e => {
   return {
     className: e.className,
@@ -184,22 +185,18 @@ class Show {
     // Add other properties you need
   };
 }''');
-      for (var p in properties.entries) {
-        "".write(inGray);
-        " ─╮ ".write(inGray);
-        print(p.key);
-        " ".write(inGray);
-        " ╰ ${p.value}".write(inYellow);  
-        print("");
-      }
-
+    for (var p in properties.entries) {
+      "".write(inGray);
+      " ─╮ ".write(inGray);
+      print(p.key);
+      " ".write(inGray);
+      " ╰ ${p.value}".write(inYellow);
+      print("");
+    }
   }
 
-
-
-
-
-
+  /// divider
+  /// ————————————————————————————————————————————————————————————
   static void divider() {
     "————————————————————————————————————————————————————————————"
         .write(inGray);
@@ -227,5 +224,25 @@ class Show {
     " $v".write(inWhite);
     print("");
     divider();
+  }
+
+  static void table(List<List<String>> table) {
+    var max = 0;
+    for (var row in table) {
+      for (var cell in row) {
+        if (cell.length > max) {
+          max = cell.length;
+        }
+      }
+    }
+    for (var row in table) {
+      for (var cell in row) {
+        "".write(inGray);
+        " ".write(inGray);
+        cell.write(inWhite);
+        (" " * (max - cell.length)).write(inGray);
+      }
+      print("");
+    }
   }
 }

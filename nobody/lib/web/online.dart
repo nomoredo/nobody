@@ -13,7 +13,7 @@ class Online {
     return pages.last;
   }
 
-  Future<Online> listen() async {
+  Future<Online> log_requests() async {
     //listen and log all requests and responses
     await (await page).onRequest.listen((request) async {
       print("REQUEST: ${request.method} ${request.url}");
@@ -21,57 +21,54 @@ class Online {
         print("POST DATA: ${request.postData}");
       }
     });
+    return this;
+  }
 
-    await (await page).onResponse.listen((event) {
-      print("RESPONSE: ${event.status} ${event.url}");
+  Future<Online> log_responses() async {
+    await (await page).onResponse.listen((response) async {
+      print("RESPONSE: ${response.status} ${response.url}");
+      if (response.request.postData != null) {
+        print("POST DATA: ${response.request.postData}");
+      }
     });
     return this;
   }
 
   Future<Online> login(Authable authable) async {
-    Show.action('LOGGING IN', authable.username);
+    Show.action('authenticating', authable.username);
     return await authable.login(this);
   }
 
   Future<Online> visit(String url) async {
-    Show.action('VISITING', url);
+    Show.action('visiting', url.remove('https://'));
     await (await page).goto(url, wait: Until.domContentLoaded);
     return this;
   }
 
   Future<Online> goto(AbstractUrl url) async {
     var clean_url = Uri.encodeFull(url.url);
-    Show.action('VISITING', clean_url);
+    Show.action('visiting', clean_url.remove('https://'));
     await (await page).goto(clean_url, wait: Until.domContentLoaded);
     return this;
   }
 
-
-  Future<Online> list_forms() async {
-    Show.action('LISTING', 'FORMS AND INPUTS');
+  Future<Online> print_input_fields() async {
+    Show.action('printing', 'input fields');
     var page = await this.page;
-
-    final List<ElementHandle> forms = await page.$$('form');
-    Show.info('FORMS', forms.length.toString());
-    Show.elements(forms);
     final List<ElementHandle> inputs = await page.$$('input');
-    Show.info('INPUTS', inputs.length.toString());
-    Show.elements(inputs);
-    final List<ElementHandle> textareas = await page.$$('textarea');
-    Show.info('TEXTAREAS', textareas.length.toString());
-    Show.elements(textareas);
-    final List<ElementHandle> buttons = await page.$$('button');
-    Show.info('BUTTONS', buttons.length.toString());
-    Show.elements(buttons);
-    final List<ElementHandle> selects = await page.$$('select');
-    Show.info('SELECTS', selects.length.toString());
-    Show.elements(selects);
-    final List<ElementHandle> links = await page.$$('a');
-    Show.info('LINKS', links.length.toString());
-    Show.elements(links);
-
-
-
+    Show.info('inputs', inputs.length.toString());
+    //get properties of each input
+    for (var input in inputs) {
+      var properties = await input.evaluate('''e => {
+        return {
+          className: e.className,
+          title: e.title,
+          id: e.id,
+          // Add other properties you need
+        };
+      }''');
+      Show.info('INPUT', properties.toString());
+    }
     return this;
   }
 
@@ -84,14 +81,35 @@ class Online {
     //handle # ? and other special characters
     url = Uri.encodeFull(url);
 
-    Show.action('NAVIGATING', url);
+    Show.action('navigating to', url);
     await (await page).goto(url, wait: Until.load);
     return this;
   }
 
   Future<Online> set(AbstractSelector selector, String text,
-      {Duration? timeout = null, bool log = true, int index = 0}) async {
-    if (log) Show.action('SETTING VALUE', text);
+      {Duration? timeout = null, int index = 0}) async {
+    Show.action('set', 'value', text);
+    if (selector is XPath) {
+      var selected = await (await page).waitForXPath(selector.selector);
+      if (selected != null) {
+        await selected.evaluateHandle('''(element, text) => {
+          element.value = text;
+        }''', args: [text]);
+      }
+    } else {
+      var selected = await (await page).waitForSelector(selector.selector);
+      if (selected != null) {
+        await selected.evaluateHandle('''(element, text) => {
+          element.value = text;
+        }''', args: [text]);
+      }
+    }
+    return this;
+  }
+
+  Future<Online> set_secret(AbstractSelector selector, String text,
+      {Duration? timeout = null, int index = 0}) async {
+    Show.action('set', 'secret', text.obscure());
     if (selector is XPath) {
       var selected = await (await page).waitForXPath(selector.selector);
       if (selected != null) {
@@ -113,14 +131,14 @@ class Online {
   Future<Online> set_range(AbstractSelector selector, String from, String to,
       {Duration? timeout = null, bool log = true}) async {
     var Online = await this;
-    if (log) Show.action('SETTING', selector.selector, from, 'TO', to);
-    await Online.set(selector, from, timeout: timeout, log: false, index: 0);
-    await Online.set(selector, to, timeout: timeout, log: false, index: 1);
+    if (log) Show.action('set', selector.selector, from, 'to', to);
+    await Online.set(selector, from, timeout: timeout, index: 0);
+    await Online.set(selector, to, timeout: timeout, index: 1);
     return Online;
   }
 
   Future<Online> type(String selector, String text) async {
-    Show.action('TYPING', text);
+    Show.action('typing', text);
     await (await page).waitForSelector(selector);
     await (await page).type(selector, text);
     return this;
@@ -131,14 +149,14 @@ class Online {
   // ex('document.querySelector("input").value = "$text";', text: 'hello world');
   Future<Online> ex(MapFunc<ElementHandle, dynamic> script,
       {List<dynamic>? args}) async {
-    Show.action('EXECUTING', 'JAVASCRIPT\n', script.toString());
+    Show.action('executing', 'javascript\n', script.toString());
     await (await page).evaluate(script.toString(), args: args);
     return this;
   }
 
   //focus
   Future<Online> focus(AbstractSelector selector) async {
-    Show.action('FOCUSING', selector.selector);
+    Show.action('focus', selector.selector);
     await (await page).waitForSelector(selector.selector);
     await (await page).focus(selector.selector);
     return this;
@@ -153,7 +171,7 @@ class Online {
     String text,
     MapFunc<ElementHandle, dynamic> action,
   ) async {
-    Show.action('WHEN CONTAINS', text);
+    Show.action('when', 'contains', text);
     var page = await this.page;
     await page.waitForSelector(selector);
     var element = await page.$eval(selector, '''(element, text) => {
@@ -167,7 +185,7 @@ class Online {
 
   //click
   Future<Online> click(AbstractSelector selector) async {
-    Show.action('CLICKING', selector.selector);
+    Show.action('clicking', selector.selector);
     if (selector is XPath) {
       var selected = await (await page).waitForXPath(selector.selector);
       if (selected != null) {
@@ -184,7 +202,7 @@ class Online {
 
   //press
   Future<Online> press(Key key) async {
-    Show.action('PRESSING', key.toString());
+    Show.action('pressing', key.toString());
 
     await (await page).keyboard.press(key);
     return this;
@@ -192,7 +210,7 @@ class Online {
 
   //submit form
   Future<Online> submit(AbstractSelector selector) async {
-    Show.action('SUBMITTING', selector.selector);
+    Show.action('submitting', selector.selector);
     await (await page).waitForSelector(selector.selector);
     await (await page).evaluate('''(selector) => {
       document.querySelector(selector).submit();
@@ -202,7 +220,7 @@ class Online {
 
   //right click
   Future<Online> right_click(AbstractSelector selector) async {
-    Show.action('RIGHT CLICKING', selector.selector);
+    Show.action('right click', selector.selector);
     await (await page).waitForSelector(selector.selector);
     await (await page).click(selector.selector, button: MouseButton.right);
     return this;
@@ -210,7 +228,7 @@ class Online {
 
   //double click
   Future<Online> double_click(AbstractSelector selector) async {
-    Show.action('DOUBLE CLICKING', selector.selector);
+    Show.action('double click', selector.selector);
     await (await page).waitForSelector(selector.selector);
     await (await page).click(selector.selector, clickCount: 2);
     return this;
@@ -218,7 +236,7 @@ class Online {
 
   //hover
   Future<Online> hover(AbstractSelector selector) async {
-    Show.action('HOVERING', selector.selector);
+    Show.action('hover over', selector.selector);
     await (await page).waitForSelector(selector.selector);
     await (await page).hover(selector.selector);
     return this;
@@ -226,7 +244,7 @@ class Online {
 
   //middle click
   Future<Online> middle_click(AbstractSelector selector) async {
-    Show.action('MIDDLE CLICKING', selector.selector);
+    Show.action('middle click', selector.selector);
     await (await page).waitForSelector(selector.selector);
     await (await page).click(selector.selector, button: MouseButton.middle);
     return this;
@@ -234,14 +252,14 @@ class Online {
 
   //key down
   Future<Online> key_down(Key key) async {
-    Show.action('KEY DOWN', key.toString());
+    Show.action('key down', key.toString());
     await (await page).keyboard.down(key);
     return this;
   }
 
   //key up
   Future<Online> key_up(Key key) async {
-    Show.action('KEY UP', key.toString());
+    Show.action('key up', key.toString());
     await (await page).keyboard.up(key);
     return this;
   }
@@ -284,13 +302,13 @@ class Online {
   }
 
   Future<Online> close() async {
-    Show.action('CLOSING', 'BROWSER');
+    Show.action('closing', 'browser');
     await browser.close();
     return this;
   }
 
   Future<Online> screenshot(String path) async {
-    Show.action('TAKING SCREENSHOT', path);
+    Show.action('capture', 'screenshot', path);
     var sc = await (await page).screenshot();
     await File(path).writeAsBytes(sc);
     return this;
@@ -298,13 +316,13 @@ class Online {
 
   Future<Online> download(
       AbstractDownloadable downloadable, AbstractPath path) async {
-    Show.action('DOWNLOADING', downloadable.name);
+    Show.action('downloading', downloadable.name);
     await downloadable.download(this, path);
     return this;
   }
 
   Future<Online> scrollToElement(AbstractSelector selector) async {
-    Show.action('SCROLLING TO', selector.selector);
+    Show.action('scrolling', 'to', selector.selector);
     await (await page).waitForSelector(selector.selector);
     await (await page).evaluate('''(selector) => {
       document.querySelector(selector).scrollIntoView();
@@ -313,7 +331,7 @@ class Online {
   }
 
   Future<Online> scrollBy(int x, int y) async {
-    Show.action('SCROLLING BY', 'x: $x, y: $y');
+    Show.action('scrolling', 'by', x.toString(), y.toString());
     await (await page).evaluate('''() => {
       window.scrollBy($x, $y);
     }''');
@@ -321,7 +339,7 @@ class Online {
   }
 
   Future<String?> get_value(AbstractSelector selector, String property) async {
-    Show.action('GETTING VALUE', property);
+    Show.action('getting', property, 'of', selector.selector);
     await (await page).waitForSelector(selector.selector);
     var value = await (await page).evaluate('''(selector, property) => {
       return document.querySelector(selector).$property;
@@ -376,7 +394,7 @@ class Online {
   // all buttons have class containing 'lsButton'
   // all dropdowns have class containing 'lsField__input' and aria-roledescription="Select"
   Future<Online> list_all(AbstractSelector selector) async {
-    Show.action('LISTING', selector.selector);
+    Show.action('listing', selector.selector);
     await (await page).waitForSelector(selector.selector);
     var elements = await (await page).evaluate('''(selector) => {
       return Array.from(document.querySelectorAll(selector)).map((e) => e.outerHTML);
