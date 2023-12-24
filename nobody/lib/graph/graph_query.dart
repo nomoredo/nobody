@@ -65,7 +65,7 @@ class GraphQuery {
       var response = await client.getUri(uri);
       var request = await response.data;
       var body = await request;
-      Show.anything(body);
+      // Show.anything(body);
       return body;
     } on DioException catch (e) {
       print(e.response?.data);

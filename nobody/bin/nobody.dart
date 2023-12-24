@@ -68,7 +68,7 @@ Future read_excel() async {
 }
 
 final Print = (x) {
-  Show.anything(x);
+  // Show.anything(x);
   return x;
 };
 
