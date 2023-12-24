@@ -18,6 +18,7 @@
 
 // Section: imports
 
+use crate::api::online::*;
 use flutter_rust_bridge::for_generated::byteorder::{NativeEndian, ReadBytesExt, WriteBytesExt};
 use flutter_rust_bridge::for_generated::transform_result_dco;
 use flutter_rust_bridge::{Handler, IntoIntoDart};
@@ -32,6 +33,155 @@ flutter_rust_bridge::frb_generated_default_handler!();
 
 // Section: wire_funcs
 
+fn wire_download_driver_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    driver_dir: impl CstDecode<String> + core::panic::UnwindSafe,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::DcoCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "download_driver",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let api_driver_dir = driver_dir.cst_decode();
+            move |context| async move {
+                transform_result_dco((move || async move {
+                         crate::api::online::download_driver(api_driver_dir).await
+                    })().await)
+            }
+        },
+    )
+}
+fn wire_get_app_home_dir_impl(port_: flutter_rust_bridge::for_generated::MessagePort) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::DcoCodec, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "get_app_home_dir",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            move |context| transform_result_dco((move || crate::api::online::get_app_home_dir())())
+        },
+    )
+}
+fn wire_get_driver_dir_impl(port_: flutter_rust_bridge::for_generated::MessagePort) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::DcoCodec, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "get_driver_dir",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            move |context| transform_result_dco((move || crate::api::online::get_driver_dir())())
+        },
+    )
+}
+fn wire_get_driver_path_impl(port_: flutter_rust_bridge::for_generated::MessagePort) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::DcoCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "get_driver_path",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            move |context| async move {
+                transform_result_dco(
+                    (move || async move { crate::api::online::get_driver_path().await })().await,
+                )
+            }
+        },
+    )
+}
+fn wire_get_edge_version_impl(port_: flutter_rust_bridge::for_generated::MessagePort) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::DcoCodec, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "get_edge_version",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            move |context| transform_result_dco((move || crate::api::online::get_edge_version())())
+        },
+    )
+}
+fn wire_init_driver_impl(port_: flutter_rust_bridge::for_generated::MessagePort) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::DcoCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "init_driver",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            move |context| async move {
+                transform_result_dco(
+                    (move || async move {
+                        Result::<_, ()>::Ok(
+                            flutter_rust_bridge::for_generated::rust_auto_opaque_encode(
+                                crate::api::online::init_driver().await,
+                            ),
+                        )
+                    })()
+                    .await,
+                )
+            }
+        },
+    )
+}
+fn wire_is_webdriver_running_impl(port_: flutter_rust_bridge::for_generated::MessagePort) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::DcoCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "is_webdriver_running",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            move |context| async move {
+                transform_result_dco(
+                    (move || async move {
+                        Result::<_, ()>::Ok(crate::api::online::is_webdriver_running().await)
+                    })()
+                    .await,
+                )
+            }
+        },
+    )
+}
+fn wire_start_webdriver_impl(port_: flutter_rust_bridge::for_generated::MessagePort) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::DcoCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "start_webdriver",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            move |context| async move {
+                transform_result_dco(
+                    (move || async move {
+                        Result::<_, ()>::Ok(crate::api::online::start_webdriver().await)
+                    })()
+                    .await,
+                )
+            }
+        },
+    )
+}
+fn wire_get_files_impl(port_: flutter_rust_bridge::for_generated::MessagePort) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::DcoCodec, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "get_files",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            move |context| {
+                transform_result_dco((move || {
+                    Result::<_, ()>::Ok(crate::api::simple::get_files())
+                })())
+            }
+        },
+    )
+}
 fn wire_my_custom_func_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     a: impl CstDecode<i32> + core::panic::UnwindSafe,
@@ -54,22 +204,67 @@ fn wire_my_custom_func_impl(
         },
     )
 }
+fn wire_show_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    name: impl CstDecode<String> + core::panic::UnwindSafe,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::DcoCodec, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "show",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let api_name = name.cst_decode();
+            move |context| {
+                transform_result_dco((move || {
+                    Result::<_, ()>::Ok(crate::api::simple::show(api_name))
+                })())
+            }
+        },
+    )
+}
 
 // Section: dart2rust
 
+impl CstDecode<bool> for bool {
+    fn cst_decode(self) -> bool {
+        self
+    }
+}
 impl CstDecode<i32> for i32 {
     fn cst_decode(self) -> i32 {
         self
     }
 }
-impl SseDecode for i32 {
+impl CstDecode<u8> for u8 {
+    fn cst_decode(self) -> u8 {
+        self
+    }
+}
+impl CstDecode<usize> for usize {
+    fn cst_decode(self) -> usize {
+        self
+    }
+}
+impl SseDecode for anyhow::Error {
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
-        deserializer.cursor.read_i32::<NativeEndian>().unwrap()
+        unimplemented!("not yet supported in serialized mode, feel free to create an issue");
     }
 }
 
-impl SseDecode for () {
-    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {}
+impl SseDecode for flutter_rust_bridge::RustOpaque<std::sync::RwLock<WebDriver>> {
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut inner = <usize>::sse_decode(deserializer);
+        return unsafe { flutter_rust_bridge::for_generated::sse_decode_rust_opaque(inner) };
+    }
+}
+
+impl SseDecode for String {
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut inner = <Vec<u8>>::sse_decode(deserializer);
+        return String::from_utf8(inner).unwrap();
+    }
 }
 
 impl SseDecode for bool {
@@ -78,7 +273,77 @@ impl SseDecode for bool {
     }
 }
 
+impl SseDecode for i32 {
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        deserializer.cursor.read_i32::<NativeEndian>().unwrap()
+    }
+}
+
+impl SseDecode for Vec<String> {
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut len_ = <i32>::sse_decode(deserializer);
+        let mut ans_ = vec![];
+        for idx_ in 0..len_ {
+            ans_.push(<String>::sse_decode(deserializer));
+        }
+        return ans_;
+    }
+}
+
+impl SseDecode for Vec<u8> {
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut len_ = <i32>::sse_decode(deserializer);
+        let mut ans_ = vec![];
+        for idx_ in 0..len_ {
+            ans_.push(<u8>::sse_decode(deserializer));
+        }
+        return ans_;
+    }
+}
+
+impl SseDecode for u8 {
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        deserializer.cursor.read_u8().unwrap()
+    }
+}
+
+impl SseDecode for () {
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {}
+}
+
+impl SseDecode for usize {
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        deserializer.cursor.read_u64::<NativeEndian>().unwrap() as _
+    }
+}
+
 // Section: rust2dart
+
+impl SseEncode for anyhow::Error {
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <String>::sse_encode(format!("{:?}", self), serializer);
+    }
+}
+
+impl SseEncode for flutter_rust_bridge::RustOpaque<std::sync::RwLock<WebDriver>> {
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        let (ptr, size) = self.sse_encode_raw();
+        <usize>::sse_encode(ptr, serializer);
+        <i32>::sse_encode(size, serializer);
+    }
+}
+
+impl SseEncode for String {
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <Vec<u8>>::sse_encode(self.into_bytes(), serializer);
+    }
+}
+
+impl SseEncode for bool {
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        serializer.cursor.write_u8(self as _).unwrap();
+    }
+}
 
 impl SseEncode for i32 {
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -86,13 +351,40 @@ impl SseEncode for i32 {
     }
 }
 
+impl SseEncode for Vec<String> {
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(self.len() as _, serializer);
+        for item in self {
+            <String>::sse_encode(item, serializer);
+        }
+    }
+}
+
+impl SseEncode for Vec<u8> {
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(self.len() as _, serializer);
+        for item in self {
+            <u8>::sse_encode(item, serializer);
+        }
+    }
+}
+
+impl SseEncode for u8 {
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        serializer.cursor.write_u8(self).unwrap();
+    }
+}
+
 impl SseEncode for () {
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {}
 }
 
-impl SseEncode for bool {
+impl SseEncode for usize {
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
-        serializer.cursor.write_u8(self as _).unwrap();
+        serializer
+            .cursor
+            .write_u64::<NativeEndian>(self as _)
+            .unwrap();
     }
 }
 

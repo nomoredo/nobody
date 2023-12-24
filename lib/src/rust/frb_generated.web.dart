@@ -3,6 +3,7 @@
 
 // ignore_for_file: unused_import, unused_element, unnecessary_import, duplicate_ignore, invalid_use_of_internal_member, annotate_overrides, non_constant_identifier_names, curly_braces_in_flow_control_structures, prefer_const_literals_to_create_immutables
 
+import 'api/online.dart';
 import 'api/simple.dart';
 import 'dart:async';
 import 'dart:convert';
@@ -17,35 +18,157 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
     required super.portManager,
   });
 
+  CrossPlatformFinalizerArg
+      get rust_arc_decrement_strong_count_RwLockWebDriverPtr => wire
+          .rust_arc_decrement_strong_count_RustOpaque_stdsyncRwLockWebDriver;
+
+  @protected
+  AnyhowException dco_decode_AnyhowException(dynamic raw);
+
+  @protected
+  RwLockWebDriver dco_decode_Auto_Owned_RustOpaque_stdsyncRwLockWebDriver(
+      dynamic raw);
+
+  @protected
+  RwLockWebDriver dco_decode_RustOpaque_stdsyncRwLockWebDriver(dynamic raw);
+
+  @protected
+  String dco_decode_String(dynamic raw);
+
+  @protected
+  bool dco_decode_bool(dynamic raw);
+
   @protected
   int dco_decode_i_32(dynamic raw);
+
+  @protected
+  List<String> dco_decode_list_String(dynamic raw);
+
+  @protected
+  Uint8List dco_decode_list_prim_u_8(dynamic raw);
+
+  @protected
+  int dco_decode_u_8(dynamic raw);
 
   @protected
   void dco_decode_unit(dynamic raw);
 
   @protected
-  int sse_decode_i_32(SseDeserializer deserializer);
+  int dco_decode_usize(dynamic raw);
 
   @protected
-  void sse_decode_unit(SseDeserializer deserializer);
+  AnyhowException sse_decode_AnyhowException(SseDeserializer deserializer);
+
+  @protected
+  RwLockWebDriver sse_decode_Auto_Owned_RustOpaque_stdsyncRwLockWebDriver(
+      SseDeserializer deserializer);
+
+  @protected
+  RwLockWebDriver sse_decode_RustOpaque_stdsyncRwLockWebDriver(
+      SseDeserializer deserializer);
+
+  @protected
+  String sse_decode_String(SseDeserializer deserializer);
 
   @protected
   bool sse_decode_bool(SseDeserializer deserializer);
 
   @protected
+  int sse_decode_i_32(SseDeserializer deserializer);
+
+  @protected
+  List<String> sse_decode_list_String(SseDeserializer deserializer);
+
+  @protected
+  Uint8List sse_decode_list_prim_u_8(SseDeserializer deserializer);
+
+  @protected
+  int sse_decode_u_8(SseDeserializer deserializer);
+
+  @protected
+  void sse_decode_unit(SseDeserializer deserializer);
+
+  @protected
+  int sse_decode_usize(SseDeserializer deserializer);
+
+  @protected
+  String cst_encode_AnyhowException(AnyhowException raw) {
+    throw UnimplementedError();
+  }
+
+  @protected
+  String cst_encode_String(String raw) {
+    return raw;
+  }
+
+  @protected
+  List<dynamic> cst_encode_list_String(List<String> raw) {
+    return raw.map(cst_encode_String).toList();
+  }
+
+  @protected
+  Uint8List cst_encode_list_prim_u_8(Uint8List raw) {
+    return raw;
+  }
+
+  @protected
+  PlatformPointer cst_encode_Auto_Owned_RustOpaque_stdsyncRwLockWebDriver(
+      RwLockWebDriver raw);
+
+  @protected
+  PlatformPointer cst_encode_RustOpaque_stdsyncRwLockWebDriver(
+      RwLockWebDriver raw);
+
+  @protected
+  bool cst_encode_bool(bool raw);
+
+  @protected
   int cst_encode_i_32(int raw);
+
+  @protected
+  int cst_encode_u_8(int raw);
 
   @protected
   void cst_encode_unit(void raw);
 
   @protected
+  int cst_encode_usize(int raw);
+
+  @protected
+  void sse_encode_AnyhowException(
+      AnyhowException self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_Auto_Owned_RustOpaque_stdsyncRwLockWebDriver(
+      RwLockWebDriver self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_RustOpaque_stdsyncRwLockWebDriver(
+      RwLockWebDriver self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_String(String self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_bool(bool self, SseSerializer serializer);
+
+  @protected
   void sse_encode_i_32(int self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_list_String(List<String> self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_list_prim_u_8(Uint8List self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_u_8(int self, SseSerializer serializer);
 
   @protected
   void sse_encode_unit(void self, SseSerializer serializer);
 
   @protected
-  void sse_encode_bool(bool self, SseSerializer serializer);
+  void sse_encode_usize(int self, SseSerializer serializer);
 }
 
 // Section: wire_class
@@ -58,8 +181,49 @@ class RustLibWire extends BaseWire {
       wasmModule.dart_fn_deliver_output(
           call_id, ptr_, rust_vec_len_, data_len_);
 
+  void wire_download_driver(NativePortType port_, String driver_dir) =>
+      wasmModule.wire_download_driver(port_, driver_dir);
+
+  void wire_get_app_home_dir(NativePortType port_) =>
+      wasmModule.wire_get_app_home_dir(port_);
+
+  void wire_get_driver_dir(NativePortType port_) =>
+      wasmModule.wire_get_driver_dir(port_);
+
+  void wire_get_driver_path(NativePortType port_) =>
+      wasmModule.wire_get_driver_path(port_);
+
+  void wire_get_edge_version(NativePortType port_) =>
+      wasmModule.wire_get_edge_version(port_);
+
+  void wire_init_driver(NativePortType port_) =>
+      wasmModule.wire_init_driver(port_);
+
+  void wire_is_webdriver_running(NativePortType port_) =>
+      wasmModule.wire_is_webdriver_running(port_);
+
+  void wire_start_webdriver(NativePortType port_) =>
+      wasmModule.wire_start_webdriver(port_);
+
+  void wire_get_files(NativePortType port_) => wasmModule.wire_get_files(port_);
+
   void wire_my_custom_func(NativePortType port_, int a, int b) =>
       wasmModule.wire_my_custom_func(port_, a, b);
+
+  void wire_show(NativePortType port_, String name) =>
+      wasmModule.wire_show(port_, name);
+
+  void rust_arc_increment_strong_count_RustOpaque_stdsyncRwLockWebDriver(
+          dynamic ptr) =>
+      wasmModule
+          .rust_arc_increment_strong_count_RustOpaque_stdsyncRwLockWebDriver(
+              ptr);
+
+  void rust_arc_decrement_strong_count_RustOpaque_stdsyncRwLockWebDriver(
+          dynamic ptr) =>
+      wasmModule
+          .rust_arc_decrement_strong_count_RustOpaque_stdsyncRwLockWebDriver(
+              ptr);
 }
 
 @JS('wasm_bindgen')
@@ -77,5 +241,33 @@ class RustLibWasmModule implements WasmModule {
   external void dart_fn_deliver_output(int call_id,
       PlatformGeneralizedUint8ListPtr ptr_, int rust_vec_len_, int data_len_);
 
+  external void wire_download_driver(NativePortType port_, String driver_dir);
+
+  external void wire_get_app_home_dir(NativePortType port_);
+
+  external void wire_get_driver_dir(NativePortType port_);
+
+  external void wire_get_driver_path(NativePortType port_);
+
+  external void wire_get_edge_version(NativePortType port_);
+
+  external void wire_init_driver(NativePortType port_);
+
+  external void wire_is_webdriver_running(NativePortType port_);
+
+  external void wire_start_webdriver(NativePortType port_);
+
+  external void wire_get_files(NativePortType port_);
+
   external void wire_my_custom_func(NativePortType port_, int a, int b);
+
+  external void wire_show(NativePortType port_, String name);
+
+  external void
+      rust_arc_increment_strong_count_RustOpaque_stdsyncRwLockWebDriver(
+          dynamic ptr);
+
+  external void
+      rust_arc_decrement_strong_count_RustOpaque_stdsyncRwLockWebDriver(
+          dynamic ptr);
 }

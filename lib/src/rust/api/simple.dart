@@ -8,3 +8,9 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
 Future<int> myCustomFunc({required int a, required int b, dynamic hint}) =>
     RustLib.instance.api.myCustomFunc(a: a, b: b, hint: hint);
+
+Future<void> show({required String name, dynamic hint}) =>
+    RustLib.instance.api.show(name: name, hint: hint);
+
+Future<List<String>> getFiles({dynamic hint}) =>
+    RustLib.instance.api.getFiles(hint: hint);

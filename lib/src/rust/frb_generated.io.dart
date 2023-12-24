@@ -3,6 +3,7 @@
 
 // ignore_for_file: unused_import, unused_element, unnecessary_import, duplicate_ignore, invalid_use_of_internal_member, annotate_overrides, non_constant_identifier_names, curly_braces_in_flow_control_structures, prefer_const_literals_to_create_immutables
 
+import 'api/online.dart';
 import 'api/simple.dart';
 import 'dart:async';
 import 'dart:convert';
@@ -18,35 +19,164 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
     required super.portManager,
   });
 
+  CrossPlatformFinalizerArg
+      get rust_arc_decrement_strong_count_RwLockWebDriverPtr => wire
+          ._rust_arc_decrement_strong_count_RustOpaque_stdsyncRwLockWebDriverPtr;
+
+  @protected
+  AnyhowException dco_decode_AnyhowException(dynamic raw);
+
+  @protected
+  RwLockWebDriver dco_decode_Auto_Owned_RustOpaque_stdsyncRwLockWebDriver(
+      dynamic raw);
+
+  @protected
+  RwLockWebDriver dco_decode_RustOpaque_stdsyncRwLockWebDriver(dynamic raw);
+
+  @protected
+  String dco_decode_String(dynamic raw);
+
+  @protected
+  bool dco_decode_bool(dynamic raw);
+
   @protected
   int dco_decode_i_32(dynamic raw);
+
+  @protected
+  List<String> dco_decode_list_String(dynamic raw);
+
+  @protected
+  Uint8List dco_decode_list_prim_u_8(dynamic raw);
+
+  @protected
+  int dco_decode_u_8(dynamic raw);
 
   @protected
   void dco_decode_unit(dynamic raw);
 
   @protected
-  int sse_decode_i_32(SseDeserializer deserializer);
+  int dco_decode_usize(dynamic raw);
 
   @protected
-  void sse_decode_unit(SseDeserializer deserializer);
+  AnyhowException sse_decode_AnyhowException(SseDeserializer deserializer);
+
+  @protected
+  RwLockWebDriver sse_decode_Auto_Owned_RustOpaque_stdsyncRwLockWebDriver(
+      SseDeserializer deserializer);
+
+  @protected
+  RwLockWebDriver sse_decode_RustOpaque_stdsyncRwLockWebDriver(
+      SseDeserializer deserializer);
+
+  @protected
+  String sse_decode_String(SseDeserializer deserializer);
 
   @protected
   bool sse_decode_bool(SseDeserializer deserializer);
 
   @protected
+  int sse_decode_i_32(SseDeserializer deserializer);
+
+  @protected
+  List<String> sse_decode_list_String(SseDeserializer deserializer);
+
+  @protected
+  Uint8List sse_decode_list_prim_u_8(SseDeserializer deserializer);
+
+  @protected
+  int sse_decode_u_8(SseDeserializer deserializer);
+
+  @protected
+  void sse_decode_unit(SseDeserializer deserializer);
+
+  @protected
+  int sse_decode_usize(SseDeserializer deserializer);
+
+  @protected
+  ffi.Pointer<wire_cst_list_prim_u_8> cst_encode_AnyhowException(
+      AnyhowException raw) {
+    throw UnimplementedError();
+  }
+
+  @protected
+  ffi.Pointer<wire_cst_list_prim_u_8> cst_encode_String(String raw) {
+    return cst_encode_list_prim_u_8(utf8.encoder.convert(raw));
+  }
+
+  @protected
+  ffi.Pointer<wire_cst_list_String> cst_encode_list_String(List<String> raw) {
+    final ans = wire.cst_new_list_String(raw.length);
+    for (var i = 0; i < raw.length; ++i) {
+      ans.ref.ptr[i] = cst_encode_String(raw[i]);
+    }
+    return ans;
+  }
+
+  @protected
+  ffi.Pointer<wire_cst_list_prim_u_8> cst_encode_list_prim_u_8(Uint8List raw) {
+    final ans = wire.cst_new_list_prim_u_8(raw.length);
+    ans.ref.ptr.asTypedList(raw.length).setAll(0, raw);
+    return ans;
+  }
+
+  @protected
+  PlatformPointer cst_encode_Auto_Owned_RustOpaque_stdsyncRwLockWebDriver(
+      RwLockWebDriver raw);
+
+  @protected
+  PlatformPointer cst_encode_RustOpaque_stdsyncRwLockWebDriver(
+      RwLockWebDriver raw);
+
+  @protected
+  bool cst_encode_bool(bool raw);
+
+  @protected
   int cst_encode_i_32(int raw);
+
+  @protected
+  int cst_encode_u_8(int raw);
 
   @protected
   void cst_encode_unit(void raw);
 
   @protected
+  int cst_encode_usize(int raw);
+
+  @protected
+  void sse_encode_AnyhowException(
+      AnyhowException self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_Auto_Owned_RustOpaque_stdsyncRwLockWebDriver(
+      RwLockWebDriver self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_RustOpaque_stdsyncRwLockWebDriver(
+      RwLockWebDriver self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_String(String self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_bool(bool self, SseSerializer serializer);
+
+  @protected
   void sse_encode_i_32(int self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_list_String(List<String> self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_list_prim_u_8(Uint8List self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_u_8(int self, SseSerializer serializer);
 
   @protected
   void sse_encode_unit(void self, SseSerializer serializer);
 
   @protected
-  void sse_encode_bool(bool self, SseSerializer serializer);
+  void sse_encode_usize(int self, SseSerializer serializer);
 }
 
 // Section: wire_class
@@ -97,6 +227,135 @@ class RustLibWire implements BaseWire {
   late final _dart_fn_deliver_output = _dart_fn_deliver_outputPtr
       .asFunction<void Function(int, ffi.Pointer<ffi.Uint8>, int, int)>();
 
+  void wire_download_driver(
+    int port_,
+    ffi.Pointer<wire_cst_list_prim_u_8> driver_dir,
+  ) {
+    return _wire_download_driver(
+      port_,
+      driver_dir,
+    );
+  }
+
+  late final _wire_download_driverPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(ffi.Int64,
+              ffi.Pointer<wire_cst_list_prim_u_8>)>>('wire_download_driver');
+  late final _wire_download_driver = _wire_download_driverPtr
+      .asFunction<void Function(int, ffi.Pointer<wire_cst_list_prim_u_8>)>();
+
+  void wire_get_app_home_dir(
+    int port_,
+  ) {
+    return _wire_get_app_home_dir(
+      port_,
+    );
+  }
+
+  late final _wire_get_app_home_dirPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64)>>(
+          'wire_get_app_home_dir');
+  late final _wire_get_app_home_dir =
+      _wire_get_app_home_dirPtr.asFunction<void Function(int)>();
+
+  void wire_get_driver_dir(
+    int port_,
+  ) {
+    return _wire_get_driver_dir(
+      port_,
+    );
+  }
+
+  late final _wire_get_driver_dirPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64)>>(
+          'wire_get_driver_dir');
+  late final _wire_get_driver_dir =
+      _wire_get_driver_dirPtr.asFunction<void Function(int)>();
+
+  void wire_get_driver_path(
+    int port_,
+  ) {
+    return _wire_get_driver_path(
+      port_,
+    );
+  }
+
+  late final _wire_get_driver_pathPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64)>>(
+          'wire_get_driver_path');
+  late final _wire_get_driver_path =
+      _wire_get_driver_pathPtr.asFunction<void Function(int)>();
+
+  void wire_get_edge_version(
+    int port_,
+  ) {
+    return _wire_get_edge_version(
+      port_,
+    );
+  }
+
+  late final _wire_get_edge_versionPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64)>>(
+          'wire_get_edge_version');
+  late final _wire_get_edge_version =
+      _wire_get_edge_versionPtr.asFunction<void Function(int)>();
+
+  void wire_init_driver(
+    int port_,
+  ) {
+    return _wire_init_driver(
+      port_,
+    );
+  }
+
+  late final _wire_init_driverPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64)>>(
+          'wire_init_driver');
+  late final _wire_init_driver =
+      _wire_init_driverPtr.asFunction<void Function(int)>();
+
+  void wire_is_webdriver_running(
+    int port_,
+  ) {
+    return _wire_is_webdriver_running(
+      port_,
+    );
+  }
+
+  late final _wire_is_webdriver_runningPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64)>>(
+          'wire_is_webdriver_running');
+  late final _wire_is_webdriver_running =
+      _wire_is_webdriver_runningPtr.asFunction<void Function(int)>();
+
+  void wire_start_webdriver(
+    int port_,
+  ) {
+    return _wire_start_webdriver(
+      port_,
+    );
+  }
+
+  late final _wire_start_webdriverPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64)>>(
+          'wire_start_webdriver');
+  late final _wire_start_webdriver =
+      _wire_start_webdriverPtr.asFunction<void Function(int)>();
+
+  void wire_get_files(
+    int port_,
+  ) {
+    return _wire_get_files(
+      port_,
+    );
+  }
+
+  late final _wire_get_filesPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Int64)>>(
+          'wire_get_files');
+  late final _wire_get_files =
+      _wire_get_filesPtr.asFunction<void Function(int)>();
+
   void wire_my_custom_func(
     int port_,
     int a,
@@ -116,6 +375,83 @@ class RustLibWire implements BaseWire {
   late final _wire_my_custom_func =
       _wire_my_custom_funcPtr.asFunction<void Function(int, int, int)>();
 
+  void wire_show(
+    int port_,
+    ffi.Pointer<wire_cst_list_prim_u_8> name,
+  ) {
+    return _wire_show(
+      port_,
+      name,
+    );
+  }
+
+  late final _wire_showPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Void Function(
+              ffi.Int64, ffi.Pointer<wire_cst_list_prim_u_8>)>>('wire_show');
+  late final _wire_show = _wire_showPtr
+      .asFunction<void Function(int, ffi.Pointer<wire_cst_list_prim_u_8>)>();
+
+  void rust_arc_increment_strong_count_RustOpaque_stdsyncRwLockWebDriver(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_increment_strong_count_RustOpaque_stdsyncRwLockWebDriver(
+      ptr,
+    );
+  }
+
+  late final _rust_arc_increment_strong_count_RustOpaque_stdsyncRwLockWebDriverPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+          'rust_arc_increment_strong_count_RustOpaque_stdsyncRwLockWebDriver');
+  late final _rust_arc_increment_strong_count_RustOpaque_stdsyncRwLockWebDriver =
+      _rust_arc_increment_strong_count_RustOpaque_stdsyncRwLockWebDriverPtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+
+  void rust_arc_decrement_strong_count_RustOpaque_stdsyncRwLockWebDriver(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_decrement_strong_count_RustOpaque_stdsyncRwLockWebDriver(
+      ptr,
+    );
+  }
+
+  late final _rust_arc_decrement_strong_count_RustOpaque_stdsyncRwLockWebDriverPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+          'rust_arc_decrement_strong_count_RustOpaque_stdsyncRwLockWebDriver');
+  late final _rust_arc_decrement_strong_count_RustOpaque_stdsyncRwLockWebDriver =
+      _rust_arc_decrement_strong_count_RustOpaque_stdsyncRwLockWebDriverPtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+
+  ffi.Pointer<wire_cst_list_String> cst_new_list_String(
+    int len,
+  ) {
+    return _cst_new_list_String(
+      len,
+    );
+  }
+
+  late final _cst_new_list_StringPtr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<wire_cst_list_String> Function(
+              ffi.Int32)>>('cst_new_list_String');
+  late final _cst_new_list_String = _cst_new_list_StringPtr
+      .asFunction<ffi.Pointer<wire_cst_list_String> Function(int)>();
+
+  ffi.Pointer<wire_cst_list_prim_u_8> cst_new_list_prim_u_8(
+    int len,
+  ) {
+    return _cst_new_list_prim_u_8(
+      len,
+    );
+  }
+
+  late final _cst_new_list_prim_u_8Ptr = _lookup<
+      ffi.NativeFunction<
+          ffi.Pointer<wire_cst_list_prim_u_8> Function(
+              ffi.Int32)>>('cst_new_list_prim_u_8');
+  late final _cst_new_list_prim_u_8 = _cst_new_list_prim_u_8Ptr
+      .asFunction<ffi.Pointer<wire_cst_list_prim_u_8> Function(int)>();
+
   int dummy_method_to_enforce_bundling() {
     return _dummy_method_to_enforce_bundling();
   }
@@ -125,4 +461,18 @@ class RustLibWire implements BaseWire {
           'dummy_method_to_enforce_bundling');
   late final _dummy_method_to_enforce_bundling =
       _dummy_method_to_enforce_bundlingPtr.asFunction<int Function()>();
+}
+
+final class wire_cst_list_prim_u_8 extends ffi.Struct {
+  external ffi.Pointer<ffi.Uint8> ptr;
+
+  @ffi.Int32()
+  external int len;
+}
+
+final class wire_cst_list_String extends ffi.Struct {
+  external ffi.Pointer<ffi.Pointer<wire_cst_list_prim_u_8>> ptr;
+
+  @ffi.Int32()
+  external int len;
 }

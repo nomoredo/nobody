@@ -1,5 +1,6 @@
-rust_input: rust/src/api/**/*.rs
+rust_input: ./rust/src/api/**/*.rs
 dart_output: lib/src/rust
 c_output: nobody.h
-
-
+# dart_decl_output: lib/bridge_definitions.dart
+dart_format_line_length: 80
+wasm: false

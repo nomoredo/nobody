@@ -4,6 +4,7 @@
 // Section: imports
 
 use super::*;
+use crate::api::online::*;
 use flutter_rust_bridge::for_generated::byteorder::{NativeEndian, ReadBytesExt, WriteBytesExt};
 use flutter_rust_bridge::for_generated::transform_result_dco;
 use flutter_rust_bridge::for_generated::wasm_bindgen;
@@ -20,8 +21,71 @@ where
         (!self.is_null() && !self.is_undefined()).then(|| self.cst_decode())
     }
 }
+impl CstDecode<anyhow::Error> for String {
+    fn cst_decode(self) -> anyhow::Error {
+        unimplemented!()
+    }
+}
+impl CstDecode<String> for String {
+    fn cst_decode(self) -> String {
+        self
+    }
+}
+impl CstDecode<Vec<String>> for flutter_rust_bridge::for_generated::wasm_bindgen::JsValue {
+    fn cst_decode(self) -> Vec<String> {
+        self.dyn_into::<flutter_rust_bridge::for_generated::js_sys::Array>()
+            .unwrap()
+            .iter()
+            .map(CstDecode::cst_decode)
+            .collect()
+    }
+}
+impl CstDecode<Vec<u8>> for Box<[u8]> {
+    fn cst_decode(self) -> Vec<u8> {
+        self.into_vec()
+    }
+}
+impl CstDecode<anyhow::Error> for flutter_rust_bridge::for_generated::wasm_bindgen::JsValue {
+    fn cst_decode(self) -> anyhow::Error {
+        unimplemented!()
+    }
+}
+impl CstDecode<flutter_rust_bridge::RustOpaque<std::sync::RwLock<WebDriver>>>
+    for flutter_rust_bridge::for_generated::wasm_bindgen::JsValue
+{
+    fn cst_decode(self) -> flutter_rust_bridge::RustOpaque<std::sync::RwLock<WebDriver>> {
+        unsafe { flutter_rust_bridge::for_generated::cst_decode_rust_opaque(self) }
+    }
+}
+impl CstDecode<String> for flutter_rust_bridge::for_generated::wasm_bindgen::JsValue {
+    fn cst_decode(self) -> String {
+        self.as_string().expect("non-UTF-8 string, or not a string")
+    }
+}
+impl CstDecode<bool> for flutter_rust_bridge::for_generated::wasm_bindgen::JsValue {
+    fn cst_decode(self) -> bool {
+        self.is_truthy()
+    }
+}
 impl CstDecode<i32> for flutter_rust_bridge::for_generated::wasm_bindgen::JsValue {
     fn cst_decode(self) -> i32 {
+        self.unchecked_into_f64() as _
+    }
+}
+impl CstDecode<Vec<u8>> for flutter_rust_bridge::for_generated::wasm_bindgen::JsValue {
+    fn cst_decode(self) -> Vec<u8> {
+        self.unchecked_into::<flutter_rust_bridge::for_generated::js_sys::Uint8Array>()
+            .to_vec()
+            .into()
+    }
+}
+impl CstDecode<u8> for flutter_rust_bridge::for_generated::wasm_bindgen::JsValue {
+    fn cst_decode(self) -> u8 {
+        self.unchecked_into_f64() as _
+    }
+}
+impl CstDecode<usize> for flutter_rust_bridge::for_generated::wasm_bindgen::JsValue {
+    fn cst_decode(self) -> usize {
         self.unchecked_into_f64() as _
     }
 }
@@ -44,6 +108,81 @@ pub fn dart_fn_deliver_output(
 }
 
 #[wasm_bindgen]
+pub fn wire_download_driver(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    driver_dir: String,
+) {
+    wire_download_driver_impl(port_, driver_dir)
+}
+
+#[wasm_bindgen]
+pub fn wire_get_app_home_dir(port_: flutter_rust_bridge::for_generated::MessagePort) {
+    wire_get_app_home_dir_impl(port_)
+}
+
+#[wasm_bindgen]
+pub fn wire_get_driver_dir(port_: flutter_rust_bridge::for_generated::MessagePort) {
+    wire_get_driver_dir_impl(port_)
+}
+
+#[wasm_bindgen]
+pub fn wire_get_driver_path(port_: flutter_rust_bridge::for_generated::MessagePort) {
+    wire_get_driver_path_impl(port_)
+}
+
+#[wasm_bindgen]
+pub fn wire_get_edge_version(port_: flutter_rust_bridge::for_generated::MessagePort) {
+    wire_get_edge_version_impl(port_)
+}
+
+#[wasm_bindgen]
+pub fn wire_init_driver(port_: flutter_rust_bridge::for_generated::MessagePort) {
+    wire_init_driver_impl(port_)
+}
+
+#[wasm_bindgen]
+pub fn wire_is_webdriver_running(port_: flutter_rust_bridge::for_generated::MessagePort) {
+    wire_is_webdriver_running_impl(port_)
+}
+
+#[wasm_bindgen]
+pub fn wire_start_webdriver(port_: flutter_rust_bridge::for_generated::MessagePort) {
+    wire_start_webdriver_impl(port_)
+}
+
+#[wasm_bindgen]
+pub fn wire_get_files(port_: flutter_rust_bridge::for_generated::MessagePort) {
+    wire_get_files_impl(port_)
+}
+
+#[wasm_bindgen]
 pub fn wire_my_custom_func(port_: flutter_rust_bridge::for_generated::MessagePort, a: i32, b: i32) {
     wire_my_custom_func_impl(port_, a, b)
+}
+
+#[wasm_bindgen]
+pub fn wire_show(port_: flutter_rust_bridge::for_generated::MessagePort, name: String) {
+    wire_show_impl(port_, name)
+}
+
+#[wasm_bindgen]
+pub fn rust_arc_increment_strong_count_RustOpaque_stdsyncRwLockWebDriver(
+    ptr: *const std::ffi::c_void,
+) {
+    unsafe {
+        flutter_rust_bridge::for_generated::rust_arc_increment_strong_count::<
+            std::sync::RwLock<WebDriver>,
+        >(ptr);
+    }
+}
+
+#[wasm_bindgen]
+pub fn rust_arc_decrement_strong_count_RustOpaque_stdsyncRwLockWebDriver(
+    ptr: *const std::ffi::c_void,
+) {
+    unsafe {
+        flutter_rust_bridge::for_generated::rust_arc_decrement_strong_count::<
+            std::sync::RwLock<WebDriver>,
+        >(ptr);
+    }
 }

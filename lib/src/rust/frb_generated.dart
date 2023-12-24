@@ -3,6 +3,7 @@
 
 // ignore_for_file: unused_import, unused_element, unnecessary_import, duplicate_ignore, invalid_use_of_internal_member, annotate_overrides, non_constant_identifier_names, curly_braces_in_flow_control_structures, prefer_const_literals_to_create_immutables
 
+import 'api/online.dart';
 import 'api/simple.dart';
 import 'dart:async';
 import 'dart:convert';
@@ -56,7 +57,36 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
 }
 
 abstract class RustLibApi extends BaseApi {
+  Future<bool> downloadDriver({required String driverDir, dynamic hint});
+
+  Future<String> getAppHomeDir({dynamic hint});
+
+  Future<String> getDriverDir({dynamic hint});
+
+  Future<String> getDriverPath({dynamic hint});
+
+  Future<String> getEdgeVersion({dynamic hint});
+
+  Future<RwLockWebDriver> initDriver({dynamic hint});
+
+  Future<bool> isWebdriverRunning({dynamic hint});
+
+  Future<void> startWebdriver({dynamic hint});
+
+  Future<List<String>> getFiles({dynamic hint});
+
   Future<int> myCustomFunc({required int a, required int b, dynamic hint});
+
+  Future<void> show({required String name, dynamic hint});
+
+  RustArcIncrementStrongCountFnType
+      get rust_arc_increment_strong_count_RwLockWebDriver;
+
+  RustArcDecrementStrongCountFnType
+      get rust_arc_decrement_strong_count_RwLockWebDriver;
+
+  CrossPlatformFinalizerArg
+      get rust_arc_decrement_strong_count_RwLockWebDriverPtr;
 }
 
 class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
@@ -66,6 +96,206 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     required super.generalizedFrbRustBinding,
     required super.portManager,
   });
+
+  @override
+  Future<bool> downloadDriver({required String driverDir, dynamic hint}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        var arg0 = cst_encode_String(driverDir);
+        return wire.wire_download_driver(port_, arg0);
+      },
+      codec: DcoCodec(
+        decodeSuccessData: dco_decode_bool,
+        decodeErrorData: dco_decode_AnyhowException,
+      ),
+      constMeta: kDownloadDriverConstMeta,
+      argValues: [driverDir],
+      apiImpl: this,
+      hint: hint,
+    ));
+  }
+
+  TaskConstMeta get kDownloadDriverConstMeta => const TaskConstMeta(
+        debugName: "download_driver",
+        argNames: ["driverDir"],
+      );
+
+  @override
+  Future<String> getAppHomeDir({dynamic hint}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        return wire.wire_get_app_home_dir(port_);
+      },
+      codec: DcoCodec(
+        decodeSuccessData: dco_decode_String,
+        decodeErrorData: dco_decode_AnyhowException,
+      ),
+      constMeta: kGetAppHomeDirConstMeta,
+      argValues: [],
+      apiImpl: this,
+      hint: hint,
+    ));
+  }
+
+  TaskConstMeta get kGetAppHomeDirConstMeta => const TaskConstMeta(
+        debugName: "get_app_home_dir",
+        argNames: [],
+      );
+
+  @override
+  Future<String> getDriverDir({dynamic hint}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        return wire.wire_get_driver_dir(port_);
+      },
+      codec: DcoCodec(
+        decodeSuccessData: dco_decode_String,
+        decodeErrorData: dco_decode_AnyhowException,
+      ),
+      constMeta: kGetDriverDirConstMeta,
+      argValues: [],
+      apiImpl: this,
+      hint: hint,
+    ));
+  }
+
+  TaskConstMeta get kGetDriverDirConstMeta => const TaskConstMeta(
+        debugName: "get_driver_dir",
+        argNames: [],
+      );
+
+  @override
+  Future<String> getDriverPath({dynamic hint}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        return wire.wire_get_driver_path(port_);
+      },
+      codec: DcoCodec(
+        decodeSuccessData: dco_decode_String,
+        decodeErrorData: dco_decode_AnyhowException,
+      ),
+      constMeta: kGetDriverPathConstMeta,
+      argValues: [],
+      apiImpl: this,
+      hint: hint,
+    ));
+  }
+
+  TaskConstMeta get kGetDriverPathConstMeta => const TaskConstMeta(
+        debugName: "get_driver_path",
+        argNames: [],
+      );
+
+  @override
+  Future<String> getEdgeVersion({dynamic hint}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        return wire.wire_get_edge_version(port_);
+      },
+      codec: DcoCodec(
+        decodeSuccessData: dco_decode_String,
+        decodeErrorData: dco_decode_AnyhowException,
+      ),
+      constMeta: kGetEdgeVersionConstMeta,
+      argValues: [],
+      apiImpl: this,
+      hint: hint,
+    ));
+  }
+
+  TaskConstMeta get kGetEdgeVersionConstMeta => const TaskConstMeta(
+        debugName: "get_edge_version",
+        argNames: [],
+      );
+
+  @override
+  Future<RwLockWebDriver> initDriver({dynamic hint}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        return wire.wire_init_driver(port_);
+      },
+      codec: DcoCodec(
+        decodeSuccessData:
+            dco_decode_Auto_Owned_RustOpaque_stdsyncRwLockWebDriver,
+        decodeErrorData: null,
+      ),
+      constMeta: kInitDriverConstMeta,
+      argValues: [],
+      apiImpl: this,
+      hint: hint,
+    ));
+  }
+
+  TaskConstMeta get kInitDriverConstMeta => const TaskConstMeta(
+        debugName: "init_driver",
+        argNames: [],
+      );
+
+  @override
+  Future<bool> isWebdriverRunning({dynamic hint}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        return wire.wire_is_webdriver_running(port_);
+      },
+      codec: DcoCodec(
+        decodeSuccessData: dco_decode_bool,
+        decodeErrorData: null,
+      ),
+      constMeta: kIsWebdriverRunningConstMeta,
+      argValues: [],
+      apiImpl: this,
+      hint: hint,
+    ));
+  }
+
+  TaskConstMeta get kIsWebdriverRunningConstMeta => const TaskConstMeta(
+        debugName: "is_webdriver_running",
+        argNames: [],
+      );
+
+  @override
+  Future<void> startWebdriver({dynamic hint}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        return wire.wire_start_webdriver(port_);
+      },
+      codec: DcoCodec(
+        decodeSuccessData: dco_decode_unit,
+        decodeErrorData: null,
+      ),
+      constMeta: kStartWebdriverConstMeta,
+      argValues: [],
+      apiImpl: this,
+      hint: hint,
+    ));
+  }
+
+  TaskConstMeta get kStartWebdriverConstMeta => const TaskConstMeta(
+        debugName: "start_webdriver",
+        argNames: [],
+      );
+
+  @override
+  Future<List<String>> getFiles({dynamic hint}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        return wire.wire_get_files(port_);
+      },
+      codec: DcoCodec(
+        decodeSuccessData: dco_decode_list_String,
+        decodeErrorData: null,
+      ),
+      constMeta: kGetFilesConstMeta,
+      argValues: [],
+      apiImpl: this,
+      hint: hint,
+    ));
+  }
+
+  TaskConstMeta get kGetFilesConstMeta => const TaskConstMeta(
+        debugName: "get_files",
+        argNames: [],
+      );
 
   @override
   Future<int> myCustomFunc({required int a, required int b, dynamic hint}) {
@@ -91,8 +321,80 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
         argNames: ["a", "b"],
       );
 
+  @override
+  Future<void> show({required String name, dynamic hint}) {
+    return handler.executeNormal(NormalTask(
+      callFfi: (port_) {
+        var arg0 = cst_encode_String(name);
+        return wire.wire_show(port_, arg0);
+      },
+      codec: DcoCodec(
+        decodeSuccessData: dco_decode_unit,
+        decodeErrorData: null,
+      ),
+      constMeta: kShowConstMeta,
+      argValues: [name],
+      apiImpl: this,
+      hint: hint,
+    ));
+  }
+
+  TaskConstMeta get kShowConstMeta => const TaskConstMeta(
+        debugName: "show",
+        argNames: ["name"],
+      );
+
+  RustArcIncrementStrongCountFnType
+      get rust_arc_increment_strong_count_RwLockWebDriver => wire
+          .rust_arc_increment_strong_count_RustOpaque_stdsyncRwLockWebDriver;
+
+  RustArcDecrementStrongCountFnType
+      get rust_arc_decrement_strong_count_RwLockWebDriver => wire
+          .rust_arc_decrement_strong_count_RustOpaque_stdsyncRwLockWebDriver;
+
+  @protected
+  AnyhowException dco_decode_AnyhowException(dynamic raw) {
+    return AnyhowException(raw as String);
+  }
+
+  @protected
+  RwLockWebDriver dco_decode_Auto_Owned_RustOpaque_stdsyncRwLockWebDriver(
+      dynamic raw) {
+    return RwLockWebDriver.dcoDecode(raw);
+  }
+
+  @protected
+  RwLockWebDriver dco_decode_RustOpaque_stdsyncRwLockWebDriver(dynamic raw) {
+    return RwLockWebDriver.dcoDecode(raw);
+  }
+
+  @protected
+  String dco_decode_String(dynamic raw) {
+    return raw as String;
+  }
+
+  @protected
+  bool dco_decode_bool(dynamic raw) {
+    return raw as bool;
+  }
+
   @protected
   int dco_decode_i_32(dynamic raw) {
+    return raw as int;
+  }
+
+  @protected
+  List<String> dco_decode_list_String(dynamic raw) {
+    return (raw as List<dynamic>).map(dco_decode_String).toList();
+  }
+
+  @protected
+  Uint8List dco_decode_list_prim_u_8(dynamic raw) {
+    return raw as Uint8List;
+  }
+
+  @protected
+  int dco_decode_u_8(dynamic raw) {
     return raw as int;
   }
 
@@ -102,12 +404,35 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
-  int sse_decode_i_32(SseDeserializer deserializer) {
-    return deserializer.buffer.getInt32();
+  int dco_decode_usize(dynamic raw) {
+    return dcoDecodeI64OrU64(raw);
   }
 
   @protected
-  void sse_decode_unit(SseDeserializer deserializer) {}
+  AnyhowException sse_decode_AnyhowException(SseDeserializer deserializer) {
+    var inner = sse_decode_String(deserializer);
+    return AnyhowException(inner);
+  }
+
+  @protected
+  RwLockWebDriver sse_decode_Auto_Owned_RustOpaque_stdsyncRwLockWebDriver(
+      SseDeserializer deserializer) {
+    return RwLockWebDriver.sseDecode(
+        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
+  }
+
+  @protected
+  RwLockWebDriver sse_decode_RustOpaque_stdsyncRwLockWebDriver(
+      SseDeserializer deserializer) {
+    return RwLockWebDriver.sseDecode(
+        sse_decode_usize(deserializer), sse_decode_i_32(deserializer));
+  }
+
+  @protected
+  String sse_decode_String(SseDeserializer deserializer) {
+    var inner = sse_decode_list_prim_u_8(deserializer);
+    return utf8.decoder.convert(inner);
+  }
 
   @protected
   bool sse_decode_bool(SseDeserializer deserializer) {
@@ -115,7 +440,65 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  int sse_decode_i_32(SseDeserializer deserializer) {
+    return deserializer.buffer.getInt32();
+  }
+
+  @protected
+  List<String> sse_decode_list_String(SseDeserializer deserializer) {
+    var len_ = sse_decode_i_32(deserializer);
+    var ans_ = <String>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_String(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
+  Uint8List sse_decode_list_prim_u_8(SseDeserializer deserializer) {
+    var len_ = sse_decode_i_32(deserializer);
+    return deserializer.buffer.getUint8List(len_);
+  }
+
+  @protected
+  int sse_decode_u_8(SseDeserializer deserializer) {
+    return deserializer.buffer.getUint8();
+  }
+
+  @protected
+  void sse_decode_unit(SseDeserializer deserializer) {}
+
+  @protected
+  int sse_decode_usize(SseDeserializer deserializer) {
+    return deserializer.buffer.getUint64();
+  }
+
+  @protected
+  PlatformPointer cst_encode_Auto_Owned_RustOpaque_stdsyncRwLockWebDriver(
+      RwLockWebDriver raw) {
+    // ignore: invalid_use_of_internal_member
+    return raw.cstEncode(move: true);
+  }
+
+  @protected
+  PlatformPointer cst_encode_RustOpaque_stdsyncRwLockWebDriver(
+      RwLockWebDriver raw) {
+    // ignore: invalid_use_of_internal_member
+    return raw.cstEncode();
+  }
+
+  @protected
+  bool cst_encode_bool(bool raw) {
+    return raw;
+  }
+
+  @protected
   int cst_encode_i_32(int raw) {
+    return raw;
+  }
+
+  @protected
+  int cst_encode_u_8(int raw) {
     return raw;
   }
 
@@ -125,15 +508,68 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  int cst_encode_usize(int raw) {
+    return raw;
+  }
+
+  @protected
+  void sse_encode_AnyhowException(
+      AnyhowException self, SseSerializer serializer) {
+    throw UnimplementedError(
+        'not yet supported in serialized mode, feel free to create an issue');
+  }
+
+  @protected
+  void sse_encode_Auto_Owned_RustOpaque_stdsyncRwLockWebDriver(
+      RwLockWebDriver self, SseSerializer serializer) {
+    sse_encode_usize(self.sseEncode(move: true), serializer);
+  }
+
+  @protected
+  void sse_encode_RustOpaque_stdsyncRwLockWebDriver(
+      RwLockWebDriver self, SseSerializer serializer) {
+    sse_encode_usize(self.sseEncode(move: null), serializer);
+  }
+
+  @protected
+  void sse_encode_String(String self, SseSerializer serializer) {
+    sse_encode_list_prim_u_8(utf8.encoder.convert(self), serializer);
+  }
+
+  @protected
+  void sse_encode_bool(bool self, SseSerializer serializer) {
+    serializer.buffer.putUint8(self ? 1 : 0);
+  }
+
+  @protected
   void sse_encode_i_32(int self, SseSerializer serializer) {
     serializer.buffer.putInt32(self);
+  }
+
+  @protected
+  void sse_encode_list_String(List<String> self, SseSerializer serializer) {
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_String(item, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_list_prim_u_8(Uint8List self, SseSerializer serializer) {
+    sse_encode_i_32(self.length, serializer);
+    serializer.buffer.putUint8List(self);
+  }
+
+  @protected
+  void sse_encode_u_8(int self, SseSerializer serializer) {
+    serializer.buffer.putUint8(self);
   }
 
   @protected
   void sse_encode_unit(void self, SseSerializer serializer) {}
 
   @protected
-  void sse_encode_bool(bool self, SseSerializer serializer) {
-    serializer.buffer.putUint8(self ? 1 : 0);
+  void sse_encode_usize(int self, SseSerializer serializer) {
+    serializer.buffer.putUint64(self);
   }
 }
