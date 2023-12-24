@@ -166,59 +166,60 @@ class Show {
 
   /// show the data as tree
   /// using box drawing characters like ─╮ ╰ ╭ ╯ │ ─ or sharp corners like ┌ ┐ └ ┘
-  /// ┌─── HEAD
-  /// │ 0
-  /// │ └─── 0
-  /// │      └─── 0 key : value
-  /// │      └─── 1 key : value
-  /// │      └─── 2 key : value
-  /// │      └─── 3 key : value
-  /// │      │              └───┐
-  /// │      │              │ 0 list item 0
-  /// │      │              │ 1 list item 1
-  /// │      │              │ 2 list item 2
-  /// │      │              │ 3 list item 3
-  /// │      │              │ 4 list item 4
-  /// │      │              │ 5 list item 5
-  /// │      │              └──────────────
-  /// │      └─── 4 key : value
-  /// │      └─── 5 key : value
-  /// │      └─── 6 key : value
-  /// │                      └───┐
-  ///
-
+  /// TITLE ─
+  /// └ key (value is a map)
+  ///   ├─ map child 0 : 00000000
+  ///   ├─ map child 1 : 00000000
+  ///   ├─ map child 2 : 00000000
+  ///   ├─ map child 3 : 00000000
+  ///   ├─ key (value is a list)
+  ///   │  ├─ value 0
+  ///   │  └─ value 1
+  ///   └─ map child 4 : 00000000
+  ///key is in yellow and value is in white. lines are in gray ┌ ┐ └ ┘
   static void tree(dynamic data, {String prefix = '', String? title}) {
     if (title != null) {
-      print('${inGray(prefix)}${inMagenta(title)}');
+      title.write(inGray);
+      print("");
     }
-    if (data is Map) {
-      final keys = data.keys.toList();
-      for (var i = 0; i < keys.length; i++) {
-        final key = keys[i];
-        final isLast = i == keys.length - 1;
-        final node = isLast ? '└── ' : '├── ';
-        final formattedKey = inCyan(key);
-        final value = data[key];
-
-        print('$prefix  $node$formattedKey : ${value.toString().inGray}');
-
-        tree(value,
-            prefix: '$prefix  ${isLast ? '    ' : '│   '}', title: null);
-      }
-    } else if (data is List) {
-      var i = 0;
-      for (var item in data) {
-        if (item is Map) {
-          tree(item, prefix: prefix, title: "item $i");
-        } else {
-          final isLast = (data.indexOf(item) == data.length - 1);
-          final node = isLast ? '└── ' : '├── ';
-          final formattedItem = inCyan(item.toString());
-
-          print('$prefix  $node$formattedItem');
+    switch (data.runtimeType) {
+      case Map:
+        data.write((key, value) {
+          prefix.write(inGray);
+          " $key".write(inYellow);
+          " : ".write(inGray);
+          if (value is Map) {
+            print("");
+            tree(value, prefix: prefix + "└─ ");
+          } else if (value is List) {
+            print("");
+            tree(value, prefix: prefix + "└─ ");
+          } else {
+            "$value".write(inWhite);
+            print("");
+          }
+        });
+        break;
+      case List:
+        for (var i = 0; i < data.length; i++) {
+          prefix.write(inGray);
+          " $i".write(inYellow);
+          " : ".write(inGray);
+          if (data[i] is Map) {
+            print("");
+            tree(data[i], prefix: prefix + "└─ ");
+          } else if (data[i] is List) {
+            print("");
+            tree(data[i], prefix: prefix + "└─ ");
+          } else {
+            "$data[i]".write(inWhite);
+            print("");
+          }
         }
-        i++;
-      }
+        break;
+      default:
+        data.write(inWhite);
+        print("");
     }
   }
 }
