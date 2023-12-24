@@ -230,12 +230,14 @@ class Show {
 
   /// show the data as a table
   /// using box drawing characters like ─╮ ╰ ╭ ╯ │ ─ or sharp corners like ┌ ┐ └ ┘
-  /// ┌──────────── Title ─────────────┐
-  /// ┌────────────────────────────────┐
-  /// │ 1        │ 2        │ 3        │
-  /// ├──────────┼──────────┼──────────┤
-  /// │ 4        │ 5        │ 6        │
-  /// └──────────┴──────────┴──────────┘
+  /// ╭──────────────────────────────────────────────────────────╮
+  /// │                           Title                          │
+  /// ├──────────────────────────────────────────────────────────┤
+  /// │ id         │ application-ZFOC_TRIP_FORM-display-compon   │
+  /// │            │ ent---object--Pernr-inner                   │
+  /// ├────────────┼─────────────────────────────────────────────┤
+  /// │ className  │ sapUiBody                                   │
+  /// ╰──────────────────────────────────────────────────────────╯
   /// borders are in gray and data is in white
   /// the first row is title and is in yellow
   /// second row is header and is in white
@@ -243,70 +245,105 @@ class Show {
   /// automatically takes care of dynamic data checking if it is a map or a list or just a toString of the data
   /// automatically wraps each cell content to fit the width of the cell
   /// automatically calculates the width of each column based on the data
-
   static void table(Iterable<dynamic> data, {String title = "Title"}) {
-    const int totalWidth = 80; // Total width of the table.
+    const int totalWidth = 60; // Adjust this to the desired total width.
+    const int keyWidth = 10; // Width allocated for keys.
+    const int valueWidth = 50; // Width allocated for values.
+    const int gapWidth = 2; // Minimum gap between columns.
 
-    // Convert all data to a list of maps for uniform processing.
-    List<Map<String, dynamic>> rows =
-        data.map<Map<String, dynamic>>((dynamic row) {
-      if (row is Map) {
-        return row
-            .map((key, value) => MapEntry(key.toString(), value.toString()));
-      } else if (row is Iterable) {
-        // Convert Iterable to Map with string keys.
-        return Map.fromIterables(
-            Iterable<String>.generate(row.length, (i) => i.toString()),
-            row.map((e) => e.toString()));
-      } else {
-        return {'Value': row.toString()};
+    // Calculate actual column widths for each column.
+    final int actualKeyWidth =
+        min(keyWidth, data.map((e) => e.toString().length).reduce(max));
+    final int actualValueWidth =
+        min(valueWidth, data.map((e) => e.toString().length).reduce(max));
+    final int actualGapWidth =
+        min(gapWidth, totalWidth - actualKeyWidth - actualValueWidth);
+
+    // Create the table header.
+    final String header =
+        '╭${'─' * actualKeyWidth}╮${'─' * actualGapWidth}╭${'─' * actualValueWidth}╮';
+
+    // Create the table footer.
+    final String footer =
+        '╰${'─' * actualKeyWidth}╯${'─' * actualGapWidth}╰${'─' * actualValueWidth}╯';
+
+    // Print the table header.
+    print(header);
+
+    // Print the title.
+    print('│${title.center(totalWidth)}│');
+
+    // Print the table header.
+    print(header);
+
+    // Print the table contents.
+    for (final MapEntry<String, dynamic> entry in data) {
+      final List<String> lines = entry.value.toString().split('\n');
+      for (final String line in lines) {
+        print(
+            '│${entry.key.padRight(actualKeyWidth)}│${' ' * actualGapWidth}│${line.padRight(actualValueWidth)}│');
       }
-    }).toList();
-
-    // Define the max key and value widths based on the data.
-    int maxKeyWidth = 'Key'.length;
-    int maxValueWidth = 'Value'.length;
-    rows.forEach((Map<String, dynamic> row) {
-      row.forEach((key, value) {
-        maxKeyWidth = max(maxKeyWidth, key.length);
-        maxValueWidth = max(maxValueWidth, value.length);
-      });
-    });
-
-    // Adjust the key and value widths based on the total width.
-    if (maxKeyWidth + maxValueWidth + 3 > totalWidth) {
-      maxKeyWidth =
-          (maxKeyWidth / (maxKeyWidth + maxValueWidth) * (totalWidth - 3))
-              .floor();
-      maxValueWidth = totalWidth - 3 - maxKeyWidth;
     }
 
-    // Function to generate horizontal border lines.
-    String horizontalLine(String left, String right, String fill) {
-      return left + fill * (totalWidth - 2) + right;
+    // Print the table footer.
+    print(footer);
+  }
+
+  /// show the data as tree
+  /// using box drawing characters like ─╮ ╰ ╭ ╯ │ ─ or sharp corners like ┌ ┐ └ ┘
+  /// ┌─── HEAD
+  /// │ 0
+  /// │ └─── 0
+  /// │      └─── 0 key : value
+  /// │      └─── 1 key : value
+  /// │      └─── 2 key : value
+  /// │      └─── 3 key : value
+  /// │      │              └───┐
+  /// │      │              │ 0 list item 0
+  /// │      │              │ 1 list item 1
+  /// │      │              │ 2 list item 2
+  /// │      │              │ 3 list item 3
+  /// │      │              │ 4 list item 4
+  /// │      │              │ 5 list item 5
+  /// │      │              └──────────────
+  /// │      └─── 4 key : value
+  /// │      └─── 5 key : value
+  /// │      └─── 6 key : value
+  /// │                      └───┐
+  ///
+
+  static void tree(dynamic data, {String prefix = '', String? title}) {
+    if (title != null) {
+      print('${inGray(prefix)}${inMagenta(title)}');
     }
+    if (data is Map) {
+      final keys = data.keys.toList();
+      for (var i = 0; i < keys.length; i++) {
+        final key = keys[i];
+        final isLast = i == keys.length - 1;
+        final node = isLast ? '└── ' : '├── ';
+        final formattedKey = inCyan(key);
+        final value = data[key];
 
-    // Function to print a single row of key-value.
-    printRow(String key, String value) {
-      key = key.padRight(maxKeyWidth);
-      value = value.padRight(maxValueWidth);
-      print('│ $key │ $value │');
-    }
+        print('$prefix  $node$formattedKey : ${value.toString().inGray}}');
 
-    // Print the table with transposed key-value pairs.
-    print(horizontalLine('╭', '╮', '─')); // Top border
-    print('│ ${title.padRight(totalWidth - 4)} │'); // Title
-    print(horizontalLine('├', '┤', '─')); // Separator
-
-    // Iterate through each row and print key-value pairs.
-    for (var row in rows) {
-      for (var entry in row.entries) {
-        printRow(entry.key, entry.value);
+        tree(value,
+            prefix: '$prefix  ${isLast ? '    ' : '│   '}', title: null);
       }
-      // Separator between data entries.
-      print(horizontalLine('├', '┤', '─'));
-    }
+    } else if (data is List) {
+      var i = 0;
+      for (var item in data) {
+        if (item is Map) {
+          tree(item, prefix: prefix, title: "item $i");
+        } else {
+          final isLast = (data.indexOf(item) == data.length - 1);
+          final node = isLast ? '└── ' : '├── ';
+          final formattedItem = inCyan(item.toString());
 
-    print(horizontalLine('╰', '╯', '─')); // Bottom border
+          print('$prefix  $node$formattedItem');
+        }
+        i++;
+      }
+    }
   }
 }

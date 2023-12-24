@@ -11,9 +11,9 @@ Future generate_trf_report() async {
       .goto(SapTransaction("ZTR01"))
       // .listen()
       .set(SapInput('Company Code'), '2200')
-      .start_record()
+      // .start_record()
       .wait(Seconds(20))
-      .stop_record("test.json")
+      // .stop_record("test.json")
       .close();
   // .click(SapButton("Execute (F8)"))
   // .waitFor(SapButton("Back (F3)"))

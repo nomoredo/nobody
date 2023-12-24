@@ -387,13 +387,39 @@ extension ExOnline on Future<Online> {
     return Online.list_inputs();
   }
 
-  Future<Online> list_all(
-    AbstractSelector selector,
-  ) async {
+  Future<Online> list_textareas() async {
     var Online = await this;
-    return Online.list_all(
-      selector,
-    );
+    return Online.list_textareas();
+  }
+
+  Future<Online> list_buttons() async {
+    var Online = await this;
+    return Online.list_buttons();
+  }
+
+  Future<Online> list_clickable() async {
+    var Online = await this;
+    return Online.list_clickable();
+  }
+
+  Future<Online> list_dropdowns() async {
+    var Online = await this;
+    return Online.list_dropdowns();
+  }
+
+  Future<Online> list_checkboxes() async {
+    var Online = await this;
+    return Online.list_checkboxes();
+  }
+
+  Future<Online> list_radio_buttons() async {
+    var Online = await this;
+    return Online.list_radio_buttons();
+  }
+
+  Future<Online> list_images() async {
+    var Online = await this;
+    return Online.list_images();
   }
 
   Future<Online> send_hotkey(
@@ -404,20 +430,6 @@ extension ExOnline on Future<Online> {
     return Online.send_hotkey(
       key,
       modifiers: modifiers,
-    );
-  }
-
-  Future<Online> start_record() async {
-    var Online = await this;
-    return Online.start_record();
-  }
-
-  Future<Online> stop_record(
-    String outputFilePath,
-  ) async {
-    var Online = await this;
-    return Online.stop_record(
-      outputFilePath,
     );
   }
 }

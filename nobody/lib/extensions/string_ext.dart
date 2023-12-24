@@ -125,6 +125,18 @@ extension ExString on String? {
     return this.remove('http://').remove('https://').remove('www.').shorten(50);
   }
 
+  /// center a string to a given length
+  /// add spaces to the left and right of the string
+  /// e.g. "1234567890" -> "  1234567890  "
+  String? center(int length) {
+    if (this == null) return null;
+    if (this!.isEmpty) return this;
+    if (this!.length >= length) return this;
+    var left = (length - this!.length) ~/ 2;
+    var right = length - this!.length - left;
+    return ' ' * left + this! + ' ' * right;
+  }
+
   /// shorten a string to a given length
   /// split the string in half and add ... in the middle
   /// e.g. "1234567890" -> "123...890"

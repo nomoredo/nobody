@@ -371,15 +371,19 @@ class Online {
 
   /// List elements matching the selector
   Future<Online> list_elements(AbstractSelector selector) async {
+    Show.action('listing', selector.selector);
     await (await page).waitForSelector(selector.selector);
     var elements = await (await page).evaluate('''(selector) => {
-      return Array.from(document.querySelectorAll(selector)).map((e) => e.outerHTML);
+      return Array.from(document.querySelectorAll(selector)).map((e) => {
+        return e;
+      });
     }''', args: [selector.selector]);
-    Show.table(elements);
+    Show.tree(elements, title: selector.selector);
     return this;
   }
 
   /// List inputs
+  /// List all input elements and their attributes for the current page
   Future<Online> list_inputs() async {
     Show.action(
         'listing', 'input elements', 'in', (await page).url.clean_url());
@@ -394,23 +398,144 @@ class Online {
         }, {});
       });
     }''');
-    Show.table(elements);
+    Show.tree(elements, title: "inputs");
     return this;
   }
 
-  /// List forms
+  /// List textareas
+  /// List all textarea elements and their attributes for the current page
+  Future<Online> list_textareas() async {
+    Show.action(
+        'listing', 'textarea elements', 'in', (await page).url.clean_url());
+    await (await page).waitForSelector('textarea');
+    //return a list of all input elements each as a map of properties
+    var elements = await (await page).evaluate('''() => {
+      return Array.from(document.querySelectorAll('textarea')).map((e) => {
+       // list all attributes and their values
+        return Array.from(e.attributes).reduce((map, attribute) => {
+          map[attribute.name] = attribute.value;
+          return map;
+        }, {});
+      });
+    }''');
+    Show.tree(elements, title: "textareas");
+    return this;
+  }
 
-  //lists all elements matching the selector
-  // all input fields have class containing 'lsField__input'
-  // all buttons have class containing 'lsButton'
-  // all dropdowns have class containing 'lsField__input' and aria-roledescription="Select"
-  Future<Online> list_all(AbstractSelector selector) async {
-    Show.action('listing', selector.selector);
-    await (await page).waitForSelector(selector.selector);
-    var elements = await (await page).evaluate('''(selector) => {
-      return Array.from(document.querySelectorAll(selector)).map((e) => e.outerHTML);
-    }''', args: [selector.selector]);
-    Show.anything(elements);
+  /// List buttons
+  /// List all button elements and their attributes for the current page
+  Future<Online> list_buttons() async {
+    Show.action(
+        'listing', 'button elements', 'in', (await page).url.clean_url());
+    await (await page).waitForSelector('button');
+    //return a list of all input elements each as a map of properties
+    var elements = await (await page).evaluate('''() => {
+      return Array.from(document.querySelectorAll('button')).map((e) => {
+       // list all attributes and their values
+        return Array.from(e.attributes).reduce((map, attribute) => {
+          map[attribute.name] = attribute.value;
+          return map;
+        }, {});
+      });
+    }''');
+    Show.tree(elements, title: "buttons");
+    return this;
+  }
+
+  /// List clickable elements
+  /// List all clickable elements and their attributes for the current page
+  Future<Online> list_clickable() async {
+    Show.action(
+        'listing', 'clickable elements', 'in', (await page).url.clean_url());
+    await (await page).waitForSelector('a');
+    //return a list of all input elements each as a map of properties
+    var elements = await (await page).evaluate('''() => {
+      return Array.from(document.querySelectorAll('a')).map((e) => {
+       // list all attributes and their values
+        return Array.from(e.attributes).reduce((map, attribute) => {
+          map[attribute.name] = attribute.value;
+          return map;
+        }, {});
+      });
+    }''');
+    Show.tree(elements, title: "clickable");
+    return this;
+  }
+
+  /// List dropdowns
+  /// List all dropdown elements and their attributes for the current page
+  Future<Online> list_dropdowns() async {
+    Show.action(
+        'listing', 'dropdown elements', 'in', (await page).url.clean_url());
+    await (await page).waitForSelector('select');
+    //return a list of all input elements each as a map of properties
+    var elements = await (await page).evaluate('''() => {
+      return Array.from(document.querySelectorAll('select')).map((e) => {
+       // list all attributes and their values
+        return Array.from(e.attributes).reduce((map, attribute) => {
+          map[attribute.name] = attribute.value;
+          return map;
+        }, {});
+      });
+    }''');
+    Show.tree(elements, title: "dropdowns");
+    return this;
+  }
+
+  /// List checkboxes
+  Future<Online> list_checkboxes() async {
+    Show.action(
+        'listing', 'checkbox elements', 'in', (await page).url.clean_url());
+    await (await page).waitForSelector('input[type="checkbox"]');
+    //return a list of all input elements each as a map of properties
+    var elements = await (await page).evaluate('''() => {
+      return Array.from(document.querySelectorAll('input[type="checkbox"]')).map((e) => {
+       // list all attributes and their values
+        return Array.from(e.attributes).reduce((map, attribute) => {
+          map[attribute.name] = attribute.value;
+          return map;
+        }, {});
+      });
+    }''');
+    Show.tree(elements, title: "checkboxes");
+    return this;
+  }
+
+  /// List radio buttons
+  Future<Online> list_radio_buttons() async {
+    Show.action(
+        'listing', 'radio button elements', 'in', (await page).url.clean_url());
+    await (await page).waitForSelector('input[type="radio"]');
+    //return a list of all input elements each as a map of properties
+    var elements = await (await page).evaluate('''() => {
+      return Array.from(document.querySelectorAll('input[type="radio"]')).map((e) => {
+       // list all attributes and their values
+        return Array.from(e.attributes).reduce((map, attribute) => {
+          map[attribute.name] = attribute.value;
+          return map;
+        }, {});
+      });
+    }''');
+    Show.tree(elements, title: "radio buttons");
+    return this;
+  }
+
+  /// List images
+  Future<Online> list_images() async {
+    Show.action(
+        'listing', 'image elements', 'in', (await page).url.clean_url());
+    await (await page).waitForSelector('img');
+    //return a list of all input elements each as a map of properties
+    var elements = await (await page).evaluate('''() => {
+      return Array.from(document.querySelectorAll('img')).map((e) => {
+       // list all attributes and their values
+        return Array.from(e.attributes).reduce((map, attribute) => {
+          map[attribute.name] = attribute.value;
+          return map;
+        }, {});
+      });
+    }''');
+    Show.tree(elements, title: "images");
     return this;
   }
 
@@ -431,123 +556,6 @@ class Online {
       await (await page).keyboard.press(key);
     }
 
-    return this;
-  }
-
-  List<Map<String, String>> recordedActions = [];
-
-  // Start recording user actions
-  Future<Online> start_record() async {
-    Show.action('INJECTING RECORD BUTTON AND LIST',
-        'Injecting record button and action list...');
-
-    // Inject JavaScript code to create the record button and action list
-    await (await page).evaluate('''() => {
-      // Create a container for the record button and action list
-      const container = document.createElement('div');
-      container.style.display = 'flex';
-      container.style.height = '100%';
-
-      // Create a div for the current view (shrink to the left)
-      const currentView = document.createElement('div');
-      currentView.style.flex = '1';
-      currentView.style.overflow = 'auto';
-      container.appendChild(currentView);
-
-      // Create a div for the record button and action list (on the right)
-      const rightPanel = document.createElement('div');
-      rightPanel.style.width = '300px'; // Adjust the width as needed
-      rightPanel.style.overflow = 'auto';
-      container.appendChild(rightPanel);
-
-      // Create the record button
-      const recordButton = document.createElement('button');
-      recordButton.innerText = 'Record';
-      recordButton.id = 'recordButton';
-      rightPanel.appendChild(recordButton);
-
-      // Create an ordered list for displaying recorded actions
-      const actionList = document.createElement('ol');
-      actionList.id = 'actionList';
-      rightPanel.appendChild(actionList);
-
-      // Initialize a variable to track recording state
-      let isRecording = false;
-
-      // Function to start recording
-      async function start_record() {
-        isRecording = true;
-        recordButton.innerText = 'Stop Recording';
-        console.log('Recording started...');
-
-        // Your existing code for recording actions here...
-      }
-
-      // Function to stop recording
-      async function stop_record() {
-        if (isRecording) {
-          isRecording = false;
-          recordButton.innerText = 'Record';
-          console.log('Recording stopped...');
-
-          // Your existing code for stopping and exporting actions here...
-        }
-      }
-
-      // Function to add an action to the action list
-      function addActionToUI(action, details) {
-        const listItem = document.createElement('li');
-        listItem.innerText = `\${action}: \${details}`;
-        actionList.appendChild(listItem);
-      }
-
-      // Add click event listener to the record button
-      recordButton.addEventListener('click', () => {
-        if (isRecording) {
-          stop_record();
-        } else {
-          start_record();
-        }
-      });
-
-      // Function to record actions and add them to the action list
-      function recordAction(action, details) {
-        if (isRecording) {
-          addActionToUI(action, details);
-        }
-      }
-
-      // Replace your existing event listeners with recordAction calls
-      document.addEventListener('click', (event) => {
-        const selector = getOptimalSelector(event.target);
-        recordAction('CLICK', selector);
-        // Your existing code for click actions...
-      });
-
-      document.addEventListener('input', (event) => {
-        const selector = getOptimalSelector(event.target);
-        recordAction('INPUT', selector);
-        // Your existing code for input actions...
-      });
-
-      // Add more event listeners for other actions (e.g., hover, keypress) as needed
-    }''');
-
-    return this;
-  }
-
-  // Stop recording and export actions
-  Future<Online> stop_record(String outputFilePath) async {
-    // Export the recorded actions to a script file
-    var exportedActions = await (await page).evaluate('''() => {
-      return JSON.stringify(window.recordedActions);
-    }''');
-
-    final scriptContent = exportedActions.toString();
-    await File(outputFilePath).writeAsString(scriptContent);
-
-    Show.action('RECORDING ACTIONS',
-        'Recording completed. Script exported to $outputFilePath');
     return this;
   }
 }
