@@ -1,0 +1,1 @@
+C:\repo\nobody\rust\target\debug\rust_lib.dll: C:\repo\nobody\rust\src\api\mod.rs C:\repo\nobody\rust\src\api\simple.rs C:\repo\nobody\rust\src\frb_generated.io.rs C:\repo\nobody\rust\src\frb_generated.rs C:\repo\nobody\rust\src\lib.rs

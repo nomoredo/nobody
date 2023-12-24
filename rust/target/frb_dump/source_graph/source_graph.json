@@ -1,0 +1,109 @@
+{
+  "name": "rust_lib",
+  "manifest_path": "\\\\?\\C:\\repo\\nobody\\rust\\Cargo.toml",
+  "root_module": {
+    "info": {
+      "visibility": "Public",
+      "file_path": "\\\\?\\C:\\repo\\nobody\\rust\\src\\lib.rs",
+      "module_path": [
+        "crate"
+      ]
+    },
+    "scope": {
+      "modules": [
+        {
+          "info": {
+            "visibility": "Inherited",
+            "file_path": "\\\\?\\C:\\repo\\nobody\\rust\\src\\frb_generated.rs",
+            "module_path": [
+              "crate",
+              "frb_generated"
+            ]
+          },
+          "scope": {
+            "modules": [
+              {
+                "info": {
+                  "visibility": "Inherited",
+                  "file_path": "\\\\?\\C:\\repo\\nobody\\rust\\src\\frb_generated.rs",
+                  "module_path": [
+                    "crate",
+                    "frb_generated",
+                    "io"
+                  ]
+                },
+                "scope": {
+                  "modules": [],
+                  "enums": [],
+                  "structs": [],
+                  "type_alias": []
+                }
+              }
+            ],
+            "enums": [],
+            "structs": [
+              {
+                "ident": "StreamSink",
+                "visibility": "Public",
+                "path": [
+                  "crate",
+                  "frb_generated",
+                  "StreamSink"
+                ],
+                "mirror": false
+              },
+              {
+                "ident": "FLUTTER_RUST_BRIDGE_HANDLER",
+                "visibility": "Public",
+                "path": [
+                  "crate",
+                  "frb_generated",
+                  "FLUTTER_RUST_BRIDGE_HANDLER"
+                ],
+                "mirror": false
+              }
+            ],
+            "type_alias": []
+          }
+        },
+        {
+          "info": {
+            "visibility": "Inherited",
+            "file_path": "\\\\?\\C:\\repo\\nobody\\rust\\src\\api\\mod.rs",
+            "module_path": [
+              "crate",
+              "api"
+            ]
+          },
+          "scope": {
+            "modules": [
+              {
+                "info": {
+                  "visibility": "Public",
+                  "file_path": "\\\\?\\C:\\repo\\nobody\\rust\\src\\api\\mod.rs",
+                  "module_path": [
+                    "crate",
+                    "api",
+                    "simple"
+                  ]
+                },
+                "scope": {
+                  "modules": [],
+                  "enums": [],
+                  "structs": [],
+                  "type_alias": []
+                }
+              }
+            ],
+            "enums": [],
+            "structs": [],
+            "type_alias": []
+          }
+        }
+      ],
+      "enums": [],
+      "structs": [],
+      "type_alias": []
+    }
+  }
+}

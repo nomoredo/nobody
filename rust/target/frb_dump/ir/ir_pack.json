@@ -1,0 +1,54 @@
+{
+  "funcs": [
+    {
+      "name": "crate::api::simple/my_custom_func",
+      "inputs": [
+        {
+          "ty": {
+            "type": "Primitive",
+            "safe_ident": "i_32",
+            "data": "I32"
+          },
+          "name": "a",
+          "is_final": true,
+          "comments": [],
+          "default": null,
+          "settings": {
+            "is_in_mirrored_enum": false
+          }
+        },
+        {
+          "ty": {
+            "type": "Primitive",
+            "safe_ident": "i_32",
+            "data": "I32"
+          },
+          "name": "b",
+          "is_final": true,
+          "comments": [],
+          "default": null,
+          "settings": {
+            "is_in_mirrored_enum": false
+          }
+        }
+      ],
+      "output": {
+        "type": "Primitive",
+        "safe_ident": "i_32",
+        "data": "I32"
+      },
+      "error_output": null,
+      "owner": "Function",
+      "mode": "Normal",
+      "rust_async": false,
+      "comments": [],
+      "codec_mode_pack": {
+        "dart2rust": "Cst",
+        "rust2dart": "Dco"
+      }
+    }
+  ],
+  "struct_pool": {},
+  "enum_pool": {},
+  "has_executor": false
+}

@@ -1,0 +1,13 @@
+c:\repo\nobody\rust\target\debug\deps\libquote-cbd47c1cf5915082.rmeta: C:\tools\rust\registry\src\index.crates.io-6f17d22bba15001f\quote-1.0.33\src\lib.rs C:\tools\rust\registry\src\index.crates.io-6f17d22bba15001f\quote-1.0.33\src\ext.rs C:\tools\rust\registry\src\index.crates.io-6f17d22bba15001f\quote-1.0.33\src\format.rs C:\tools\rust\registry\src\index.crates.io-6f17d22bba15001f\quote-1.0.33\src\ident_fragment.rs C:\tools\rust\registry\src\index.crates.io-6f17d22bba15001f\quote-1.0.33\src\to_tokens.rs C:\tools\rust\registry\src\index.crates.io-6f17d22bba15001f\quote-1.0.33\src\runtime.rs C:\tools\rust\registry\src\index.crates.io-6f17d22bba15001f\quote-1.0.33\src\spanned.rs
+
+c:\repo\nobody\rust\target\debug\deps\libquote-cbd47c1cf5915082.rlib: C:\tools\rust\registry\src\index.crates.io-6f17d22bba15001f\quote-1.0.33\src\lib.rs C:\tools\rust\registry\src\index.crates.io-6f17d22bba15001f\quote-1.0.33\src\ext.rs C:\tools\rust\registry\src\index.crates.io-6f17d22bba15001f\quote-1.0.33\src\format.rs C:\tools\rust\registry\src\index.crates.io-6f17d22bba15001f\quote-1.0.33\src\ident_fragment.rs C:\tools\rust\registry\src\index.crates.io-6f17d22bba15001f\quote-1.0.33\src\to_tokens.rs C:\tools\rust\registry\src\index.crates.io-6f17d22bba15001f\quote-1.0.33\src\runtime.rs C:\tools\rust\registry\src\index.crates.io-6f17d22bba15001f\quote-1.0.33\src\spanned.rs
+
+c:\repo\nobody\rust\target\debug\deps\quote-cbd47c1cf5915082.d: C:\tools\rust\registry\src\index.crates.io-6f17d22bba15001f\quote-1.0.33\src\lib.rs C:\tools\rust\registry\src\index.crates.io-6f17d22bba15001f\quote-1.0.33\src\ext.rs C:\tools\rust\registry\src\index.crates.io-6f17d22bba15001f\quote-1.0.33\src\format.rs C:\tools\rust\registry\src\index.crates.io-6f17d22bba15001f\quote-1.0.33\src\ident_fragment.rs C:\tools\rust\registry\src\index.crates.io-6f17d22bba15001f\quote-1.0.33\src\to_tokens.rs C:\tools\rust\registry\src\index.crates.io-6f17d22bba15001f\quote-1.0.33\src\runtime.rs C:\tools\rust\registry\src\index.crates.io-6f17d22bba15001f\quote-1.0.33\src\spanned.rs
+
+C:\tools\rust\registry\src\index.crates.io-6f17d22bba15001f\quote-1.0.33\src\lib.rs:
+C:\tools\rust\registry\src\index.crates.io-6f17d22bba15001f\quote-1.0.33\src\ext.rs:
+C:\tools\rust\registry\src\index.crates.io-6f17d22bba15001f\quote-1.0.33\src\format.rs:
+C:\tools\rust\registry\src\index.crates.io-6f17d22bba15001f\quote-1.0.33\src\ident_fragment.rs:
+C:\tools\rust\registry\src\index.crates.io-6f17d22bba15001f\quote-1.0.33\src\to_tokens.rs:
+C:\tools\rust\registry\src\index.crates.io-6f17d22bba15001f\quote-1.0.33\src\runtime.rs:
+C:\tools\rust\registry\src\index.crates.io-6f17d22bba15001f\quote-1.0.33\src\spanned.rs:

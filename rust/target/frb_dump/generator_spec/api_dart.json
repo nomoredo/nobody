@@ -1,0 +1,27 @@
+{
+  "namespaced_items": {
+    "crate::api::simple": {
+      "funcs": [
+        {
+          "namespace": "crate::api::simple",
+          "header": {
+            "file_top": "",
+            "import": "",
+            "part": ""
+          },
+          "func_comments": "",
+          "func_expr": "Future<int> myCustomFunc({required int a , required int b , dynamic hint})",
+          "func_impl": "RustLib.instance.api.myCustomFunc(a: a, b: b, hint: hint)",
+          "src_lineno": 1
+        }
+      ],
+      "classes": [],
+      "imports": {
+        "file_top": "",
+        "import": "",
+        "part": ""
+      },
+      "needs_freezed": false
+    }
+  }
+}

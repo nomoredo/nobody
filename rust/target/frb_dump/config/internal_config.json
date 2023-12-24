@@ -1,0 +1,124 @@
+{
+  "controller": {
+    "watch": false,
+    "watching_paths": [
+      "\\\\?\\C:\\repo\\nobody\\rust\\src"
+    ],
+    "exclude_paths": [
+      "\\\\?\\C:\\repo\\nobody\\rust\\src\\frb_generated.rs",
+      "\\\\?\\C:\\repo\\nobody\\rust\\src\\frb_generated.io.rs",
+      "\\\\?\\C:\\repo\\nobody\\rust\\src\\frb_generated.web.rs"
+    ],
+    "max_count": null
+  },
+  "preparer": {
+    "dart_root": "\\\\?\\C:\\repo\\nobody",
+    "deps_check": true
+  },
+  "parser": {
+    "rust_input_path_pack": {
+      "rust_input_paths": [
+        "\\\\?\\C:\\repo\\nobody\\rust\\src\\api\\simple.rs"
+      ]
+    },
+    "rust_crate_dir": "\\\\?\\C:\\repo\\nobody\\rust"
+  },
+  "generator": {
+    "api_dart": {
+      "dart_enums_style": true,
+      "dart3": true,
+      "dart_decl_base_output_path": "\\\\?\\C:\\repo\\nobody\\lib\\src\\rust",
+      "dart_entrypoint_class_name": "RustLib"
+    },
+    "wire": {
+      "dart": {
+        "web_enabled": true,
+        "llvm_path": [
+          "/opt/homebrew/opt/llvm",
+          "/usr/local/opt/llvm",
+          "/usr/lib/llvm-9",
+          "/usr/lib/llvm-10",
+          "/usr/lib/llvm-11",
+          "/usr/lib/llvm-12",
+          "/usr/lib/llvm-13",
+          "/usr/lib/llvm-14",
+          "/usr/lib/",
+          "/usr/lib64/",
+          "C:/Program Files/llvm",
+          "C:/msys64/mingw64"
+        ],
+        "llvm_compiler_opts": "",
+        "dart_root": "\\\\?\\C:\\repo\\nobody",
+        "extra_headers": "",
+        "dart_impl_output_path": {
+          "common": "\\\\?\\C:\\repo\\nobody\\lib\\src\\rust\\frb_generated.dart",
+          "io": "\\\\?\\C:\\repo\\nobody\\lib\\src\\rust\\frb_generated.io.dart",
+          "web": "\\\\?\\C:\\repo\\nobody\\lib\\src\\rust\\frb_generated.web.dart"
+        },
+        "dart_output_class_name_pack": {
+          "entrypoint_class_name": "RustLib",
+          "api_class_name": "RustLibApi",
+          "api_impl_class_name": "RustLibApiImpl",
+          "api_impl_platform_class_name": "RustLibApiImplPlatform",
+          "wire_class_name": "RustLibWire",
+          "wasm_module_name": "RustLibWasmModule"
+        },
+        "default_external_library_loader": {
+          "stem": "rust_lib",
+          "io_directory": "rust/target/release/",
+          "web_prefix": "pkg/"
+        }
+      },
+      "rust": {
+        "rust_input_path_pack": {
+          "rust_input_paths": [
+            "\\\\?\\C:\\repo\\nobody\\rust\\src\\api\\simple.rs"
+          ]
+        },
+        "rust_crate_dir": "\\\\?\\C:\\repo\\nobody\\rust",
+        "web_enabled": true,
+        "rust_output_path": {
+          "common": "\\\\?\\C:\\repo\\nobody\\rust\\src\\frb_generated.rs",
+          "io": "\\\\?\\C:\\repo\\nobody\\rust\\src\\frb_generated.io.rs",
+          "web": "\\\\?\\C:\\repo\\nobody\\rust\\src\\frb_generated.web.rs"
+        }
+      },
+      "c": {
+        "rust_crate_dir": "\\\\?\\C:\\repo\\nobody\\rust",
+        "rust_output_path": {
+          "common": "\\\\?\\C:\\repo\\nobody\\rust\\src\\frb_generated.rs",
+          "io": "\\\\?\\C:\\repo\\nobody\\rust\\src\\frb_generated.io.rs",
+          "web": "\\\\?\\C:\\repo\\nobody\\rust\\src\\frb_generated.web.rs"
+        },
+        "c_output_path": ".\\frb_generated.h"
+      }
+    }
+  },
+  "polisher": {
+    "duplicated_c_output_path": [],
+    "dart_format_line_length": 80,
+    "add_mod_to_lib": true,
+    "build_runner": true,
+    "web_enabled": true,
+    "dart_root": "\\\\?\\C:\\repo\\nobody",
+    "rust_crate_dir": "\\\\?\\C:\\repo\\nobody\\rust",
+    "rust_output_path": {
+      "common": "\\\\?\\C:\\repo\\nobody\\rust\\src\\frb_generated.rs",
+      "io": "\\\\?\\C:\\repo\\nobody\\rust\\src\\frb_generated.io.rs",
+      "web": "\\\\?\\C:\\repo\\nobody\\rust\\src\\frb_generated.web.rs"
+    },
+    "c_output_path": ".\\frb_generated.h"
+  },
+  "dumper": {
+    "dump_contents": [
+      "config",
+      "source",
+      "source_graph",
+      "ir",
+      "generator_info",
+      "generator_spec",
+      "generator_text"
+    ],
+    "dump_directory": "\\\\?\\C:\\repo\\nobody\\rust\\target\\frb_dump"
+  }
+}

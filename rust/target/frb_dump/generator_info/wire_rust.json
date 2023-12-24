@@ -1,0 +1,28 @@
+{
+  "types": [
+    {
+      "safe_ident": "i_32",
+      "rust_wire_type": {
+        "Web": "i32",
+        "Io": "i32"
+      },
+      "rust_wire_modifier": {
+        "Web": "",
+        "Io": ""
+      },
+      "wrapper_struct_name": null
+    },
+    {
+      "safe_ident": "unit",
+      "rust_wire_type": {
+        "Web": "()",
+        "Io": "()"
+      },
+      "rust_wire_modifier": {
+        "Web": "",
+        "Io": ""
+      },
+      "wrapper_struct_name": null
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+C:\repo\nobody\rust\target\debug\deps\libuuid-e913dfa56a914a65.rmeta: C:\tools\rust\registry\src\index.crates.io-6f17d22bba15001f\uuid-1.6.1\src\lib.rs C:\tools\rust\registry\src\index.crates.io-6f17d22bba15001f\uuid-1.6.1\src\builder.rs C:\tools\rust\registry\src\index.crates.io-6f17d22bba15001f\uuid-1.6.1\src\error.rs C:\tools\rust\registry\src\index.crates.io-6f17d22bba15001f\uuid-1.6.1\src\parser.rs C:\tools\rust\registry\src\index.crates.io-6f17d22bba15001f\uuid-1.6.1\src\fmt.rs C:\tools\rust\registry\src\index.crates.io-6f17d22bba15001f\uuid-1.6.1\src\timestamp.rs C:\tools\rust\registry\src\index.crates.io-6f17d22bba15001f\uuid-1.6.1\src\external.rs C:\tools\rust\registry\src\index.crates.io-6f17d22bba15001f\uuid-1.6.1\src\macros.rs
+
+C:\repo\nobody\rust\target\debug\deps\libuuid-e913dfa56a914a65.rlib: C:\tools\rust\registry\src\index.crates.io-6f17d22bba15001f\uuid-1.6.1\src\lib.rs C:\tools\rust\registry\src\index.crates.io-6f17d22bba15001f\uuid-1.6.1\src\builder.rs C:\tools\rust\registry\src\index.crates.io-6f17d22bba15001f\uuid-1.6.1\src\error.rs C:\tools\rust\registry\src\index.crates.io-6f17d22bba15001f\uuid-1.6.1\src\parser.rs C:\tools\rust\registry\src\index.crates.io-6f17d22bba15001f\uuid-1.6.1\src\fmt.rs C:\tools\rust\registry\src\index.crates.io-6f17d22bba15001f\uuid-1.6.1\src\timestamp.rs C:\tools\rust\registry\src\index.crates.io-6f17d22bba15001f\uuid-1.6.1\src\external.rs C:\tools\rust\registry\src\index.crates.io-6f17d22bba15001f\uuid-1.6.1\src\macros.rs
+
+C:\repo\nobody\rust\target\debug\deps\uuid-e913dfa56a914a65.d: C:\tools\rust\registry\src\index.crates.io-6f17d22bba15001f\uuid-1.6.1\src\lib.rs C:\tools\rust\registry\src\index.crates.io-6f17d22bba15001f\uuid-1.6.1\src\builder.rs C:\tools\rust\registry\src\index.crates.io-6f17d22bba15001f\uuid-1.6.1\src\error.rs C:\tools\rust\registry\src\index.crates.io-6f17d22bba15001f\uuid-1.6.1\src\parser.rs C:\tools\rust\registry\src\index.crates.io-6f17d22bba15001f\uuid-1.6.1\src\fmt.rs C:\tools\rust\registry\src\index.crates.io-6f17d22bba15001f\uuid-1.6.1\src\timestamp.rs C:\tools\rust\registry\src\index.crates.io-6f17d22bba15001f\uuid-1.6.1\src\external.rs C:\tools\rust\registry\src\index.crates.io-6f17d22bba15001f\uuid-1.6.1\src\macros.rs
+
+C:\tools\rust\registry\src\index.crates.io-6f17d22bba15001f\uuid-1.6.1\src\lib.rs:
+C:\tools\rust\registry\src\index.crates.io-6f17d22bba15001f\uuid-1.6.1\src\builder.rs:
+C:\tools\rust\registry\src\index.crates.io-6f17d22bba15001f\uuid-1.6.1\src\error.rs:
+C:\tools\rust\registry\src\index.crates.io-6f17d22bba15001f\uuid-1.6.1\src\parser.rs:
+C:\tools\rust\registry\src\index.crates.io-6f17d22bba15001f\uuid-1.6.1\src\fmt.rs:
+C:\tools\rust\registry\src\index.crates.io-6f17d22bba15001f\uuid-1.6.1\src\timestamp.rs:
+C:\tools\rust\registry\src\index.crates.io-6f17d22bba15001f\uuid-1.6.1\src\external.rs:
+C:\tools\rust\registry\src\index.crates.io-6f17d22bba15001f\uuid-1.6.1\src\macros.rs:

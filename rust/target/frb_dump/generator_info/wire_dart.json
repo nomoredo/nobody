@@ -1,0 +1,18 @@
+{
+  "types": [
+    {
+      "safe_ident": "i_32",
+      "dart_wire_type": {
+        "Web": "int",
+        "Io": "int"
+      }
+    },
+    {
+      "safe_ident": "unit",
+      "dart_wire_type": {
+        "Web": "void",
+        "Io": "void"
+      }
+    }
+  ]
+}

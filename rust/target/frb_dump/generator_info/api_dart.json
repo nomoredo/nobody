@@ -1,0 +1,12 @@
+{
+  "types": [
+    {
+      "safe_ident": "i_32",
+      "dart_api_type": "int"
+    },
+    {
+      "safe_ident": "unit",
+      "dart_api_type": "void"
+    }
+  ]
+}
