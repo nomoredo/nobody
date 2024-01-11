@@ -88,26 +88,26 @@ for (const element of elements) {
     return this;
   }
 
-  Future<Online> login(Authable authable) async {
-    Show.action('authenticating', authable.username);
+  Future<Online> login(Authable authable, {bool show = true}) async {
+    if (show) Show.action('authenticating', authable.username);
     return await authable.login(this);
   }
 
-  Future<Online> visit(String url) async {
-    Show.action('visiting', url.clean_url());
+  Future<Online> visit(String url, {bool show = true}) async {
+    if (show) Show.action('visiting', url.clean_url());
     await (await page).goto(url, wait: Until.domContentLoaded);
     return this;
   }
 
-  Future<Online> goto(AbstractUrl url) async {
+  Future<Online> goto(AbstractUrl url, {bool show = true}) async {
     var clean_url = Uri.encodeFull(url.url);
-    Show.action('visiting', clean_url.clean_url());
+    if (show) Show.action('visiting', clean_url.clean_url());
     await (await page).goto(clean_url, wait: Until.domContentLoaded);
     return this;
   }
 
   //navigate
-  Future<Online> navigate(String url) async {
+  Future<Online> navigate(String url, {bool show = true}) async {
     // clean up url to make sure it is valid
     if (!url.startsWith('http')) {
       url = 'https://$url';
@@ -115,14 +115,14 @@ for (const element of elements) {
     //handle # ? and other special characters
     url = Uri.encodeFull(url);
 
-    Show.action('navigating to', url);
+    if (show) Show.action('navigating to', url);
     await (await page).goto(url, wait: Until.load);
     return this;
   }
 
   Future<Online> set(AbstractSelector selector, String text,
-      {Duration? timeout = null, int index = 0}) async {
-    Show.action('set', 'value', text);
+      {bool show = true, Duration? timeout = null, int index = 0}) async {
+    if (show) Show.action('set', 'value', text);
     if (selector is XPath) {
       var selected = await (await page).waitForXPath(selector.selector);
       if (selected != null) {
@@ -214,8 +214,8 @@ for (const element of elements) {
   }
 
   //focus
-  Future<Online> focus(AbstractSelector selector) async {
-    Show.action('focus', selector.selector);
+  Future<Online> focus(AbstractSelector selector, {bool show = true}) async {
+    if (show) Show.action('focusing', selector.selector);
     await (await page).waitForSelector(selector.selector);
     await (await page).focus(selector.selector);
     return this;
@@ -243,8 +243,9 @@ for (const element of elements) {
   }
 
   //click
-  Future<Online> click(AbstractSelector selector) async {
-    Show.action('clicking', selector.selector);
+  Future<Online> click(AbstractSelector selector,
+      {bool show = true, int index = 0}) async {
+    if (show) Show.action('clicking', selector.selector);
     if (selector is XPath) {
       var selected =
           await (await page).waitForXPath(selector.selector, visible: true);
@@ -262,8 +263,8 @@ for (const element of elements) {
   }
 
   //press
-  Future<Online> press(Key key) async {
-    Show.action('pressing', key.toString());
+  Future<Online> press(Key key, {bool show = true}) async {
+    if (show) Show.action('pressing', key.toString());
 
     await (await page).keyboard.press(key);
     return this;
@@ -356,15 +357,15 @@ for (const element of elements) {
   }
 
   //key down
-  Future<Online> key_down(Key key) async {
-    Show.action('key down', key.toString());
+  Future<Online> key_down(Key key, {bool show = true}) async {
+    if (show) Show.action('key down', key.toString());
     await (await page).keyboard.down(key);
     return this;
   }
 
   //key up
-  Future<Online> key_up(Key key) async {
-    Show.action('key up', key.toString());
+  Future<Online> key_up(Key key, {bool show = true}) async {
+    if (show) Show.action('key up', key.toString());
     await (await page).keyboard.up(key);
     return this;
   }

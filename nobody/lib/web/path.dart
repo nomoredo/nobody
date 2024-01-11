@@ -4,6 +4,16 @@ import 'package:nobody/references.dart';
 /// has a path property
 abstract class AbstractPath {
   Future<String> get path;
+
+  const AbstractPath();
+
+  factory AbstractPath.Relative(String name) {
+    return RelativePath(name);
+  }
+
+  factory AbstractPath.Absolute(String name) {
+    return AbsolutePath(name);
+  }
 }
 
 /// Path
@@ -18,11 +28,11 @@ class RelativePath implements AbstractPath {
   const RelativePath(this.name);
 }
 
-class SimplePath implements AbstractPath {
+class AbsolutePath implements AbstractPath {
   final String name;
   Future<String> get path async {
     return name;
   }
 
-  const SimplePath(this.name);
+  const AbsolutePath(this.name);
 }

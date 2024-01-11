@@ -28,6 +28,8 @@ class Sap {
   static AbstractUrl get Fiori => SapFiori();
   static AbstractUrl Transaction(String code) => Transaction(code);
 
+  static AbstractDownloadable get DownloadableTable => DownloadableSapTable();
+
   static AbstractSelector InputFields = Css('[class="lsField__input"]');
 
   /// Table id is not unique, so we need to use the index to get the right table

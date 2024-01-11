@@ -10,6 +10,6 @@ Future generate_mb51_report() async {
       .login(Sap.User('amohandas'))
       .goto(SapTransaction("MB51"))
       .click(Sap.Execute)
-      .download(DownloadableSapTable(), SimplePath("example.xlsx"))
+      .download(DownloadableSapTable(), AbsolutePath("example.xlsx"))
       .wait(Seconds(20));
 }

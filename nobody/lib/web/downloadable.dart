@@ -9,20 +9,27 @@ abstract class AbstractDownloadable {
 
 /// DownloadableSapTable
 class DownloadableSapTable implements AbstractDownloadable {
-  String get name => 'SAP TABLE';
+  String get name => 'Table from SAP';
   const DownloadableSapTable();
 
   @override
   Future<Online> download(Online browser, AbstractPath path) async {
-    var table = SapTableHead();
-    var tablePath = await path.path;
-    await browser
-        .waitFor(table)
-        .send_hotkey(Key.f7, modifiers: [Key.control, Key.shift])
-        .click(Css('div[role="button"][title="Continue (Enter)"]'))
-        .set(Css('input[name="popupDialogInputField"]'), tablePath)
-        .click(Css('div[id="UpDownDialogChoose"]'))
-        .listen_for_downloads();
+    await browser.waitFor(Sap.TableHeader);
+    //send Ctrl+Shift+F10 to window
+    await browser.key_down(Key.control, show: false);
+    await browser.key_down(Key.control, show: false);
+    await browser.key_down(Key.shift, show: false);
+    await browser.press(Key.f10, show: false);
+    await browser.key_up(Key.control, show: false);
+    await browser.key_up(Key.shift, show: false);
+    await browser.click(
+        Css('div[role="button"][title="Spreadsheet... (Ctrl+Shift+F7)"]'),
+        show: false);
+    await browser.click(Css('div[role="button"][title="Continue (Enter)"]'),
+        show: false);
+    await browser.set(Css('#popupDialogInputField'), 'table.xlsx', show: false);
+    await browser.click(Css('#UpDownDialogChoose'), show: false);
+    // await browser.waitFor(Waitable)
     return browser;
   }
 }
