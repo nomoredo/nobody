@@ -22,6 +22,16 @@ extension ExOnline on Future<Online> {
     return Online.log_requests();
   }
 
+  Future<Online> artificial_delay() async {
+    var Online = await this;
+    return Online.artificial_delay();
+  }
+
+  Future<Online> log_clicks() async {
+    var Online = await this;
+    return Online.log_clicks();
+  }
+
   Future<Online> log_responses() async {
     var Online = await this;
     return Online.log_responses();
@@ -121,6 +131,19 @@ extension ExOnline on Future<Online> {
     );
   }
 
+  Future<Online> when(
+    Future<bool> Function(Online) waitable,
+    dynamic Function(Online) action, {
+    Duration? timeout = null,
+  }) async {
+    var Online = await this;
+    return Online.when(
+      waitable,
+      action,
+      timeout: timeout,
+    );
+  }
+
   Future<Online> ex(
     dynamic Function(ElementHandle) script, {
     List<dynamic>? args = null,
@@ -181,12 +204,26 @@ extension ExOnline on Future<Online> {
     );
   }
 
+  Future<Online> downloadSapTable() async {
+    var Online = await this;
+    return Online.downloadSapTable();
+  }
+
   Future<Online> right_click(
     AbstractSelector selector,
   ) async {
     var Online = await this;
     return Online.right_click(
       selector,
+    );
+  }
+
+  Future<Online> click_on_context_menu_item(
+    String text,
+  ) async {
+    var Online = await this;
+    return Online.click_on_context_menu_item(
+      text,
     );
   }
 

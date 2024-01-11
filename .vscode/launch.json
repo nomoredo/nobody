@@ -15,7 +15,7 @@
             "cwd": "nobody",
             "request": "launch",
             "type": "dart",
-            "program": "bin/create_trip_request.dart",
+            "program": "bin/nobody.dart",
             "console": "terminal",
         
         },

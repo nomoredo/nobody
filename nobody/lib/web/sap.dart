@@ -29,6 +29,14 @@ class Sap {
   static AbstractUrl Transaction(String code) => Transaction(code);
 
   static AbstractSelector InputFields = Css('[class="lsField__input"]');
+
+  /// Table id is not unique, so we need to use the index to get the right table
+  /// usually the first table is the one we want to use
+  static AbstractSelector get Table => Css('table[role="grid"]');
+
+  /// Header of first table
+  /// usually the first table is the one we want to use
+  static AbstractSelector get TableHeader => Css('table[role="grid"]>tbody>tr');
 }
 
 class SapUser implements Authable {

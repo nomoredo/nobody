@@ -2,15 +2,22 @@ import 'package:nobody/references.dart';
 
 void main(List<String> arguments) async {
   // create reservation
-  await create_reservation();
-  // await run_GoogleSearch();
-  // await po_export();
-  // await create_pr();
-  // await check_email();
-  // read_excel();
-  // await generate_trf_report();
-  // await generate_mb51_report();
-  // await create_trip_request();
+  await export_emp_attendance();
+}
+
+Future export_emp_attendance() async {
+  return Nobody()
+      .online()
+      .login(Sap.User('amohandas'))
+      .goto(SapTransaction("ZHR076A"))
+      .artificial_delay()
+      .set(Sap.Input("Personnel Number"), "9711068")
+      .set(Input.WithId("M0:46:::2:34"), "01.01.2023")
+      .set(Input.WithId("M0:46:::2:59"), "01.01.2024")
+      .click(Sap.Execute)
+      .downloadSapTable()
+      // .wait(Seconds(50)) // this was for testing
+      .close();
 }
 
 //create reservation

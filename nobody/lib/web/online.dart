@@ -24,6 +24,60 @@ class Online {
     return this;
   }
 
+  Future<Online> artificial_delay() async {
+    await (await page).onRequest.listen((request) async {
+      // print("REQUEST: ${request.method} ${request.url}");
+      if (request.postData != null) {
+        // print("POST DATA: ${request.postData}");
+      }
+    });
+    return this;
+  }
+
+  Future<Online> log_clicks() async {
+    //expose a function to javascript to log clicks
+    await (await page).exposeFunction('log_click', (String element) {
+      Show.action('clicked', element.toString(), '(LOGGED FROM JAVASCRIPT)');
+    });
+
+    //add event listeners to all elements to log clicks
+    await (await page).evaluate(event_listner_code);
+
+    print('ADDED EVENT LISTENERS FOR CLICKS');
+    return this;
+  }
+
+  static String event_listner_code = '''() => {
+      function calculateXPath(element) {
+    if (element) {
+        //often times we cannot use id because it may change on page refresh
+        //since we are trying to get path to sap gui elements, we can use the id
+        //since it is static
+        if (element.id) {
+            return `id('\${element.id}')`;
+        }
+        //if there is no id, we can use the class name of the element and its parent
+        //to get the xpath
+        if (element.className) {
+            return calculateXPath(element.parentNode) + `/\${element.tagName.toLowerCase()}[@class="\${element.className}"]`;
+        }
+        //if there is no class name, we can use the tag name and parent to get the xpath
+        return calculateXPath(element.parentNode) + `/\${element.tagName.toLowerCase()}`;
+    }
+    return 'null';
+}
+
+//add event listeners to all elements to log clicks
+const elements = document.querySelectorAll('*');
+for (const element of elements) {
+    element.addEventListener('click', (event) => {
+        const xpath = calculateXPath(event.target);
+        window.log_click(xpath);
+    });
+}
+
+    }''';
+
   Future<Online> log_responses() async {
     await (await page).onResponse.listen((response) async {
       print("RESPONSE: ${response.status} ${response.url}");
@@ -73,14 +127,28 @@ class Online {
       var selected = await (await page).waitForXPath(selector.selector);
       if (selected != null) {
         await selected.evaluateHandle('''(element, text) => {
-          element.value = text;
+        element.focus(); // Focus on the element
+        var inputEvent = new Event('input', {bubbles: true});
+        var changeEvent = new Event('change', {bubbles: true});
+        element.dispatchEvent(inputEvent);
+        element.value = text;
+        element.dispatchEvent(changeEvent);
+        element.blur(); // Remove focus from the element
+
         }''', args: [text]);
       }
     } else {
       var selected = await (await page).waitForSelector(selector.selector);
       if (selected != null) {
         await selected.evaluateHandle('''(element, text) => {
-          element.value = text;
+        element.focus(); // Focus on the element
+        var inputEvent = new Event('input', {bubbles: true});
+        var changeEvent = new Event('change', {bubbles: true});
+        element.dispatchEvent(inputEvent);
+        element.value = text;
+        element.dispatchEvent(changeEvent);
+        element.blur(); // Remove focus from the element
+        
         }''', args: [text]);
       }
     }
@@ -121,6 +189,17 @@ class Online {
     Show.action('typing', text);
     await (await page).waitForSelector(selector);
     await (await page).type(selector, text);
+    return this;
+  }
+
+  ///When / Then
+  /// eg. wait for a context menu to appear and select the 'Spreadsheet' option from the context menu
+  /// when(Css('div[role="menu"]'), (x) => x.click(Css('div[role="menu"]')))
+  Future<Online> when(Waitable waitable, MapFunc<Online, dynamic> action,
+      {Duration? timeout}) async {
+    Show.action('when', waitable.toString());
+    await waitable(this);
+    await action(this);
     return this;
   }
 
@@ -167,12 +246,14 @@ class Online {
   Future<Online> click(AbstractSelector selector) async {
     Show.action('clicking', selector.selector);
     if (selector is XPath) {
-      var selected = await (await page).waitForXPath(selector.selector);
+      var selected =
+          await (await page).waitForXPath(selector.selector, visible: true);
       if (selected != null) {
         await selected.click();
       }
     } else {
-      var selected = await (await page).waitForSelector(selector.selector);
+      var selected =
+          await (await page).waitForSelector(selector.selector, visible: true);
       if (selected != null) {
         await selected.click();
       }
@@ -191,10 +272,43 @@ class Online {
   //submit form
   Future<Online> submit(AbstractSelector selector) async {
     Show.action('submitting', selector.selector);
-    await (await page).waitForSelector(selector.selector);
+    await (await page).waitForSelector(selector.selector, visible: true);
     await (await page).evaluate('''(selector) => {
       document.querySelector(selector).submit();
     }''', args: [selector.selector]);
+    return this;
+  }
+
+  //select_frame that has a match for the selector
+  Future<Online> select_frame(String selector) async {
+    var frames = await (await page).frames;
+    for (var frame in frames) {
+      try {
+        await (await frame).$eval(selector, '''(element) => {
+          element.click();
+        }''');
+      } catch (e) {
+        print(e);
+      }
+    }
+    return this;
+  }
+
+  //download sap table
+  Future<Online> downloadSapTable() async {
+    await this.waitFor(Sap.TableHeader);
+    //send Ctrl+Shift+F10 to window
+    await (await page).keyboard.down(Key.control);
+    await (await page).keyboard.down(Key.shift);
+    await (await page).keyboard.press(Key.f10);
+    await (await page).keyboard.up(Key.control);
+    await (await page).keyboard.up(Key.shift);
+    await this.click(
+        Css('div[role="button"][title="Spreadsheet... (Ctrl+Shift+F7)"]'));
+    await this.click(Css('div[role="button"][title="Continue (Enter)"]'));
+    await this.set(Css('#popupDialogInputField'), 'table.xlsx');
+    await this.click(Css('#UpDownDialogChoose'));
+
     return this;
   }
 
@@ -203,6 +317,17 @@ class Online {
     Show.action('right click', selector.selector);
     await (await page).waitForSelector(selector.selector);
     await (await page).click(selector.selector, button: MouseButton.right);
+    return this;
+  }
+
+  //click_on_context_menu_item
+  Future<Online> click_on_context_menu_item(String text) async {
+    Show.action('clicking', 'on context menu item', text);
+    await (await page).waitForSelector('td.urMnuTxt');
+    await (await page).evaluate('''(text) => {
+      const element = Array.from(document.querySelectorAll('td.urMnuTxt')).find((e) => e.innerText.includes(text));
+      element.click();
+    }''', args: [text]);
     return this;
   }
 
