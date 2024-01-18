@@ -11,10 +11,17 @@ pub mod constants;
 
 pub fn show_banner() {
     BANNER.print(vibrant);
-    FOOTER.print_positioned(-1, 18, in_white);
     // get virsion from cargo.toml
     let version = env!("CARGO_PKG_VERSION");
-    format!("{}", version).print_positioned(-2, 27, in_gray);
+    FOOTER.print_positioned(-2, 26, in_white);
+    format!("{}", version).print_positioned(-2, 28, in_gray);
+
+//    divider();
+reset_line();
+    "by aghil.mohan for slickline team".print_positioned(-1, 0, in_gray);
+    reset_line();
+   showln!(gray,"so that you can focus on the things that matter");
+   divider();
 
 }
 

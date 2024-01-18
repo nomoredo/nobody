@@ -312,6 +312,19 @@ pub fn vibrant<'a, T: Display + ?Sized>(text: &'a T) -> String {
 }
 
 
+pub fn divider() {
+//reset to left
+print!("\x1b[0G");
+//print divider 50 chars long in gray
+println!("\x1b[90m{}\x1b[0m", "─".repeat(50));
+}
+
+pub fn reset_line() {
+//reset to left
+print!("\x1b[0G");
+}
+
+
 /// # Printable
 /// supports calling `print`, `write`, `render` and `style` on any type
 /// e.g. `"hello".print(|s| in_red(s))`
