@@ -9,3 +9,4 @@
 
 # hide idea crap
 **/.idea/
+**/target/**
