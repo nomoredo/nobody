@@ -11,7 +11,11 @@ pub mod constants;
 
 pub fn show_banner() {
     BANNER.print(vibrant);
-    FOOTER.print_positioned(-2, 20, in_white);
+    FOOTER.print_positioned(-1, 18, in_white);
+    // get virsion from cargo.toml
+    let version = env!("CARGO_PKG_VERSION");
+    format!("{}", version).print_positioned(-2, 27, in_gray);
+
 }
 
 use crossterm::event::{read, KeyCode, KeyEvent, KeyModifiers};
