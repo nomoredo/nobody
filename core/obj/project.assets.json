@@ -1,0 +1,680 @@
+{
+  "version": 3,
+  "targets": {
+    "net8.0": {
+      "Microsoft.Extensions.DependencyInjection/8.0.0-rc.2.23479.6": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "8.0.0-rc.2.23479.6"
+        },
+        "compile": {
+          "lib/net8.0/Microsoft.Extensions.DependencyInjection.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.Extensions.DependencyInjection.dll": {
+            "related": ".xml"
+          }
+        },
+        "build": {
+          "buildTransitive/net6.0/_._": {}
+        }
+      },
+      "Microsoft.Extensions.DependencyInjection.Abstractions/8.0.0-rc.2.23479.6": {
+        "type": "package",
+        "compile": {
+          "lib/net8.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll": {
+            "related": ".xml"
+          }
+        },
+        "build": {
+          "buildTransitive/net6.0/_._": {}
+        }
+      },
+      "Microsoft.NETCore.Platforms/5.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard1.0/_._": {}
+        },
+        "runtime": {
+          "lib/netstandard1.0/_._": {}
+        }
+      },
+      "Serilog/3.1.2-dev-02097": {
+        "type": "package",
+        "compile": {
+          "lib/net7.0/Serilog.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net7.0/Serilog.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "SixLabors.ImageSharp/2.1.3": {
+        "type": "package",
+        "dependencies": {
+          "System.Runtime.CompilerServices.Unsafe": "5.0.0",
+          "System.Text.Encoding.CodePages": "5.0.0"
+        },
+        "compile": {
+          "lib/netcoreapp3.1/SixLabors.ImageSharp.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netcoreapp3.1/SixLabors.ImageSharp.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Spectre.Console/0.48.1-preview.0.5": {
+        "type": "package",
+        "dependencies": {
+          "System.Memory": "4.5.5"
+        },
+        "compile": {
+          "lib/net8.0/Spectre.Console.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/Spectre.Console.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Spectre.Console.Cli/0.48.1-preview.0.5": {
+        "type": "package",
+        "dependencies": {
+          "Spectre.Console": "0.48.1-preview.0.5"
+        },
+        "compile": {
+          "lib/net8.0/Spectre.Console.Cli.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/Spectre.Console.Cli.dll": {
+            "related": ".xml"
+          }
+        },
+        "resource": {
+          "lib/net8.0/de/Spectre.Console.Cli.resources.dll": {
+            "locale": "de"
+          },
+          "lib/net8.0/fr/Spectre.Console.Cli.resources.dll": {
+            "locale": "fr"
+          },
+          "lib/net8.0/sv/Spectre.Console.Cli.resources.dll": {
+            "locale": "sv"
+          }
+        }
+      },
+      "Spectre.Console.Cli.Extensions.DependencyInjection/0.2.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection": "8.0.0-rc.2.23479.6",
+          "Spectre.Console.Cli": "0.47.0"
+        },
+        "compile": {
+          "lib/net8.0/Spectre.Console.Cli.Extensions.DependencyInjection.dll": {}
+        },
+        "runtime": {
+          "lib/net8.0/Spectre.Console.Cli.Extensions.DependencyInjection.dll": {}
+        }
+      },
+      "Spectre.Console.Extensions.Progress/1.0.0": {
+        "type": "package",
+        "dependencies": {
+          "Spectre.Console": "0.32.1"
+        },
+        "compile": {
+          "lib/net6.0/Spectre.Console.Extensions.Progress.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/Spectre.Console.Extensions.Progress.dll": {
+            "related": ".pdb;.xml"
+          }
+        }
+      },
+      "Spectre.Console.Extensions.Table/1.0.0": {
+        "type": "package",
+        "dependencies": {
+          "Spectre.Console": "0.32.1"
+        },
+        "compile": {
+          "lib/net6.0/Spectre.Console.Extensions.Table.dll": {
+            "related": ".pdb;.xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0/Spectre.Console.Extensions.Table.dll": {
+            "related": ".pdb;.xml"
+          }
+        }
+      },
+      "Spectre.Console.ImageSharp/0.48.1-preview.0.5": {
+        "type": "package",
+        "dependencies": {
+          "SixLabors.ImageSharp": "2.1.3",
+          "Spectre.Console": "0.48.1-preview.0.5"
+        },
+        "compile": {
+          "lib/net8.0/Spectre.Console.ImageSharp.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/Spectre.Console.ImageSharp.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "System.Memory/4.5.5": {
+        "type": "package",
+        "compile": {
+          "ref/netcoreapp2.1/_._": {}
+        },
+        "runtime": {
+          "lib/netcoreapp2.1/_._": {}
+        }
+      },
+      "System.Runtime.CompilerServices.Unsafe/5.0.0": {
+        "type": "package",
+        "compile": {
+          "ref/netstandard2.1/System.Runtime.CompilerServices.Unsafe.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netcoreapp2.0/System.Runtime.CompilerServices.Unsafe.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "System.Text.Encoding.CodePages/5.0.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.NETCore.Platforms": "5.0.0"
+        },
+        "compile": {
+          "lib/netstandard2.0/System.Text.Encoding.CodePages.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/System.Text.Encoding.CodePages.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtimeTargets": {
+          "runtimes/win/lib/netcoreapp2.0/System.Text.Encoding.CodePages.dll": {
+            "assetType": "runtime",
+            "rid": "win"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Microsoft.Extensions.DependencyInjection/8.0.0-rc.2.23479.6": {
+      "sha512": "pUD/Gjd0MTrWPD4/SnKazYQvky2EHEtPyGb3FWZkEPWAfYPFVVw5fMRTkfoBPivpWLuxEw4FNK7GX77xEErUQQ==",
+      "type": "package",
+      "path": "microsoft.extensions.dependencyinjection/8.0.0-rc.2.23479.6",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "LICENSE.TXT",
+        "PACKAGE.md",
+        "THIRD-PARTY-NOTICES.TXT",
+        "buildTransitive/net461/Microsoft.Extensions.DependencyInjection.targets",
+        "buildTransitive/net462/_._",
+        "buildTransitive/net6.0/_._",
+        "buildTransitive/netcoreapp2.0/Microsoft.Extensions.DependencyInjection.targets",
+        "lib/net462/Microsoft.Extensions.DependencyInjection.dll",
+        "lib/net462/Microsoft.Extensions.DependencyInjection.xml",
+        "lib/net6.0/Microsoft.Extensions.DependencyInjection.dll",
+        "lib/net6.0/Microsoft.Extensions.DependencyInjection.xml",
+        "lib/net7.0/Microsoft.Extensions.DependencyInjection.dll",
+        "lib/net7.0/Microsoft.Extensions.DependencyInjection.xml",
+        "lib/net8.0/Microsoft.Extensions.DependencyInjection.dll",
+        "lib/net8.0/Microsoft.Extensions.DependencyInjection.xml",
+        "lib/netstandard2.0/Microsoft.Extensions.DependencyInjection.dll",
+        "lib/netstandard2.0/Microsoft.Extensions.DependencyInjection.xml",
+        "lib/netstandard2.1/Microsoft.Extensions.DependencyInjection.dll",
+        "lib/netstandard2.1/Microsoft.Extensions.DependencyInjection.xml",
+        "microsoft.extensions.dependencyinjection.8.0.0-rc.2.23479.6.nupkg.sha512",
+        "microsoft.extensions.dependencyinjection.nuspec",
+        "useSharedDesignerContext.txt"
+      ]
+    },
+    "Microsoft.Extensions.DependencyInjection.Abstractions/8.0.0-rc.2.23479.6": {
+      "sha512": "QLTBDvE/E05Xl2UVFXOBFIW0VLn/mMJ8DSbTyK6ODsO3sqDs0fyPqydACTnX/nbGZRrTMeud3XDbUrt24ab1EA==",
+      "type": "package",
+      "path": "microsoft.extensions.dependencyinjection.abstractions/8.0.0-rc.2.23479.6",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "LICENSE.TXT",
+        "PACKAGE.md",
+        "THIRD-PARTY-NOTICES.TXT",
+        "buildTransitive/net461/Microsoft.Extensions.DependencyInjection.Abstractions.targets",
+        "buildTransitive/net462/_._",
+        "buildTransitive/net6.0/_._",
+        "buildTransitive/netcoreapp2.0/Microsoft.Extensions.DependencyInjection.Abstractions.targets",
+        "lib/net462/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+        "lib/net462/Microsoft.Extensions.DependencyInjection.Abstractions.xml",
+        "lib/net6.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+        "lib/net6.0/Microsoft.Extensions.DependencyInjection.Abstractions.xml",
+        "lib/net7.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+        "lib/net7.0/Microsoft.Extensions.DependencyInjection.Abstractions.xml",
+        "lib/net8.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+        "lib/net8.0/Microsoft.Extensions.DependencyInjection.Abstractions.xml",
+        "lib/netstandard2.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+        "lib/netstandard2.0/Microsoft.Extensions.DependencyInjection.Abstractions.xml",
+        "lib/netstandard2.1/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+        "lib/netstandard2.1/Microsoft.Extensions.DependencyInjection.Abstractions.xml",
+        "microsoft.extensions.dependencyinjection.abstractions.8.0.0-rc.2.23479.6.nupkg.sha512",
+        "microsoft.extensions.dependencyinjection.abstractions.nuspec",
+        "useSharedDesignerContext.txt"
+      ]
+    },
+    "Microsoft.NETCore.Platforms/5.0.0": {
+      "sha512": "VyPlqzH2wavqquTcYpkIIAQ6WdenuKoFN0BdYBbCWsclXacSOHNQn66Gt4z5NBqEYW0FAPm5rlvki9ZiCij5xQ==",
+      "type": "package",
+      "path": "microsoft.netcore.platforms/5.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "LICENSE.TXT",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/netstandard1.0/_._",
+        "microsoft.netcore.platforms.5.0.0.nupkg.sha512",
+        "microsoft.netcore.platforms.nuspec",
+        "runtime.json",
+        "useSharedDesignerContext.txt",
+        "version.txt"
+      ]
+    },
+    "Serilog/3.1.2-dev-02097": {
+      "sha512": "1kANtrvBOCcB/+rUuwCEoeDOdNhwjE1Rtk2AS+MF34DRhxxOjm5tTUbudWTvlBcIChmbQxW3K4Yr0dOn3+hcGA==",
+      "type": "package",
+      "path": "serilog/3.1.2-dev-02097",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "icon.png",
+        "lib/net462/Serilog.dll",
+        "lib/net462/Serilog.xml",
+        "lib/net471/Serilog.dll",
+        "lib/net471/Serilog.xml",
+        "lib/net5.0/Serilog.dll",
+        "lib/net5.0/Serilog.xml",
+        "lib/net6.0/Serilog.dll",
+        "lib/net6.0/Serilog.xml",
+        "lib/net7.0/Serilog.dll",
+        "lib/net7.0/Serilog.xml",
+        "lib/netstandard2.0/Serilog.dll",
+        "lib/netstandard2.0/Serilog.xml",
+        "lib/netstandard2.1/Serilog.dll",
+        "lib/netstandard2.1/Serilog.xml",
+        "serilog.3.1.2-dev-02097.nupkg.sha512",
+        "serilog.nuspec"
+      ]
+    },
+    "SixLabors.ImageSharp/2.1.3": {
+      "sha512": "8yonNRWX3vUE9k29ta0Hbfa0AEc0hbDjSH/nZ3vOTJEXmY6hLnGsjDKoz96Z+AgOsrdkAu6PdL/Ebaf70aitzw==",
+      "type": "package",
+      "path": "sixlabors.imagesharp/2.1.3",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net472/SixLabors.ImageSharp.dll",
+        "lib/net472/SixLabors.ImageSharp.xml",
+        "lib/netcoreapp2.1/SixLabors.ImageSharp.dll",
+        "lib/netcoreapp2.1/SixLabors.ImageSharp.xml",
+        "lib/netcoreapp3.1/SixLabors.ImageSharp.dll",
+        "lib/netcoreapp3.1/SixLabors.ImageSharp.xml",
+        "lib/netstandard2.0/SixLabors.ImageSharp.dll",
+        "lib/netstandard2.0/SixLabors.ImageSharp.xml",
+        "lib/netstandard2.1/SixLabors.ImageSharp.dll",
+        "lib/netstandard2.1/SixLabors.ImageSharp.xml",
+        "sixlabors.imagesharp.128.png",
+        "sixlabors.imagesharp.2.1.3.nupkg.sha512",
+        "sixlabors.imagesharp.nuspec"
+      ]
+    },
+    "Spectre.Console/0.48.1-preview.0.5": {
+      "sha512": "KidHJYWeVRB9H77rxzY6+X3BiG1b2ApG1V4Pj6wFKhrOKR6qjWT92y349QN755m5fyPaP116p8oxuxbWWBH38Q==",
+      "type": "package",
+      "path": "spectre.console/0.48.1-preview.0.5",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net6.0/Spectre.Console.dll",
+        "lib/net6.0/Spectre.Console.xml",
+        "lib/net7.0/Spectre.Console.dll",
+        "lib/net7.0/Spectre.Console.xml",
+        "lib/net8.0/Spectre.Console.dll",
+        "lib/net8.0/Spectre.Console.xml",
+        "lib/netstandard2.0/Spectre.Console.dll",
+        "lib/netstandard2.0/Spectre.Console.xml",
+        "small-logo.png",
+        "spectre.console.0.48.1-preview.0.5.nupkg.sha512",
+        "spectre.console.nuspec"
+      ]
+    },
+    "Spectre.Console.Cli/0.48.1-preview.0.5": {
+      "sha512": "RXiaRKq5Ax21MkuGgE1z06zu1gFi4t1niTuPxP7Pjgf60TC/4ZTEuOIjmdKZPOrNbc4RGYsN/JZ3Vgb2m6hXvg==",
+      "type": "package",
+      "path": "spectre.console.cli/0.48.1-preview.0.5",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net6.0/Spectre.Console.Cli.dll",
+        "lib/net6.0/Spectre.Console.Cli.xml",
+        "lib/net6.0/de/Spectre.Console.Cli.resources.dll",
+        "lib/net6.0/fr/Spectre.Console.Cli.resources.dll",
+        "lib/net6.0/sv/Spectre.Console.Cli.resources.dll",
+        "lib/net7.0/Spectre.Console.Cli.dll",
+        "lib/net7.0/Spectre.Console.Cli.xml",
+        "lib/net7.0/de/Spectre.Console.Cli.resources.dll",
+        "lib/net7.0/fr/Spectre.Console.Cli.resources.dll",
+        "lib/net7.0/sv/Spectre.Console.Cli.resources.dll",
+        "lib/net8.0/Spectre.Console.Cli.dll",
+        "lib/net8.0/Spectre.Console.Cli.xml",
+        "lib/net8.0/de/Spectre.Console.Cli.resources.dll",
+        "lib/net8.0/fr/Spectre.Console.Cli.resources.dll",
+        "lib/net8.0/sv/Spectre.Console.Cli.resources.dll",
+        "lib/netstandard2.0/Spectre.Console.Cli.dll",
+        "lib/netstandard2.0/Spectre.Console.Cli.xml",
+        "lib/netstandard2.0/de/Spectre.Console.Cli.resources.dll",
+        "lib/netstandard2.0/fr/Spectre.Console.Cli.resources.dll",
+        "lib/netstandard2.0/sv/Spectre.Console.Cli.resources.dll",
+        "small-logo.png",
+        "spectre.console.cli.0.48.1-preview.0.5.nupkg.sha512",
+        "spectre.console.cli.nuspec"
+      ]
+    },
+    "Spectre.Console.Cli.Extensions.DependencyInjection/0.2.0": {
+      "sha512": "okJMSXgLHRndiMXcCnFj63CGwsnGXtCOSiIhQsSjcC+g8YrVyrUVE4kPJp8lQ48ArWDedTCCO5Lm5w4oRuFlIA==",
+      "type": "package",
+      "path": "spectre.console.cli.extensions.dependencyinjection/0.2.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net7.0/Spectre.Console.Cli.Extensions.DependencyInjection.dll",
+        "lib/net8.0/Spectre.Console.Cli.Extensions.DependencyInjection.dll",
+        "lib/netstandard2.0/Spectre.Console.Cli.Extensions.DependencyInjection.dll",
+        "spectre.console.cli.extensions.dependencyinjection.0.2.0.nupkg.sha512",
+        "spectre.console.cli.extensions.dependencyinjection.nuspec"
+      ]
+    },
+    "Spectre.Console.Extensions.Progress/1.0.0": {
+      "sha512": "gQQoZxgOVk05LiX78X8mRePO5yjGgn3lOoOon1PHyIv9YHV30uqTHizD2rj52aYzVMrvIYf46Z7yvGOPkQ36eg==",
+      "type": "package",
+      "path": "spectre.console.extensions.progress/1.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "lib/net6.0/Spectre.Console.Extensions.Progress.dll",
+        "lib/net6.0/Spectre.Console.Extensions.Progress.pdb",
+        "lib/net6.0/Spectre.Console.Extensions.Progress.xml",
+        "lib/netstandard2.1/Spectre.Console.Extensions.Progress.dll",
+        "lib/netstandard2.1/Spectre.Console.Extensions.Progress.pdb",
+        "lib/netstandard2.1/Spectre.Console.Extensions.Progress.xml",
+        "spectre.console.extensions.progress.1.0.0.nupkg.sha512",
+        "spectre.console.extensions.progress.nuspec"
+      ]
+    },
+    "Spectre.Console.Extensions.Table/1.0.0": {
+      "sha512": "T8zXVQ02zfWRV+frX3IRk2/RpNqrq4jmXByW86GKfh4qEP2aBoGIfAB2zIrZFFCJ2oU3Zta06pRaDgJaXDo1KA==",
+      "type": "package",
+      "path": "spectre.console.extensions.table/1.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "lib/net6.0/Spectre.Console.Extensions.Table.dll",
+        "lib/net6.0/Spectre.Console.Extensions.Table.pdb",
+        "lib/net6.0/Spectre.Console.Extensions.Table.xml",
+        "lib/netstandard2.1/Spectre.Console.Extensions.Table.dll",
+        "lib/netstandard2.1/Spectre.Console.Extensions.Table.pdb",
+        "lib/netstandard2.1/Spectre.Console.Extensions.Table.xml",
+        "spectre.console.extensions.table.1.0.0.nupkg.sha512",
+        "spectre.console.extensions.table.nuspec"
+      ]
+    },
+    "Spectre.Console.ImageSharp/0.48.1-preview.0.5": {
+      "sha512": "2rKioS1Xpckle2OEcuSHVDvJFG0H7zI0tUZvtoJ9hly/Ndvyafjq/nqgPTUckbf2cnGrJOxqON5H/Cn8DCAABg==",
+      "type": "package",
+      "path": "spectre.console.imagesharp/0.48.1-preview.0.5",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net6.0/Spectre.Console.ImageSharp.dll",
+        "lib/net6.0/Spectre.Console.ImageSharp.xml",
+        "lib/net7.0/Spectre.Console.ImageSharp.dll",
+        "lib/net7.0/Spectre.Console.ImageSharp.xml",
+        "lib/net8.0/Spectre.Console.ImageSharp.dll",
+        "lib/net8.0/Spectre.Console.ImageSharp.xml",
+        "lib/netstandard2.0/Spectre.Console.ImageSharp.dll",
+        "lib/netstandard2.0/Spectre.Console.ImageSharp.xml",
+        "small-logo.png",
+        "spectre.console.imagesharp.0.48.1-preview.0.5.nupkg.sha512",
+        "spectre.console.imagesharp.nuspec"
+      ]
+    },
+    "System.Memory/4.5.5": {
+      "sha512": "XIWiDvKPXaTveaB7HVganDlOCRoj03l+jrwNvcge/t8vhGYKvqV+dMv6G4SAX2NoNmN0wZfVPTAlFwZcZvVOUw==",
+      "type": "package",
+      "path": "system.memory/4.5.5",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.TXT",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/net461/System.Memory.dll",
+        "lib/net461/System.Memory.xml",
+        "lib/netcoreapp2.1/_._",
+        "lib/netstandard1.1/System.Memory.dll",
+        "lib/netstandard1.1/System.Memory.xml",
+        "lib/netstandard2.0/System.Memory.dll",
+        "lib/netstandard2.0/System.Memory.xml",
+        "ref/netcoreapp2.1/_._",
+        "system.memory.4.5.5.nupkg.sha512",
+        "system.memory.nuspec",
+        "useSharedDesignerContext.txt",
+        "version.txt"
+      ]
+    },
+    "System.Runtime.CompilerServices.Unsafe/5.0.0": {
+      "sha512": "ZD9TMpsmYJLrxbbmdvhwt9YEgG5WntEnZ/d1eH8JBX9LBp+Ju8BSBhUGbZMNVHHomWo2KVImJhTDl2hIgw/6MA==",
+      "type": "package",
+      "path": "system.runtime.compilerservices.unsafe/5.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "LICENSE.TXT",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/net45/System.Runtime.CompilerServices.Unsafe.dll",
+        "lib/net45/System.Runtime.CompilerServices.Unsafe.xml",
+        "lib/netcoreapp2.0/System.Runtime.CompilerServices.Unsafe.dll",
+        "lib/netcoreapp2.0/System.Runtime.CompilerServices.Unsafe.xml",
+        "lib/netstandard1.0/System.Runtime.CompilerServices.Unsafe.dll",
+        "lib/netstandard1.0/System.Runtime.CompilerServices.Unsafe.xml",
+        "lib/netstandard2.0/System.Runtime.CompilerServices.Unsafe.dll",
+        "lib/netstandard2.0/System.Runtime.CompilerServices.Unsafe.xml",
+        "ref/net461/System.Runtime.CompilerServices.Unsafe.dll",
+        "ref/net461/System.Runtime.CompilerServices.Unsafe.xml",
+        "ref/netstandard1.0/System.Runtime.CompilerServices.Unsafe.dll",
+        "ref/netstandard1.0/System.Runtime.CompilerServices.Unsafe.xml",
+        "ref/netstandard2.0/System.Runtime.CompilerServices.Unsafe.dll",
+        "ref/netstandard2.0/System.Runtime.CompilerServices.Unsafe.xml",
+        "ref/netstandard2.1/System.Runtime.CompilerServices.Unsafe.dll",
+        "ref/netstandard2.1/System.Runtime.CompilerServices.Unsafe.xml",
+        "system.runtime.compilerservices.unsafe.5.0.0.nupkg.sha512",
+        "system.runtime.compilerservices.unsafe.nuspec",
+        "useSharedDesignerContext.txt",
+        "version.txt"
+      ]
+    },
+    "System.Text.Encoding.CodePages/5.0.0": {
+      "sha512": "NyscU59xX6Uo91qvhOs2Ccho3AR2TnZPomo1Z0K6YpyztBPM/A5VbkzOO19sy3A3i1TtEnTxA7bCe3Us+r5MWg==",
+      "type": "package",
+      "path": "system.text.encoding.codepages/5.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "LICENSE.TXT",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/MonoAndroid10/_._",
+        "lib/MonoTouch10/_._",
+        "lib/net46/System.Text.Encoding.CodePages.dll",
+        "lib/net461/System.Text.Encoding.CodePages.dll",
+        "lib/net461/System.Text.Encoding.CodePages.xml",
+        "lib/netstandard1.3/System.Text.Encoding.CodePages.dll",
+        "lib/netstandard2.0/System.Text.Encoding.CodePages.dll",
+        "lib/netstandard2.0/System.Text.Encoding.CodePages.xml",
+        "lib/xamarinios10/_._",
+        "lib/xamarinmac20/_._",
+        "lib/xamarintvos10/_._",
+        "lib/xamarinwatchos10/_._",
+        "ref/MonoAndroid10/_._",
+        "ref/MonoTouch10/_._",
+        "ref/xamarinios10/_._",
+        "ref/xamarinmac20/_._",
+        "ref/xamarintvos10/_._",
+        "ref/xamarinwatchos10/_._",
+        "runtimes/win/lib/net461/System.Text.Encoding.CodePages.dll",
+        "runtimes/win/lib/net461/System.Text.Encoding.CodePages.xml",
+        "runtimes/win/lib/netcoreapp2.0/System.Text.Encoding.CodePages.dll",
+        "runtimes/win/lib/netcoreapp2.0/System.Text.Encoding.CodePages.xml",
+        "runtimes/win/lib/netstandard1.3/System.Text.Encoding.CodePages.dll",
+        "runtimes/win/lib/netstandard2.0/System.Text.Encoding.CodePages.dll",
+        "runtimes/win/lib/netstandard2.0/System.Text.Encoding.CodePages.xml",
+        "system.text.encoding.codepages.5.0.0.nupkg.sha512",
+        "system.text.encoding.codepages.nuspec",
+        "useSharedDesignerContext.txt",
+        "version.txt"
+      ]
+    }
+  },
+  "projectFileDependencyGroups": {
+    "net8.0": [
+      "Serilog >= 3.1.2-dev-02097",
+      "Spectre.Console >= 0.48.1-preview.0.5",
+      "Spectre.Console.Cli >= 0.48.1-preview.0.5",
+      "Spectre.Console.Cli.Extensions.DependencyInjection >= 0.2.0",
+      "Spectre.Console.Extensions.Progress >= 1.0.0",
+      "Spectre.Console.Extensions.Table >= 1.0.0",
+      "Spectre.Console.ImageSharp >= 0.48.1-preview.0.5"
+    ]
+  },
+  "packageFolders": {
+    "C:\\Users\\aghil\\.nuget\\packages\\": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "C:\\repo\\nobody\\core\\core.csproj",
+      "projectName": "nobody.core",
+      "projectPath": "C:\\repo\\nobody\\core\\core.csproj",
+      "packagesPath": "C:\\Users\\aghil\\.nuget\\packages\\",
+      "outputPath": "C:\\repo\\nobody\\core\\obj\\",
+      "projectStyle": "PackageReference",
+      "configFilePaths": [
+        "C:\\Users\\aghil\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+      ],
+      "originalTargetFrameworks": [
+        "net8.0"
+      ],
+      "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "https://api.nuget.org/v3/index.json": {}
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "projectReferences": {}
+        }
+      },
+      "warningProperties": {
+        "warnAsError": [
+          "NU1605"
+        ]
+      }
+    },
+    "frameworks": {
+      "net8.0": {
+        "targetAlias": "net8.0",
+        "dependencies": {
+          "Serilog": {
+            "target": "Package",
+            "version": "[3.1.2-dev-02097, )"
+          },
+          "Spectre.Console": {
+            "target": "Package",
+            "version": "[0.48.1-preview.0.5, )"
+          },
+          "Spectre.Console.Cli": {
+            "target": "Package",
+            "version": "[0.48.1-preview.0.5, )"
+          },
+          "Spectre.Console.Cli.Extensions.DependencyInjection": {
+            "target": "Package",
+            "version": "[0.2.0, )"
+          },
+          "Spectre.Console.Extensions.Progress": {
+            "target": "Package",
+            "version": "[1.0.0, )"
+          },
+          "Spectre.Console.Extensions.Table": {
+            "target": "Package",
+            "version": "[1.0.0, )"
+          },
+          "Spectre.Console.ImageSharp": {
+            "target": "Package",
+            "version": "[0.48.1-preview.0.5, )"
+          }
+        },
+        "imports": [
+          "net461",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48",
+          "net481"
+        ],
+        "assetTargetFallback": true,
+        "warn": true,
+        "frameworkReferences": {
+          "Microsoft.NETCore.App": {
+            "privateAssets": "all"
+          }
+        },
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.101/PortableRuntimeIdentifierGraph.json"
+      }
+    }
+  }
+}

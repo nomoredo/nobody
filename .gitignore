@@ -6,3 +6,8 @@
 /.local-chrome/
 **/.nothing**
 /nobody/.local-chrome/
+
+
+# Added by cargo
+
+/target

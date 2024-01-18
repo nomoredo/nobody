@@ -1,0 +1,23 @@
+{
+  "version": 2,
+  "dgSpecHash": "BKP7Z4j6X6tc0qvVo372sWd8l4ilhDV9JQkx0aXlL51pjUEHP4/tJYdkjpm/3Mm7FOm12Mpv/4Ps1gAKS76XJg==",
+  "success": true,
+  "projectFilePath": "C:\\repo\\nobody\\core\\core.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\aghil\\.nuget\\packages\\microsoft.extensions.dependencyinjection\\8.0.0-rc.2.23479.6\\microsoft.extensions.dependencyinjection.8.0.0-rc.2.23479.6.nupkg.sha512",
+    "C:\\Users\\aghil\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\8.0.0-rc.2.23479.6\\microsoft.extensions.dependencyinjection.abstractions.8.0.0-rc.2.23479.6.nupkg.sha512",
+    "C:\\Users\\aghil\\.nuget\\packages\\microsoft.netcore.platforms\\5.0.0\\microsoft.netcore.platforms.5.0.0.nupkg.sha512",
+    "C:\\Users\\aghil\\.nuget\\packages\\serilog\\3.1.2-dev-02097\\serilog.3.1.2-dev-02097.nupkg.sha512",
+    "C:\\Users\\aghil\\.nuget\\packages\\sixlabors.imagesharp\\2.1.3\\sixlabors.imagesharp.2.1.3.nupkg.sha512",
+    "C:\\Users\\aghil\\.nuget\\packages\\spectre.console\\0.48.1-preview.0.5\\spectre.console.0.48.1-preview.0.5.nupkg.sha512",
+    "C:\\Users\\aghil\\.nuget\\packages\\spectre.console.cli\\0.48.1-preview.0.5\\spectre.console.cli.0.48.1-preview.0.5.nupkg.sha512",
+    "C:\\Users\\aghil\\.nuget\\packages\\spectre.console.cli.extensions.dependencyinjection\\0.2.0\\spectre.console.cli.extensions.dependencyinjection.0.2.0.nupkg.sha512",
+    "C:\\Users\\aghil\\.nuget\\packages\\spectre.console.extensions.progress\\1.0.0\\spectre.console.extensions.progress.1.0.0.nupkg.sha512",
+    "C:\\Users\\aghil\\.nuget\\packages\\spectre.console.extensions.table\\1.0.0\\spectre.console.extensions.table.1.0.0.nupkg.sha512",
+    "C:\\Users\\aghil\\.nuget\\packages\\spectre.console.imagesharp\\0.48.1-preview.0.5\\spectre.console.imagesharp.0.48.1-preview.0.5.nupkg.sha512",
+    "C:\\Users\\aghil\\.nuget\\packages\\system.memory\\4.5.5\\system.memory.4.5.5.nupkg.sha512",
+    "C:\\Users\\aghil\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\5.0.0\\system.runtime.compilerservices.unsafe.5.0.0.nupkg.sha512",
+    "C:\\Users\\aghil\\.nuget\\packages\\system.text.encoding.codepages\\5.0.0\\system.text.encoding.codepages.5.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}

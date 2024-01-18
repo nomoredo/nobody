@@ -1,0 +1,30 @@
+{
+  "version": 2,
+  "dgSpecHash": "fv6W5q63+Wf/tWkkQpnU6ChvqPXlMrNrSLgxdwWZEICVCdY5OqdRG5fhD/QRLzYerT1PXg26qgfL3bQ/B85FuA==",
+  "success": true,
+  "projectFilePath": "C:\\repo\\nobody\\echo\\echo.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\aghil\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\6.0.0\\microsoft.bcl.asyncinterfaces.6.0.0.nupkg.sha512",
+    "C:\\Users\\aghil\\.nuget\\packages\\microsoft.extensions.dependencyinjection\\8.0.0-rc.2.23479.6\\microsoft.extensions.dependencyinjection.8.0.0-rc.2.23479.6.nupkg.sha512",
+    "C:\\Users\\aghil\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\8.0.0-rc.2.23479.6\\microsoft.extensions.dependencyinjection.abstractions.8.0.0-rc.2.23479.6.nupkg.sha512",
+    "C:\\Users\\aghil\\.nuget\\packages\\microsoft.netcore.platforms\\5.0.0\\microsoft.netcore.platforms.5.0.0.nupkg.sha512",
+    "C:\\Users\\aghil\\.nuget\\packages\\microsoft.playwright\\1.39.0\\microsoft.playwright.1.39.0.nupkg.sha512",
+    "C:\\Users\\aghil\\.nuget\\packages\\playwrightextrasharp\\1.0.7\\playwrightextrasharp.1.0.7.nupkg.sha512",
+    "C:\\Users\\aghil\\.nuget\\packages\\restsharp\\110.2.0\\restsharp.110.2.0.nupkg.sha512",
+    "C:\\Users\\aghil\\.nuget\\packages\\serilog\\3.1.2-dev-02097\\serilog.3.1.2-dev-02097.nupkg.sha512",
+    "C:\\Users\\aghil\\.nuget\\packages\\sixlabors.imagesharp\\2.1.3\\sixlabors.imagesharp.2.1.3.nupkg.sha512",
+    "C:\\Users\\aghil\\.nuget\\packages\\spectre.console\\0.48.1-preview.0.5\\spectre.console.0.48.1-preview.0.5.nupkg.sha512",
+    "C:\\Users\\aghil\\.nuget\\packages\\spectre.console.cli\\0.48.1-preview.0.5\\spectre.console.cli.0.48.1-preview.0.5.nupkg.sha512",
+    "C:\\Users\\aghil\\.nuget\\packages\\spectre.console.cli.extensions.dependencyinjection\\0.2.0\\spectre.console.cli.extensions.dependencyinjection.0.2.0.nupkg.sha512",
+    "C:\\Users\\aghil\\.nuget\\packages\\spectre.console.extensions.progress\\1.0.0\\spectre.console.extensions.progress.1.0.0.nupkg.sha512",
+    "C:\\Users\\aghil\\.nuget\\packages\\spectre.console.extensions.table\\1.0.0\\spectre.console.extensions.table.1.0.0.nupkg.sha512",
+    "C:\\Users\\aghil\\.nuget\\packages\\spectre.console.imagesharp\\0.48.1-preview.0.5\\spectre.console.imagesharp.0.48.1-preview.0.5.nupkg.sha512",
+    "C:\\Users\\aghil\\.nuget\\packages\\system.componentmodel.annotations\\5.0.0\\system.componentmodel.annotations.5.0.0.nupkg.sha512",
+    "C:\\Users\\aghil\\.nuget\\packages\\system.memory\\4.5.5\\system.memory.4.5.5.nupkg.sha512",
+    "C:\\Users\\aghil\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\5.0.0\\system.runtime.compilerservices.unsafe.5.0.0.nupkg.sha512",
+    "C:\\Users\\aghil\\.nuget\\packages\\system.text.encoding.codepages\\5.0.0\\system.text.encoding.codepages.5.0.0.nupkg.sha512",
+    "C:\\Users\\aghil\\.nuget\\packages\\system.text.encodings.web\\7.0.0\\system.text.encodings.web.7.0.0.nupkg.sha512",
+    "C:\\Users\\aghil\\.nuget\\packages\\system.text.json\\7.0.2\\system.text.json.7.0.2.nupkg.sha512"
+  ],
+  "logs": []
+}
