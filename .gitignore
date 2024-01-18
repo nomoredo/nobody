@@ -1,12 +1,13 @@
-# for dotnet projects
-**/bin/
-**/obj/
-**/*.user
-**/*.vspscc
-**/*.vssscc
-*.suo
-*.user
-
-# hide idea crap
-**/.idea/
 **/target/**
+**/node_modules/**
+**/bower_components/**
+**/local_chromium/**
+**/.local-chrome/**
+/.local-chrome/
+**/.nothing**
+/nobody/.local-chrome/
+
+
+# Added by cargo
+
+/target

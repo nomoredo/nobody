@@ -5,11 +5,25 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "here",
-            "type": "dotnet",
+            "name": "codegen",
+            "cwd": "codegen",
             "request": "launch",
-            "projectPath": "${workspaceFolder}/here/here.csproj"
+            "type": "dart"
+        },
+        {
+            "name": "nobody",
+            "cwd": "nobody",
+            "request": "launch",
+            "type": "dart",
+            "program": "bin/nobody.dart",
+            "console": "terminal",
+        
+        },
+        {
+            "name": "termo",
+            "cwd": "termo",
+            "request": "launch",
+            "type": "dart"
         }
-
     ]
 }

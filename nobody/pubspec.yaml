@@ -1,0 +1,24 @@
+name: nobody
+description: works for you
+version: 1.0.0
+publish_to: none
+
+environment:
+  sdk: ^3.2.0-4.2.2.beta
+
+dependencies:
+  puppeteer: ^3.4.0
+  codegen: 
+    path: ../codegen
+  collection: ^1.18.0
+  flat_buffers: ^2.0.5
+  encrypt: ^5.0.3
+  dio: ^5.3.3
+  excel: ^2.1.0
+  archive: ^3.4.2
+  coco: ^1.0.2
+
+
+dev_dependencies:
+  build_runner: any
+  source_gen: any

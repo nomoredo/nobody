@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <excludeFolder url="file://$MODULE_DIR$/codegen/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/codegen/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/codegen/build" />
+      <excludeFolder url="file://$MODULE_DIR$/nobody/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/nobody/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/nobody/build" />
+      <excludeFolder url="file://$MODULE_DIR$/termo/.dart_tool" />
+      <excludeFolder url="file://$MODULE_DIR$/termo/.pub" />
+      <excludeFolder url="file://$MODULE_DIR$/termo/build" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Dart SDK" level="project" />
+    <orderEntry type="library" name="Dart Packages" level="project" />
+  </component>
+</module>

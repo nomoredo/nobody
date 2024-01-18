@@ -1,0 +1,12 @@
+name: codegen
+description: A sample command-line application.
+version: 1.0.0
+publish_to: none
+
+environment:
+  sdk: ^3.1.5
+
+dependencies:
+  analyzer: ^6.2.0
+  build: ^2.4.1
+  source_gen: ^1.4.0
