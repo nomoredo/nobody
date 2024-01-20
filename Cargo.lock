@@ -658,6 +658,18 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "68354c5c6bd36d73ff3feceb05efa59b6acb7626617f4962be322a825e61f79a"
 
 [[package]]
+name = "minimo"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1d742f115febb2a0f73a261e78d9c0351dd1928e76aee8862399992ff1aeac61"
+dependencies = [
+ "crossterm",
+ "indicatif",
+ "nom",
+ "rand",
+]
+
+[[package]]
 name = "miniz_oxide"
 version = "0.7.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -702,6 +714,7 @@ version = "0.1.0"
 dependencies = [
  "crossterm",
  "indicatif",
+ "minimo",
  "nom",
  "rand",
  "reqwest",

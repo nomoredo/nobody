@@ -8,7 +8,7 @@ use std::{
 pub use constants::*;
 pub mod constants;
 
-pub use noui::*;
+pub use minimo::*;
 
 
 pub fn show_banner() {
@@ -35,7 +35,7 @@ pub fn execution_loop() {
     loop {
         let options = get_options();
         // let selection = show::menu(&options);
-        let selection = ask_for_selection(&options);
+        let selection = show::menu(&options);
 
         if let Some(selected_option) = selection {
             selected_option.execute_with_args(&vec![]);
