@@ -1,8 +1,84 @@
-use std::{fmt::{Display, Formatter, Result}, io::{self, Write, Read}};
+
+use crossterm::{cursor, execute, terminal, ExecutableCommand};
+use std::io::{self, Read, Write};
+
+use std::{
+    fmt::{Display, Formatter, Result},
+    io::{self, Read, Write},
+};
+
+///! # noui
+///! terminal ui library combining alot of things from here and there
+///! and making it slightly easier to play with
+///! below are the key functionalities provided by this library
+/// - show! macro - print text with color and style e.g. `show!(red,"hello",green,"world")` prints "hello" in red and "world" in green
+/// - showln! macro - same as show! but with a newline at the end
+/// - paragraph! macro - same as showln! but automatically chops the text and wraps it in a paragraph. the width of the paragraph is 65 characters by default. when the text is longer than 65 characters, it is wrapped in a paragraph
+/// - render! macro - same as showln! but automatically chops the text and wraps it in a paragraph. the width of the paragraph is 65 characters by default. when the text is longer than 65 characters, it is wrapped in a paragraph
+/// - ask_for_selection - interactively ask for a selection from a list of options. user can type in a number or press up/down arrows to select and press enter to confirm. user can also type in a term to filter options by that term. press esc to break out of the loop
+/// - enable_raw_mode - enable raw mode on stdin (no external dependencies)
+/// - disable_raw_mode - disable raw mode on stdin (no external dependencies)
+/// - get_key - get the next key from stdin
+/// - Pickable - a trait that can be used to implement a pickable item
+/// - Printable - supports calling `print`, `write`, `render` and `style` on any type e.g. `"hello".print(in_red)`
+/// - Choice - represents a choice in a menu that the user can select. provides a name, description, execute function and a matches_if function.
+/// 
+/// # Example
+/// ```rust
+/// use noui::*;
+/// 
+/// fn main() {
+///    show!(red,"hello",green,"world");
+///   showln!(red,"hello",green,"world");
+///     paragraph!(white,"this is a long text that will be wrapped in a paragraph after 65 chars",green,"this is another long text that will be appended to the first one and wrapped in a paragraph");
+///    render!(white,"this is a long text that will be wrapped in a paragraph after 65 chars",green,"this is another long text that will be appended to the first one and wrapped in a paragraph");
+///   let options = vec![Choice{
+///       name:"hello".to_string(),
+///      description:"world".to_string(),
+///     execute:|args:&Vec<String>|{
+///        println!("hello world");
+///   },
+///    matches_if:|args:&Vec<String>|{
+///       args.len() > 1 && args[1] == "hello"
+///  }
+/// }];
+/// let selection = ask_for_selection(options);
+/// }
+/// ```
+
+/// # Choice
+/// represents a choice in a menu that the user can select
+/// provides a name, description, execute function and a matches_if function
+/// the matches_if function is used to determine if the choice matches the args
+/// the execute function is executed if the choice matches the args
+#[derive(Debug, Clone)]
+pub struct Choice {
+    pub name: String,
+    pub description: String,
+    pub execute: fn(&Vec<String>),
+    pub matches_if: fn(&Vec<String>) -> bool,
+}
+
+impl Pickable for Choice {
+    fn get_title(&self) -> String {
+        self.name.clone()
+    }
+    fn get_description(&self) -> String {
+        self.description.clone()
+    }
+}
+
+impl Choice {
+    pub fn matches(&self, args: &Vec<String>) -> bool {
+        (self.matches_if)(args)
+    }
+
+    pub fn execute_with_args(&self, args: &Vec<String>) {
+        (self.execute)(args);
+    }
+}
 
 pub struct CStyle<'a>(&'a str);
-
-
 
 impl<'a> Display for CStyle<'a> {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
@@ -17,8 +93,6 @@ impl<'a> std::ops::Add<&'a str> for CStyle<'a> {
         format!("{}{}", self, rhs)
     }
 }
-
-
 
 pub const bold: &CStyle = &CStyle("\x1b[1m");
 pub const dim: &CStyle = &CStyle("\x1b[2m");
@@ -52,7 +126,6 @@ pub const orange_bold: &CStyle = &CStyle("\x1b[38;2;255;165;0m\x1b[1m"); // Bold
 pub const pink_bold: &CStyle = &CStyle("\x1b[38;2;255;192;203m\x1b[1m"); // Bold pink
 pub const purple_bold: &CStyle = &CStyle("\x1b[38;2;128;0;128m\x1b[1m"); // Bold purple
 
-
 // Dim colors (darker and less saturated)
 pub const gray_dim: &CStyle = &CStyle("\x1b[38;2;150;150;150m"); // Dim gray
 pub const red_dim: &CStyle = &CStyle("\x1b[38;2;150;0;0m"); // Dim red
@@ -65,7 +138,6 @@ pub const white_dim: &CStyle = &CStyle("\x1b[38;2;150;150;150m"); // Dim white
 pub const orange_dim: &CStyle = &CStyle("\x1b[38;2;150;65;0m"); // Dim orange
 pub const pink_dim: &CStyle = &CStyle("\x1b[38;2;150;96;102m"); // Dim pink
 pub const purple_dim: &CStyle = &CStyle("\x1b[38;2;50;0;50m"); // Dim purple
-
 
 // Background colors
 pub const graybg: &CStyle = &CStyle("\x1b[48;2;128;128;128m");
@@ -82,7 +154,6 @@ pub const purplebg: &CStyle = &CStyle("\x1b[48;2;128;0;128m");
 
 pub const nostyle: &CStyle = &CStyle("");
 pub const reset: &CStyle = &CStyle("\x1b[0m");
-
 
 /// CStyleSequence
 /// a sequence of CStyle
@@ -132,8 +203,6 @@ impl<'a, const N: usize> CStyleSequence<'a, N> {
     pub fn last(&self) -> &'a CStyle<'a> {
         self.get(self.len() - 1)
     }
-
-
 }
 
 impl<'a, const N: usize> std::ops::Index<usize> for CStyleSequence<'a, N> {
@@ -144,18 +213,18 @@ impl<'a, const N: usize> std::ops::Index<usize> for CStyleSequence<'a, N> {
     }
 }
 
-pub const success: CStyleSequence<6> = CStyleSequence(&[green_bold, green, gray_dim, gray_dim, white, white]);
-pub const info: CStyleSequence<6> = CStyleSequence(&[cyan_bold, cyan_dim, gray_dim, gray_dim, white, gray]);
-pub const warning: CStyleSequence<6> = CStyleSequence(&[yellow_bold, yellow, gray_dim, gray_dim, white, white]);
-pub const error: CStyleSequence<6> = CStyleSequence(&[red_bold, red, gray_dim, gray_dim, white, white]);
-pub const debug: CStyleSequence<6> = CStyleSequence(&[magenta_bold, magenta, gray_dim, gray_dim, white, white]);
-pub const muted: CStyleSequence<6> = CStyleSequence(&[gray_bold, gray, gray_dim, gray_dim, white, white]);
-
-
-
-
-
-
+pub const success: CStyleSequence<6> =
+    CStyleSequence(&[green_bold, green, gray_dim, gray_dim, white, white]);
+pub const info: CStyleSequence<6> =
+    CStyleSequence(&[cyan_bold, cyan_dim, gray_dim, gray_dim, white, gray]);
+pub const warning: CStyleSequence<6> =
+    CStyleSequence(&[yellow_bold, yellow, gray_dim, gray_dim, white, white]);
+pub const error: CStyleSequence<6> =
+    CStyleSequence(&[red_bold, red, gray_dim, gray_dim, white, white]);
+pub const debug: CStyleSequence<6> =
+    CStyleSequence(&[magenta_bold, magenta, gray_dim, gray_dim, white, white]);
+pub const muted: CStyleSequence<6> =
+    CStyleSequence(&[gray_bold, gray, gray_dim, gray_dim, white, white]);
 
 pub fn wrap<T: Display>(style: &CStyle, text: T) -> String {
     format!("{}{}{}", style, text, reset)
@@ -311,69 +380,149 @@ pub fn vibrant<'a, T: Display + ?Sized>(text: &'a T) -> String {
     result
 }
 
-
 pub fn divider() {
-//reset to left
-print!("\x1b[0G");
-//print divider 50 chars long in gray
-println!("\x1b[90m{}\x1b[0m", "─".repeat(50));
+    //reset to left
+    print!("\x1b[0G");
+    //print divider 50 chars long in gray
+    println!("\x1b[90m{}\x1b[0m", "─".repeat(50));
 }
 
 pub fn reset_line() {
-//reset to left
-print!("\x1b[0G");
+    //reset to left
+    print!("\x1b[0G");
 }
 
+
+/// # Header macro
+/// prints provided title and optional description in a header style with lines and colors
+/// e.g. `header!(success,"hello","world","this is a description")`
+/// displays: 
+/// ```text
+/// ┌──────────────────────────────────────────────────────────────────────────────┐
+/// │                                   HELLO                                      │
+/// │                                   world                                      │
+/// │                            this is a description                             │
+/// └──────────────────────────────────────────────────────────────────────────────┘
+/// colors are based on the provided style (success, info, warning, error, debug, muted)
+/// title, subtitle and description are centered and wrapped within the box width of 65 characters
+#[macro_export]
+macro_rules! header {
+    ($style:ident,$title:expr) => {
+        $crate::header!($style,$title,"","");
+    };
+    ($style:ident,$title:expr,$subtitle:expr) => {
+        $crate::header!($style,$title,$subtitle,"");
+    };
+    ($style:ident,$title:expr,$subtitle:expr,$description:expr) => {
+        $crate::header!($style,$title,$subtitle,$description,65);
+    };
+    ($style:ident,$title:expr,$subtitle:expr,$description:expr,$width:expr) => {
+        let title = $title.to_string();
+        let subtitle = $subtitle.to_string();
+        let description = $description.to_string();
+        let width = $width;
+        let title_width = title.len();
+        let subtitle_width = subtitle.len();
+        let description_width = description.len();
+        let max_width = std::cmp::max(title_width, std::cmp::max(subtitle_width, description_width));
+        let left_padding = (max_width - title_width) / 2;
+        let right_padding = max_width - title_width - left_padding;
+        let subtitle_left_padding = (max_width - subtitle_width) / 2;
+        let subtitle_right_padding = max_width - subtitle_width - subtitle_left_padding;
+        let description_left_padding = (max_width - description_width) / 2;
+        let description_right_padding = max_width - description_width - description_left_padding;
+        let title = format!(
+            "│{}{}{}│",
+            " ".repeat(left_padding),
+            title,
+            " ".repeat(right_padding)
+        );
+        let subtitle = format!(
+            "│{}{}{}│",
+            " ".repeat(subtitle_left_padding),
+            subtitle,
+            " ".repeat(subtitle_right_padding)
+        );
+        let description = format!(
+            "│{}{}{}│",
+            " ".repeat(description_left_padding),
+            description,
+            " ".repeat(description_right_padding)
+        );
+        let line = format!(
+            "┌{}┐",
+            "─".repeat(max_width + 2)
+        );
+        let line2 = format!(
+            "├{}┤",
+            "─".repeat(max_width + 2)
+        );
+        let line3 = format!(
+            "└{}┘",
+            "─".repeat(max_width + 2)
+        );
+        $crate::divider();
+        $crate::show!($style, line);
+        $crate::show!($style, title);
+        $crate::show!($style, subtitle);
+        $crate::show!($style, description);
+        $crate::show!($style, line2);
+        $crate::show!($style, line3);
+        $crate::divider();
+    };
+}
+
+#[test]
+fn test_header() {
+    header!(success, "hello");
+    header!(success, "hello", "world");
+    header!(success, "hello", "world", "this is a description");
+    header!(success, "hello", "world", "this is a description", 50);
+}
 
 /// # Printable
 /// supports calling `print`, `write`, `render` and `style` on any type
 /// e.g. `"hello".print(|s| in_red(s))`
-pub trait Printable{
+pub trait Printable {
     /// print the text
     fn print<F>(&self, func: F)
     where
         F: Fn(&str) -> String;
     /// print the text with a newline
-        fn println<F>(&self, func: F)
-        where
-            F: Fn(&str) -> String;
+    fn println<F>(&self, func: F)
+    where
+        F: Fn(&str) -> String;
 
-/// write the text (same as print)
+    /// write the text (same as print)
     fn write<F>(&self, func: F)
     where
         F: Fn(&str) -> String;
 
-
-        /// render the text
+    /// render the text
     fn render<F>(&self, func: F) -> String
     where
         F: Fn(&str) -> String;
 
-        /// style the text
+    /// style the text
     fn style<F>(&self, func: F) -> String
     where
         F: Fn(&str) -> String;
 
-        fn show(&self) {
-            self.print(|s| s.to_string());
-        }
+    fn show(&self) {
+        self.print(|s| s.to_string());
+    }
 
-        fn showln(&self) {
-            self.println(|s| s.to_string());
-        }
+    fn showln(&self) {
+        self.println(|s| s.to_string());
+    }
 
-
-        /// print_in_postion
-        /// print the text in a specific position
-        /// e.g. "hello".print_in_position(-3,4,|s| in_red(s))
-        /// prints "hello" 3 lines up and 4 characters to the right
-        fn print_positioned<F>(&self, x: i32, y: i32, func: F)
-        where
-            F: Fn(&str) -> String;
-
-
-
-
+    /// print_in_postion
+    /// print the text in a specific position
+    /// e.g. "hello".print_in_position(-3,4,|s| in_red(s))
+    /// prints "hello" 3 lines up and 4 characters to the right
+    fn print_positioned<F>(&self, x: i32, y: i32, func: F)
+    where
+        F: Fn(&str) -> String;
 }
 
 impl<T: Display> Printable for T {
@@ -390,7 +539,6 @@ impl<T: Display> Printable for T {
     {
         println!("{}", func(&self.to_string()));
     }
-
 
     fn print_positioned<F>(&self, x: i32, y: i32, func: F)
     where
@@ -416,7 +564,7 @@ impl<T: Display> Printable for T {
             print!("\x1b[{}C", y);
         }
 
-        print!("{}", func(&self.to_string()));    
+        print!("{}", func(&self.to_string()));
 
         //undo the cursor movement
         if x < 0 {
@@ -440,12 +588,7 @@ impl<T: Display> Printable for T {
 
         //flush stdout
         io::stdout().flush().unwrap();
-
-       
     }
-
-
-
 
     fn write<F>(&self, func: F)
     where
@@ -469,7 +612,6 @@ impl<T: Display> Printable for T {
     }
 }
 
-
 /// show selection picker
 /// ask for selection
 /// interactively ask for a selection from a list of options
@@ -489,8 +631,8 @@ impl<T: Display> Printable for T {
 /// let options = vec![Person{name:"John"},Person{name:"Jane"}];
 /// let selection = ask_for_selection(options.iter().collect());
 /// ```
-pub fn ask_for_selection<T: Pickable+Clone>(options: Vec<T>) -> usize {
- // continue from the current line and dont clear anything before current line
+pub fn ask_for_selection<T: Pickable + Clone>(options: Vec<T>) -> usize {
+    // continue from the current line and dont clear anything before current line
     print!("\x1b[1K\x1b[0G");
     //print the options
     display_options(options.clone(), 0);
@@ -588,13 +730,11 @@ pub enum Key {
     Esc,
 }
 
-
-
 pub fn display_options<T: Pickable>(options: Vec<T>, selected: usize) {
     let mut index = 0;
     for option in options {
         if index == selected {
-            option.get_title().print(in_yellow) ;
+            option.get_title().print(in_yellow);
             " ".print(in_yellow);
             option.get_description().println(in_yellow);
         } else {
@@ -606,11 +746,10 @@ pub fn display_options<T: Pickable>(options: Vec<T>, selected: usize) {
     }
 }
 
-
 /// enable raw mode
 /// enable raw mode on stdin (no external dependencies)
 pub fn enable_raw_mode() -> std::io::Result<()> {
-   io::stdout().write_all(b"\x1b[?25l")?;
+    io::stdout().write_all(b"\x1b[?25l")?;
     io::stdout().flush()?;
     Ok(())
 }
@@ -629,12 +768,6 @@ pub trait Pickable {
     fn get_title(&self) -> String;
     fn get_description(&self) -> String;
 }
-
-
-
-
-
-
 
 #[macro_export]
 macro_rules! show {
@@ -668,10 +801,9 @@ macro_rules! showln {
     };
 }
 
-
 /// paragraph! macro
-/// same like showln! but automatically chops the text and 
-/// wraps it in a paragraph. the width of the paragraph 
+/// same like showln! but automatically chops the text and
+/// wraps it in a paragraph. the width of the paragraph
 /// is 65 characters by default. when the text is longer than
 /// 65 characters, it is wrapped in a paragraph
 /// # Examples
@@ -680,16 +812,16 @@ macro_rules! showln {
 /// ``
 /// output:
 /// ``
-/// this is a long text that will be wrapped in a paragraph after 
+/// this is a long text that will be wrapped in a paragraph after
 /// 65 chars. this is another long text that will be appended to
 /// the first one and wrapped in a paragraph
-/// 
+///
 #[macro_export]
 macro_rules! paragraph {
     ($($arg:tt)*) => {{
         // Use the render! macro to format the text
         let formatted = $crate::render!($($arg)*);
-        
+
         // Use textwrap to wrap the text to a width of 65 characters
         // You can adjust this value if needed
         let width = 65;
@@ -701,8 +833,11 @@ macro_rules! paragraph {
 }
 
 
-
-
+/// render! macro
+/// same like showln! but automatically chops the text and
+/// wraps it in a paragraph. the width of the paragraph
+/// is 65 characters by default. when the text is longer than
+/// 65 characters, it is wrapped in a paragraph
 
 #[macro_export]
 macro_rules! render {

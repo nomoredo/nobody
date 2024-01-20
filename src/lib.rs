@@ -3,11 +3,13 @@ use std::{
     io::{self, Read, Write},
 };
 
-pub use c::*;
-pub mod c;
+
 
 pub use constants::*;
 pub mod constants;
+
+pub use noui::*;
+
 
 pub fn show_banner() {
     BANNER.print(vibrant);
@@ -32,7 +34,8 @@ pub fn execution_loop() {
     handle_args();
     loop {
         let options = get_options();
-        let selection = show::menu(&options);
+        // let selection = show::menu(&options);
+        let selection = ask_for_selection(&options);
 
         if let Some(selected_option) = selection {
             selected_option.execute_with_args(&vec![]);
@@ -56,32 +59,7 @@ pub fn handle_args() {
     }
 }
 
-#[derive(Debug, Clone)]
-pub struct Choice {
-    pub name: String,
-    pub description: String,
-    pub execute: fn(&Vec<String>),
-    pub matches_if: fn(&Vec<String>) -> bool,
-}
 
-impl Pickable for Choice {
-    fn get_title(&self) -> String {
-        self.name.clone()
-    }
-    fn get_description(&self) -> String {
-        self.description.clone()
-    }
-}
-
-impl Choice {
-    pub fn matches(&self, args: &Vec<String>) -> bool {
-        (self.matches_if)(args)
-    }
-
-    pub fn execute_with_args(&self, args: &Vec<String>) {
-        (self.execute)(args);
-    }
-}
 
 pub fn get_options() -> Vec<Choice> {
     vec![
