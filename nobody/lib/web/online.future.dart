@@ -38,44 +38,53 @@ extension ExOnline on Future<Online> {
   }
 
   Future<Online> login(
-    Authable authable,
-  ) async {
+    AnyUser authable, {
+    bool show = true,
+  }) async {
     var Online = await this;
     return Online.login(
       authable,
+      show: show,
     );
   }
 
   Future<Online> visit(
-    String url,
-  ) async {
+    String url, {
+    bool show = true,
+  }) async {
     var Online = await this;
     return Online.visit(
       url,
+      show: show,
     );
   }
 
   Future<Online> goto(
-    AbstractUrl url,
-  ) async {
+    AnyUrl url, {
+    bool show = true,
+  }) async {
     var Online = await this;
     return Online.goto(
       url,
+      show: show,
     );
   }
 
   Future<Online> navigate(
-    String url,
-  ) async {
+    String url, {
+    bool show = true,
+  }) async {
     var Online = await this;
     return Online.navigate(
       url,
+      show: show,
     );
   }
 
   Future<Online> set(
-    AbstractSelector selector,
+    AnySelector selector,
     String text, {
+    bool show = true,
     Duration? timeout = null,
     int index = 0,
   }) async {
@@ -83,13 +92,14 @@ extension ExOnline on Future<Online> {
     return Online.set(
       selector,
       text,
+      show: show,
       timeout: timeout,
       index: index,
     );
   }
 
   Future<Online> set_secret(
-    AbstractSelector selector,
+    AnySelector selector,
     String text, {
     Duration? timeout = null,
     int index = 0,
@@ -104,7 +114,7 @@ extension ExOnline on Future<Online> {
   }
 
   Future<Online> set_range(
-    AbstractSelector selector,
+    AnySelector selector,
     String from,
     String to, {
     Duration? timeout = null,
@@ -156,11 +166,13 @@ extension ExOnline on Future<Online> {
   }
 
   Future<Online> focus(
-    AbstractSelector selector,
-  ) async {
+    AnySelector selector, {
+    bool show = true,
+  }) async {
     var Online = await this;
     return Online.focus(
       selector,
+      show: show,
     );
   }
 
@@ -178,28 +190,43 @@ extension ExOnline on Future<Online> {
   }
 
   Future<Online> click(
-    AbstractSelector selector,
-  ) async {
+    AnySelector selector, {
+    bool show = true,
+    int index = 0,
+  }) async {
     var Online = await this;
     return Online.click(
       selector,
+      show: show,
+      index: index,
     );
   }
 
   Future<Online> press(
-    Key key,
-  ) async {
+    Key key, {
+    bool show = true,
+  }) async {
     var Online = await this;
     return Online.press(
       key,
+      show: show,
     );
   }
 
   Future<Online> submit(
-    AbstractSelector selector,
+    AnySelector selector,
   ) async {
     var Online = await this;
     return Online.submit(
+      selector,
+    );
+  }
+
+  Future<Online> select_frame(
+    String selector,
+  ) async {
+    var Online = await this;
+    return Online.select_frame(
       selector,
     );
   }
@@ -210,7 +237,7 @@ extension ExOnline on Future<Online> {
   }
 
   Future<Online> right_click(
-    AbstractSelector selector,
+    AnySelector selector,
   ) async {
     var Online = await this;
     return Online.right_click(
@@ -228,7 +255,7 @@ extension ExOnline on Future<Online> {
   }
 
   Future<Online> double_click(
-    AbstractSelector selector,
+    AnySelector selector,
   ) async {
     var Online = await this;
     return Online.double_click(
@@ -237,7 +264,7 @@ extension ExOnline on Future<Online> {
   }
 
   Future<Online> hover(
-    AbstractSelector selector,
+    AnySelector selector,
   ) async {
     var Online = await this;
     return Online.hover(
@@ -246,7 +273,7 @@ extension ExOnline on Future<Online> {
   }
 
   Future<Online> middle_click(
-    AbstractSelector selector,
+    AnySelector selector,
   ) async {
     var Online = await this;
     return Online.middle_click(
@@ -255,26 +282,30 @@ extension ExOnline on Future<Online> {
   }
 
   Future<Online> key_down(
-    Key key,
-  ) async {
+    Key key, {
+    bool show = true,
+  }) async {
     var Online = await this;
     return Online.key_down(
       key,
+      show: show,
     );
   }
 
   Future<Online> key_up(
-    Key key,
-  ) async {
+    Key key, {
+    bool show = true,
+  }) async {
     var Online = await this;
     return Online.key_up(
       key,
+      show: show,
     );
   }
 
   Future<Online> fill(
     Map<String, dynamic> map, {
-    AbstractSelector? form = null,
+    AnySelector? form = null,
   }) async {
     var Online = await this;
     return Online.fill(
@@ -284,7 +315,7 @@ extension ExOnline on Future<Online> {
   }
 
   Future<Online> waitFor(
-    AbstractSelector waitable, {
+    AnySelector waitable, {
     Duration? timeout = null,
   }) async {
     var Online = await this;
@@ -318,8 +349,8 @@ extension ExOnline on Future<Online> {
   }
 
   Future<Online> download(
-    AbstractDownloadable downloadable,
-    AbstractPath path,
+    AnyDownloadable downloadable,
+    AnyPath path,
   ) async {
     var Online = await this;
     return Online.download(
@@ -329,7 +360,7 @@ extension ExOnline on Future<Online> {
   }
 
   Future<Online> scrollToElement(
-    AbstractSelector selector,
+    AnySelector selector,
   ) async {
     var Online = await this;
     return Online.scrollToElement(
@@ -349,7 +380,7 @@ extension ExOnline on Future<Online> {
   }
 
   Future<String?> get_value(
-    AbstractSelector selector,
+    AnySelector selector,
     String property,
   ) async {
     var Online = await this;
@@ -411,7 +442,7 @@ extension ExOnline on Future<Online> {
   }
 
   Future<Online> list_elements(
-    AbstractSelector selector,
+    AnySelector selector,
   ) async {
     var Online = await this;
     return Online.list_elements(

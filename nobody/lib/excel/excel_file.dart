@@ -2,7 +2,7 @@ import 'package:excel/excel.dart';
 import 'package:nobody/references.dart';
 
 @NomoCode()
-class ExcelFile implements AbstractFile<Workbook> {
+class ExcelFile implements AnyFile<Workbook> {
   final String path;
 
   const ExcelFile(this.path);

@@ -2,6 +2,8 @@
 //wait_for(Navigation)
 import 'package:nobody/references.dart';
 
+import 'any_selector.dart';
+
 Waitable UntilPageLoaded = (Online online) async {
   Show.action('waiting', 'for', "navigation");
   await (await online.page).waitForNavigation();
@@ -26,14 +28,14 @@ Waitable Element(String selector) => (Online online) async {
       return true;
     };
 
-Waitable ElementVisible(AbstractSelector selector) => (Online online) async {
+Waitable ElementVisible(AnySelector selector) => (Online online) async {
       Show.action('waiting', 'for', selector.selector, 'to be', 'visible');
       await (await online.page)
           .waitForSelector(selector.selector, visible: true);
       return true;
     };
 
-Waitable ElementHidden(AbstractSelector selector) => (Online online) async {
+Waitable ElementHidden(AnySelector selector) => (Online online) async {
       Show.action('waiting', 'for', selector.selector, 'to be', 'hidden');
       await (await online.page)
           .waitForSelector(selector.selector, hidden: true);

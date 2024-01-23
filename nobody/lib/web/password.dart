@@ -2,7 +2,7 @@
 
 import 'package:nobody/references.dart';
 
-class Password implements AbstractPassword {
+class Password implements AnyPassword {
   final String scope;
   final String key;
 
@@ -32,20 +32,5 @@ class Password implements AbstractPassword {
   Future<bool> save(String password) async {
     await passwordStore.set('$scope.$key', password);
     return true;
-  }
-}
-
-abstract class AbstractPassword {
-  Future<String> get password;
-
-  factory AbstractPassword.From({required String scope, required String key}) {
-    return Password(scope: scope, key: key);
-  }
-
-  Future<bool> save(String password);
-
-  @override
-  String toString() {
-    return 'P*SSW*RD';
   }
 }

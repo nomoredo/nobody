@@ -2,10 +2,12 @@
 
 import 'package:nobody/references.dart';
 
-abstract class Authable {
-  AbstractUrl get url;
+import 'any_password.dart';
+import 'any_url.dart';
+
+abstract class AnyUser {
+  AnyUrl get url;
   String get username;
-  AbstractPassword get password;
+  AnyPassword get password;
   Future<Online> login(Online browser);
 }
-

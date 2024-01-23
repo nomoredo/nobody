@@ -1,4 +1,8 @@
 import '../references.dart';
+import 'any_downloadable.dart';
+import 'any_path.dart';
+import 'any_selector.dart';
+import 'any_url.dart';
 
 @NomoCode()
 class Online {
@@ -88,7 +92,7 @@ for (const element of elements) {
     return this;
   }
 
-  Future<Online> login(Authable authable, {bool show = true}) async {
+  Future<Online> login(AnyUser authable, {bool show = true}) async {
     if (show) Show.action('authenticating', authable.username);
     return await authable.login(this);
   }
@@ -99,7 +103,7 @@ for (const element of elements) {
     return this;
   }
 
-  Future<Online> goto(AbstractUrl url, {bool show = true}) async {
+  Future<Online> goto(AnyUrl url, {bool show = true}) async {
     var clean_url = Uri.encodeFull(url.url);
     if (show) Show.action('visiting', clean_url.clean_url());
     await (await page).goto(clean_url, wait: Until.domContentLoaded);
@@ -120,7 +124,7 @@ for (const element of elements) {
     return this;
   }
 
-  Future<Online> set(AbstractSelector selector, String text,
+  Future<Online> set(AnySelector selector, String text,
       {bool show = true, Duration? timeout = null, int index = 0}) async {
     if (show) Show.action('set', 'value', text);
     if (selector is XPath) {
@@ -155,7 +159,7 @@ for (const element of elements) {
     return this;
   }
 
-  Future<Online> set_secret(AbstractSelector selector, String text,
+  Future<Online> set_secret(AnySelector selector, String text,
       {Duration? timeout = null, int index = 0}) async {
     Show.action('set', 'secret', text.obscure());
     if (selector is XPath) {
@@ -176,7 +180,7 @@ for (const element of elements) {
     return this;
   }
 
-  Future<Online> set_range(AbstractSelector selector, String from, String to,
+  Future<Online> set_range(AnySelector selector, String from, String to,
       {Duration? timeout = null, bool log = true}) async {
     var Online = await this;
     if (log) Show.action('set', selector.selector, from, 'to', to);
@@ -214,7 +218,7 @@ for (const element of elements) {
   }
 
   //focus
-  Future<Online> focus(AbstractSelector selector, {bool show = true}) async {
+  Future<Online> focus(AnySelector selector, {bool show = true}) async {
     if (show) Show.action('focusing', selector.selector);
     await (await page).waitForSelector(selector.selector);
     await (await page).focus(selector.selector);
@@ -243,7 +247,7 @@ for (const element of elements) {
   }
 
   //click
-  Future<Online> click(AbstractSelector selector,
+  Future<Online> click(AnySelector selector,
       {bool show = true, int index = 0}) async {
     if (show) Show.action('clicking', selector.selector);
     if (selector is XPath) {
@@ -271,7 +275,7 @@ for (const element of elements) {
   }
 
   //submit form
-  Future<Online> submit(AbstractSelector selector) async {
+  Future<Online> submit(AnySelector selector) async {
     Show.action('submitting', selector.selector);
     await (await page).waitForSelector(selector.selector, visible: true);
     await (await page).evaluate('''(selector) => {
@@ -314,7 +318,7 @@ for (const element of elements) {
   }
 
   //right click
-  Future<Online> right_click(AbstractSelector selector) async {
+  Future<Online> right_click(AnySelector selector) async {
     Show.action('right click', selector.selector);
     await (await page).waitForSelector(selector.selector);
     await (await page).click(selector.selector, button: MouseButton.right);
@@ -333,7 +337,7 @@ for (const element of elements) {
   }
 
   //double click
-  Future<Online> double_click(AbstractSelector selector) async {
+  Future<Online> double_click(AnySelector selector) async {
     Show.action('double click', selector.selector);
     await (await page).waitForSelector(selector.selector);
     await (await page).click(selector.selector, clickCount: 2);
@@ -341,7 +345,7 @@ for (const element of elements) {
   }
 
   //hover
-  Future<Online> hover(AbstractSelector selector) async {
+  Future<Online> hover(AnySelector selector) async {
     Show.action('hover over', selector.selector);
     await (await page).waitForSelector(selector.selector);
     await (await page).hover(selector.selector);
@@ -349,7 +353,7 @@ for (const element of elements) {
   }
 
   //middle click
-  Future<Online> middle_click(AbstractSelector selector) async {
+  Future<Online> middle_click(AnySelector selector) async {
     Show.action('middle click', selector.selector);
     await (await page).waitForSelector(selector.selector);
     await (await page).click(selector.selector, button: MouseButton.middle);
@@ -370,8 +374,7 @@ for (const element of elements) {
     return this;
   }
 
-  Future<Online> fill(Map<String, dynamic> map,
-      {AbstractSelector? form}) async {
+  Future<Online> fill(Map<String, dynamic> map, {AnySelector? form}) async {
     try {
       form ??= Css('#webguiform0');
       var pageInstance = await page;
@@ -396,7 +399,7 @@ for (const element of elements) {
   //wait_for('h3.LC20lb')
   //wait_for(Navigation)
   //uses Wait type
-  Future<Online> waitFor(AbstractSelector waitable, {Duration? timeout}) async {
+  Future<Online> waitFor(AnySelector waitable, {Duration? timeout}) async {
     await (await page).waitForSelector(waitable.selector,
         timeout: timeout ?? default_timeout);
     return this;
@@ -420,14 +423,13 @@ for (const element of elements) {
     return this;
   }
 
-  Future<Online> download(
-      AbstractDownloadable downloadable, AbstractPath path) async {
+  Future<Online> download(AnyDownloadable downloadable, AnyPath path) async {
     Show.action('downloading', downloadable.name);
     await downloadable.download(this, path);
     return this;
   }
 
-  Future<Online> scrollToElement(AbstractSelector selector) async {
+  Future<Online> scrollToElement(AnySelector selector) async {
     Show.action('scrolling', 'to', selector.selector);
     await (await page).waitForSelector(selector.selector);
     await (await page).evaluate('''(selector) => {
@@ -444,7 +446,7 @@ for (const element of elements) {
     return this;
   }
 
-  Future<String?> get_value(AbstractSelector selector, String property) async {
+  Future<String?> get_value(AnySelector selector, String property) async {
     Show.action('getting', property, 'of', selector.selector);
     await (await page).waitForSelector(selector.selector);
     var value = await (await page).evaluate('''(selector, property) => {
@@ -496,7 +498,7 @@ for (const element of elements) {
   }
 
   /// List elements matching the selector
-  Future<Online> list_elements(AbstractSelector selector) async {
+  Future<Online> list_elements(AnySelector selector) async {
     Show.action('listing', selector.selector);
     await (await page).waitForSelector(selector.selector);
     var elements = await (await page).evaluate('''(selector) => {
@@ -692,7 +694,7 @@ typedef MapManyFunc<T, R> = Iterable<R> Function(T);
 typedef AsyncMapManyFunc<T, R> = Future<Iterable<R>> Function(T);
 typedef Waitable<T> = Future<bool> Function(Online);
 
-UntilVisible(AbstractSelector selector) => (Online browser) async {
+UntilVisible(AnySelector selector) => (Online browser) async {
       await browser.evaluate('''(selector) => {
         //wait for selector to be visible
         return new Promise((resolve, reject) => {

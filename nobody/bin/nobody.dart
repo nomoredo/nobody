@@ -14,7 +14,7 @@ Future export_emp_attendance() async {
       .set(Input.WithId("M0:46:::2:34"), "01.01.2023")
       .set(Input.WithId("M0:46:::2:59"), "01.01.2024")
       .click(Sap.Execute)
-      .download(Sap.DownloadableTable, AbstractPath.Relative("attendance.xlsx"))
+      .download(Sap.DownloadableTable, AnyPath.Relative("attendance.xlsx"))
       .wait(Seconds(50)) // this was for testing
       .close();
 }

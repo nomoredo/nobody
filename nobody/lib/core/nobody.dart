@@ -32,7 +32,7 @@ class Nobody {
       browser = await puppeteer.launch(
         headless: !visible,
         args: [
-          //all flags taht help us with automation and prevent detection
+          //all flags that help us with automation and avoid complications.
           '--disable-infobars',
           '--disable-extensions',
           '--disable-dev-shm-usage',
@@ -82,7 +82,7 @@ class Nobody {
     return built;
   }
 
-  Future<T> open<T>(AbstractFile<T> file) async {
+  Future<T> open<T>(AnyFile<T> file) async {
     return file.open();
   }
 }
@@ -99,7 +99,7 @@ abstract class Timeout {
   Duration get timeout;
 }
 
-abstract class AbstractFile<T> {
+abstract class AnyFile<T> {
   Future<T> open();
 }
 

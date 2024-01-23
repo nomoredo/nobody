@@ -1,19 +1,15 @@
 import 'package:nobody/references.dart';
 
-/// AbstractDownloadable
-/// has a download method
-abstract class AbstractDownloadable {
-  String get name;
-  Future<Online> download(Online browser, AbstractPath path);
-}
+import 'any_downloadable.dart';
+import 'any_path.dart';
 
 /// DownloadableSapTable
-class DownloadableSapTable implements AbstractDownloadable {
+class DownloadableSapTable implements AnyDownloadable {
   String get name => 'Table from SAP';
   const DownloadableSapTable();
 
   @override
-  Future<Online> download(Online browser, AbstractPath path) async {
+  Future<Online> download(Online browser, AnyPath path) async {
     await browser.waitFor(Sap.TableHeader);
     //send Ctrl+Shift+F10 to window
     await browser.key_down(Key.control, show: false);

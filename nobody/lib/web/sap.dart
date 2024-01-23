@@ -1,5 +1,10 @@
 import 'package:nobody/lib.dart';
 
+import 'any_downloadable.dart';
+import 'any_password.dart';
+import 'any_selector.dart';
+import 'any_url.dart';
+
 class Sap {
   static final Execute = Sap.Button("Execute (F8)");
   static final Back = Sap.Button("Back (F3)");
@@ -9,9 +14,9 @@ class Sap {
   static final Exit = Sap.Button("Exit (Shift+F3)");
   static final CreateNew = Sap.Button("Create New Items (F7)");
 
-  static AbstractSelector Button(String label) =>
+  static AnySelector Button(String label) =>
       Css('div[role="button"][title="$label"]');
-  static AbstractSelector Input(String label) =>
+  static AnySelector Input(String label) =>
       Css('input[title="$label"][name="InputField"][class="lsField__input"]');
 
   /*
@@ -24,27 +29,27 @@ class Sap {
 
    */
 
-  static Authable User(String username) => SapUser(username);
-  static AbstractUrl get Fiori => SapFiori();
-  static AbstractUrl Transaction(String code) => Transaction(code);
+  static AnyUser User(String username) => SapUser(username);
+  static AnyUrl get Fiori => SapFiori();
+  static AnyUrl Transaction(String code) => Transaction(code);
 
-  static AbstractDownloadable get DownloadableTable => DownloadableSapTable();
+  static AnyDownloadable get DownloadableTable => DownloadableSapTable();
 
-  static AbstractSelector InputFields = Css('[class="lsField__input"]');
+  static AnySelector InputFields = Css('[class="lsField__input"]');
 
   /// Table id is not unique, so we need to use the index to get the right table
   /// usually the first table is the one we want to use
-  static AbstractSelector get Table => Css('table[role="grid"]');
+  static AnySelector get Table => Css('table[role="grid"]');
 
   /// Header of first table
   /// usually the first table is the one we want to use
-  static AbstractSelector get TableHeader => Css('table[role="grid"]>tbody>tr');
+  static AnySelector get TableHeader => Css('table[role="grid"]>tbody>tr');
 }
 
-class SapUser implements Authable {
+class SapUser implements AnyUser {
   final String username;
-  AbstractPassword get password => Password.From(scope: 'sap', key: username);
-  AbstractUrl get url => Url('https://cbs.almansoori.biz');
+  AnyPassword get password => Password.From(scope: 'sap', key: username);
+  AnyUrl get url => Url('https://cbs.almansoori.biz');
 
   const SapUser(this.username);
 
@@ -67,13 +72,13 @@ class SapUser implements Authable {
   }
 }
 
-class SapFiori implements AbstractUrl {
+class SapFiori implements AnyUrl {
   String get url =>
       'https://cbs.almansoori.biz/sap/bc/ui5_ui5/ui2/ushell/shells/abap/FioriLaunchpad.html?sap-client=800&sap-language=EN';
   const SapFiori();
 }
 
-class SapTransaction implements AbstractUrl {
+class SapTransaction implements AnyUrl {
   final String code;
   String get url =>
       'https://cbs.almansoori.biz/sap/bc/gui/sap/its/webgui/?sap-client=800&~TRANSACTION=$code#';
