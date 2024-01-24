@@ -10,11 +10,11 @@ U+255x	═	║	╒	╓	╔	╕	╖	╗	╘	╙	╚	╛	╜	╝	╞	╟
 U+256x	╠	╡	╢	╣	╤	╥	╦	╧	╨	╩	╪	╫	╬	╭	╮	╯
 U+257x	╰	╱	╲	╳	╴	╵	╶	╷	╸	╹	╺	╻	╼	╽	╾	╿
 
-╭──
+╭── TITLE ────────────────────────────────────────────────────────────────────────╮
 │
 │
 │
-└──
+╰──
 
 
 */
@@ -30,3 +30,4 @@ pub const BANNER :&str = r#"
 "#;
 
 pub const FOOTER :&str = r#"WORKS FOR YOU ✨"#;
+pub const DESCRIPTION :&str = r#"DEVELOPED BY AGHIL MOHANDAS FOR ALMANSOORI WIRELINE SERVICES"#;

@@ -3,8 +3,8 @@ use std::{
     io::{self, Read, Write},
 };
 
-pub use c::*;
-pub mod c;
+pub use minimo::*;
+
 
 pub use constants::*;
 pub mod constants;
