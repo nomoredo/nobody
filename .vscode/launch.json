@@ -20,6 +20,15 @@
         
         },
         {
+            "name": "check_email",
+            "cwd": "nobody",
+            "request": "launch",
+            "type": "dart",
+            "program": "bin/check_email.dart",
+            "console": "terminal",
+        
+        },
+        {
             "name": "termo",
             "cwd": "termo",
             "request": "launch",

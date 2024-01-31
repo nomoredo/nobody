@@ -1,11 +1,9 @@
-import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:nobody/references.dart';
 
 // const APP_SECRET = "QKr8Q~ZvViURbcgL60Tqd3MsyMXKqBPACX4K4dAt";
-const APP_ID = "376877d4-f7ea-4c45-bdc8-1c592ac38a9d";
-const TENANT_ID = "bad285a0-eef3-4865-9a2c-7893068e70b0";
+const APP_ID = "69f1fa1f-6d33-4dd2-b49a-823bec62ae00";
+const TENANT_ID = "d6f6af94-f516-4217-a014-f61ce26f86db";
 // const scope = "api://376877d4-f7ea-4c45-bdc8-1c592ac38a9d/aims";
 // const scope = "https://graph.microsoft.com/.default";
 const scopes = [
@@ -14,10 +12,10 @@ const scopes = [
 ];
 
 const authorization_endpoint =
-    'https://login.microsoftonline.com/bad285a0-eef3-4865-9a2c-7893068e70b0/oauth2/v2.0/authorize';
+    'https://login.microsoftonline.com/d6f6af94-f516-4217-a014-f61ce26f86db/oauth2/v2.0/authorize';
 const auth_token_endpoint =
-    'https://login.microsoftonline.com/bad285a0-eef3-4865-9a2c-7893068e70b0/oauth2/v2.0/token';
-const redirect_url = 'http://localhost:8000/redirect';
+    'https://login.microsoftonline.com/d6f6af94-f516-4217-a014-f61ce26f86db/oauth2/v2.0/token';
+const redirect_url = 'https://localhost:44368';
 
 // const scope_root = "https://graph.microsoft.com/";
 
@@ -69,39 +67,52 @@ Future<String?> get_token(String username, {retry_count = 0}) async {
         '$authorization_endpoint?client_id=$APP_ID^&scope=$scope^&response_type=code^&redirect_uri=$redirect_url';
     print(url);
     await launch(url);
-    var server = await HttpServer.bind(InternetAddress.loopbackIPv4, 8000);
+    //once authenticated, the browser will redirect to localhost:44368 with the code
+
+    var server = await HttpServer.bindSecure(
+        InternetAddress.loopbackIPv4, 44368, SecurityContext.defaultContext);
     var request = await server.first;
     var code = request.uri.queryParameters['code'];
-    request.response
-      ..statusCode = 200
-      ..headers.set('content-type', 'text/html')
-      ..write('<html><h1>Authentication successful</h1></html>');
-    if (code == null) {
-      throw Exception('no code');
-    }
-    Show.success("RECEIVED", "AUTHORIZATION", "CODE");
-    //store code in database
-    await tokenStore.set("auth_$username", code);
-    var client = HttpClient();
-    var request2 = await client.postUrl(Uri.parse(auth_token_endpoint));
-    request2.headers.set('content-type', 'application/x-www-form-urlencoded');
-    request2.write('client_id=$APP_ID');
-    request2.write('&scope=$scope');
-    request2.write('&code=$code');
-    request2.write('&redirect_uri=$redirect_url');
-    request2.write('&grant_type=authorization_code');
-    // request2.write('&client_secret=$APP_SECRET');
-    var response = await request2.close();
-    var body = await response.transform(Utf8Decoder()).join();
-    var json = jsonDecode(body);
-    var token = json['access_token'];
-    if (token == null) {
-      throw Exception('no token');
-    }
-    Show.success("RECEIVED", "ACCESS TOKEN");
+
+    //get token from code
+    var token = await get_token_from_code(code!);
     await tokenStore.set("token_$username", token);
+
+    //get token validity
+    var validity = await get_token_validity(token);
+    await dateStore.set("token_validity_$username", validity);
+
+    await server.close(force: true);
     return token;
   } catch (e) {
-    return get_token(username, retry_count: retry_count + 1);
+    print(e);
+    return await get_token(username, retry_count: retry_count + 1);
   }
+}
+
+Future<String> get_token_from_code(String code) async {
+  var client = Dio();
+  var response = await client.post(
+    auth_token_endpoint,
+    data: {
+      'client_id': APP_ID,
+      'scope': scope,
+      'code': code,
+      'redirect_uri': redirect_url,
+      'grant_type': 'authorization_code',
+      // 'client_secret': APP_SECRET,
+    },
+  );
+  var token = response.data['access_token'];
+  return token;
+}
+
+Future<DateTime> get_token_validity(String token) async {
+  var client = Dio();
+  var response = await client.get(
+    'https://graph.microsoft.com/v1.0/me',
+    options: Options(headers: {'Authorization': 'Bearer $token'}),
+  );
+  var validity = DateTime.now().add(Duration(seconds: 3599));
+  return validity;
 }
