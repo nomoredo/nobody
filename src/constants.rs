@@ -29,4 +29,4 @@ pub const BANNER :&str = r#"
                                     /____/                 
 "#;
 
-pub const FOOTER :&str = r#" WORKS FOR YOU "#;
+pub const FOOTER :&str = r#" WORKS FOR YOU 🙄"#;

@@ -15,7 +15,7 @@ pub fn show_banner() {
     BANNER.print(vibrant);
     // get virsion from cargo.toml
     let version = env!("CARGO_PKG_VERSION");
-    FOOTER.print_positioned(-2, 26, in_white);
+    FOOTER.print_positioned(-2, 22, in_white);
     format!("{}", version).print_positioned(-2, 28, in_gray);
 
 //    divider();
@@ -38,7 +38,11 @@ pub fn execution_loop() {
         let selection = show::menu(&options);
 
         if let Some(selected_option) = selection {
+            divider();
+            showln!(yellow_bold,"running ",cyan_bold, selected_option.name, white, " ...");
             selected_option.execute_with_args(&vec![]);
+            showln!(green_bold,"completed running ",cyan_bold, selected_option.name);
+            divider();
         }
     }
 }
@@ -180,6 +184,12 @@ pub mod show {
                                     cursor::MoveTo(0, corrected_y),
                                     terminal::Clear(terminal::ClearType::FromCursorDown)
                                 ).unwrap();
+                                execute!(
+                                    io::stdout(),
+                                    cursor::MoveTo(0, corrected_y),
+                                    terminal::Clear(terminal::ClearType::FromCursorDown)
+                                ).unwrap();
+                                
                                 terminal::disable_raw_mode().unwrap();
                                 return options.get(selected_index).cloned();
 
@@ -197,6 +207,8 @@ pub mod show {
                 // corrected_y = corrected_y - 2;
             }
             
-
+            //clear everything from the current cursor position till the end of the screen
+     
+            
     }
 }
