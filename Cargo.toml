@@ -2,7 +2,9 @@
 name = "nobody"
 version = "0.1.0"
 edition = "2021"
-
+authors = ["aghil mohandas <a@xo.rs>"]
+description = "nobody works for you 🙄"
+license = "MIT"
 
 
 [dependencies]
