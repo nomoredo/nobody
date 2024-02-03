@@ -29,6 +29,15 @@
         
         },
         {
+            "name": "create_trip_request",
+            "cwd": "nobody",
+            "request": "launch",
+            "type": "dart",
+            "program": "bin/create_trip_request.dart",
+            "console": "terminal",
+        
+        },
+        {
             "name": "termo",
             "cwd": "termo",
             "request": "launch",
