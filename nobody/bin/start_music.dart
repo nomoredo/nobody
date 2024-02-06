@@ -5,18 +5,15 @@ void main(List<String> arguments) async {
 }
 
 Future export_emp_attendance() async {
-  return Nobody()
+  await Nobody()
       .online()
-      .login(Sap.User('amohandas'))
-      .goto(SapTransaction("ZHR076A"))
-      // .artificial_delay()
-      .set(Sap.Input("Personnel Number"), "9711068")
-      .set(Input.WithId("M0:46:::2:34"), "01.01.2023")
-      .set(Input.WithId("M0:46:::2:59"), "01.01.2024")
-      .click(Sap.Execute)
-      .download(Sap.DownloadableTable, AbstractPath.Relative("attendance.xlsx"))
-      .wait(Seconds(50)) // this was for testing
-      .close();
+      .goto(Url("https://youtube.com"))
+      .type("input#search", "kachi sera")
+      .click(Button.WithId("search-icon-legacy"))
+      .wait(Navigation)
+      .click(Css("a#video-title"))
+      .wait(Navigation)
+      .wait(Seconds(10));
 }
 
 
