@@ -12,7 +12,7 @@ Future generate_trf_report() async {
       // .listen()
       .set(SapInput('Company Code'), '2200')
       // .start_record()
-      .wait(Seconds(20))
+      .wait(Waitable.Seconds(20))
       // .stop_record("test.json")
       .close();
   // .click(SapButton("Execute (F8)"))

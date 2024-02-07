@@ -10,10 +10,10 @@ Future export_emp_attendance() async {
       .goto(Url("https://youtube.com"))
       .type("input#search", "kachi sera")
       .click(Button.WithId("search-icon-legacy"))
-      .wait(Navigation)
+      .wait(Waitable.Navigation())
       .click(Css("a#video-title"))
-      .wait(Navigation)
-      .wait(Seconds(10));
+      .wait(Waitable.PageLoaded())
+      .wait(Waitable.Seconds(10));
 }
 
 

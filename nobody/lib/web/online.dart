@@ -198,7 +198,7 @@ for (const element of elements) {
   Future<Online> when(Waitable waitable, MapFunc<Online, dynamic> action,
       {Duration? timeout}) async {
     Show.action('when', waitable.toString());
-    await waitable(this);
+    await waitable.wait(this);
     await action(this);
     return this;
   }
@@ -403,7 +403,7 @@ for (const element of elements) {
   }
 
   Future<Online> wait(Waitable waitable) async {
-    await waitable(this);
+    await waitable.wait(this);
     return this;
   }
 
@@ -690,7 +690,6 @@ typedef MapFunc<T, R> = R Function(T);
 typedef AsyncMapFunc<T, R> = Future<R> Function(T);
 typedef MapManyFunc<T, R> = Iterable<R> Function(T);
 typedef AsyncMapManyFunc<T, R> = Future<Iterable<R>> Function(T);
-typedef Waitable<T> = Future<bool> Function(Online);
 
 UntilVisible(AbstractSelector selector) => (Online browser) async {
       await browser.evaluate('''(selector) => {

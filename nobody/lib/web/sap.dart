@@ -57,8 +57,8 @@ class SapUser implements Authable {
           .set(Input.WithId('logonuidfield'), username)
           .set(Input.WithId('logonpassfield'), pss)
           .click(Input.WithName('uidPasswordLogon'))
-          .wait(UntilPageLoaded)
-          .wait(ElementVisible(Css(
+          .wait(Waitable.PageLoaded())
+          .wait(Waitable.ElementVisible(Css(
               'span[class="sapUshellAppTitle sapUshellAppTitleClickable"]')));
     } catch (e) {
       print(e);
