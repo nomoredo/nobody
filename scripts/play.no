@@ -1,0 +1,24 @@
+    /// sample script
+    name: "the test"
+    author: "amohandas"
+    description: "this is a test"
+    version: "1.0"
+    imports:[
+        "nobody",
+        {name: "sap", version: "1.0"},
+        {name: "minimo", path: "./minimo"}
+    ]
+    
+
+    /// start of script
+    Nobody()
+      .online()
+      .login(Sap.User('amohandas'))
+      .goto(SapTransaction("ZHR076A"))
+      .set(Sap.Input("Personnel Number"), "9711068")
+      .set(Input.WithId("M0:46:::2:34"), "01.01.2023")
+      .set(Input.WithId("M0:46:::2:59"), "01.01.2024")
+      .click(Sap.Execute)
+      .download(Sap.DownloadableTable, AbstractPath.Relative("attendance.xlsx"))
+      .wait(Waitable.Seconds(50)) // this was for testing
+      .close();

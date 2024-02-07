@@ -13,3 +13,4 @@ rand = "0.8.5"
 reqwest = { version = "0.11.23", features = ["blocking"] }
 zip = "0.6.6"
 minimo = "0.3.0"
+walkdir = "2.4.0"
