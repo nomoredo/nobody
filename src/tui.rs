@@ -1,3 +1,5 @@
+use std::sync::Arc;
+
 pub use super::*;
 
 pub fn show_banner() {
@@ -23,46 +25,19 @@ pub fn get_options() -> Vec<Choice> {
     let mut opt = vec![];
 
     if is_not_installed() {
-        opt.push(Choice {
-            name: String::from("install"),
-            description: String::from("install nomo"),
-            execute: install,
-            matches_if: |args| args.contains(&String::from("install")),
-        });
+        opt.push(choice!("install", "install nobody", || install(), |args| args.contains(&String::from("install"))));
     }
 
     for script in get_scripts() {
-        opt.push(Choice {
-            name: script.get_name(),
-            description: script.get_description(),
-            execute: run_script,
-            matches_if: |args| false,
-        });
+        let script = script.clone();
+        let scriptname = script.get_name();
+        opt.push(choice!(script.get_name(), "run script",move || run_script(&script),move |args| args.contains(&scriptname)));
     }
 
-    opt.push(Choice {
-        name: String::from("create"),
-        description: String::from("create new nomo script"),
-        execute: create_new,
-        matches_if: |args| args.contains(&String::from("create")),
-    });
+    opt.push(choice!("create", "create new nobody script", || create_new(&vec![]), |args| args.contains(&String::from("create"))) );
+    opt.push(choice!("help", "display help", || display_help(&vec![]), |args| args.contains(&String::from("help"))) );
 
-    opt.push(Choice {
-        name: String::from("help"),
-        description: String::from("display help"),
-        execute: display_help,
-        matches_if: |args| args.contains(&String::from("help")),
-    });
-
-    opt.push(Choice {
-        name: String::from("exit"),
-        description: String::from("exit this program"),
-        execute: |args| {
-            showln!(white, "EXIT");
-            std::process::exit(0);
-        },
-        matches_if: |args| args.contains(&String::from("exit")),
-    });
+    opt.push(choice!("exit", "exit nobody", || std::process::exit(0), |args| args.contains(&String::from("exit"))) );
 
     opt
 }
@@ -81,7 +56,7 @@ pub fn is_not_installed() -> bool {
     true
 }
 
-pub fn install(_args: &Vec<String>) {
+pub fn install() {
     showln!(white, "INSTALL nobody");
 }
 
@@ -113,6 +88,7 @@ pub fn create_new(_args: &Vec<String>) {
     showln!(white, "CREATE NEW NOMO SCRIPT");
 }
 
-pub fn run_script(_args: &Vec<String>) {
-    showln!(white, "RUN NOMO SCRIPT");
+pub fn run_script(script: &NoScript)  {
+    showln!(white, "RUNNING SCRIPT");
+    script.run_script().unwrap();
 }

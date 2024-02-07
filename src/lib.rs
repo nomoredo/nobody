@@ -3,14 +3,10 @@ use std::{
     io::{self, Read, Write},
 };
 
-
-
 pub use constants::*;
 pub mod constants;
 
 pub use minimo::*;
-
-
 
 use crossterm::event::{read, KeyCode, KeyEvent, KeyModifiers};
 use crossterm::{cursor, event, execute, terminal, ExecutableCommand};
@@ -24,9 +20,21 @@ pub fn execution_loop() {
 
         if let Some(selected_option) = selection {
             divider();
-            showln!(yellow_bold,"running ",cyan_bold, selected_option.name, white, " ...");
-            selected_option.execute_with_args(&vec![]);
-            showln!(green_bold,"completed running ",cyan_bold, selected_option.name);
+            showln!(
+                yellow_bold,
+                "running ",
+                cyan_bold,
+                selected_option.name,
+                white,
+                " ..."
+            );
+            selected_option.run();
+            showln!(
+                green_bold,
+                "completed running ",
+                cyan_bold,
+                selected_option.name
+            );
             divider();
         }
     }
@@ -41,7 +49,7 @@ pub fn handle_args() {
         let options = get_options();
         for opt in options {
             if opt.matches(&args) {
-                opt.execute_with_args(&args);
+                opt.run();
                 continue;
             }
         }
@@ -52,8 +60,6 @@ pub use tui::*;
 pub mod tui;
 
 pub mod show;
-
-
 
 pub use script::*;
 pub mod script;
