@@ -15,6 +15,7 @@
       .online()
       .login(Sap.User('amohandas'))
       .goto(SapTransaction("ZHR076A"))
+      // .artificial_delay()
       .set(Sap.Input("Personnel Number"), "9711068")
       .set(Input.WithId("M0:46:::2:34"), "01.01.2023")
       .set(Input.WithId("M0:46:::2:59"), "01.01.2024")
