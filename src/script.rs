@@ -1,9 +1,18 @@
-use std::{collections::HashMap, io::{BufRead, BufReader}, process::{Command, Stdio}, sync::mpsc::{self, Receiver, Sender}, thread};
+use std::{
+    collections::HashMap,
+    io::{BufRead, BufReader},
+    process::{Command, Stdio},
+    sync::mpsc::{self, Receiver, Sender},
+    thread,
+};
 
 pub use super::*;
+pub mod parser;
+pub use parser::*;
 
 const PATH_TO_NOBODY: &str = "C:\\repo\\nobody\\nobody";
 const IMPORT_PATH: &str = "import 'package:nobody/references.dart';";
+const LINE: &str = "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━";
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct NoScript {
@@ -13,7 +22,6 @@ pub struct NoScript {
 }
 
 impl NoScript {
-
     pub fn get_meta(&self) -> &NoMeta {
         &self.meta
     }
@@ -61,7 +69,6 @@ impl NoScript {
         safe_name
     }
 
-
     fn create_main_file(&self) -> std::io::Result<()> {
         let path = dirs::home_dir().unwrap().join(".nobody");
         let dir = path.join(self.get_name());
@@ -87,11 +94,19 @@ impl NoScript {
         self.create_main_file()
     }
 
+    /*
+
+    ╭─ running ─────────────────────────────────────────────────
+    │ created files
+    │ running script
+    │ doing something ...
+    ╰─ 🌕 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅⋅ 01:02
+         */
     pub fn run_script(&self) -> std::io::Result<()> {
         self.create()?;
         let path = dirs::home_dir().unwrap().join(".nobody");
         let dir = path.join(self.get_name());
-        println!("running script: {}", self.get_name());
+        print_header(self.get_name());
 
         // Spawn the Dart script process with piped stdio
         let mut child = Command::new("dart")
@@ -142,21 +157,17 @@ impl NoScript {
                 }
             }
         });
-        //box drawing characters
-        // ┌ ┐ └ ┘ ─ │ and ╭ ╮ ╯ ╰ ╱ ╲ ╳
-        showln!(white,"╭─",yellow_bold, " running ",white,"────────────────────────── ");
 
         // Output handling
         thread::spawn(move || {
-
             for received in rx_out.iter() {
-                println!("| {}", received);
+                print_info(received);
             }
         });
 
         thread::spawn(move || {
             for received in rx_err.iter() {
-                println!("| {}", received);
+                print_error(received);
             }
         });
 
@@ -167,34 +178,29 @@ impl NoScript {
     }
 
 
-
     pub fn get_name(&self) -> String {
-       match self.meta.data.get("name") {
-           Some(Value::String(name)) =>  {
-             if name.len() > 0 {
-                name.clone()
-             } else {
-                get_name_from_path(&self.path)
-             }
-           }
-           _ => {
-              get_name_from_path(&self.path)
-           }
-       }
+        match self.meta.data.get("name") {
+            Some(Value::String(name)) => {
+                if name.len() > 0 {
+                    name.clone()
+                } else {
+                    get_name_from_path(&self.path)
+                }
+            }
+            _ => get_name_from_path(&self.path),
+        }
     }
 
     pub fn get_description(&self) -> String {
         match self.meta.data.get("description") {
             Some(Value::String(description)) => description.clone(),
-            _ => {
-                "".to_string()
-            }
+            _ => "".to_string(),
         }
     }
 
     pub fn from_file(path: &std::path::Path) -> Result<Self, std::io::Error> {
         let content = std::fs::read_to_string(path)?;
-        let (rest,mut script) = parse_noscript(&content).unwrap();
+        let (rest, mut script) = parser::parse_noscript(content.as_str()).unwrap();
         script.path = path.to_str().unwrap().to_string();
         Ok(script)
     }
@@ -207,12 +213,41 @@ fn get_name_from_path(path: &str) -> String {
     parts[0].to_string()
 }
 
+pub fn print_header(name: impl Into<String>) {
+    let name = name.into();
+    showln!(white, "╭─ running ", cyan_bold, name, white, " ━━━━━━");
+    println!("| ");
+}
+
+pub fn print_info( message: impl Into<String>) {
+    //remove last line and print new line
+    print!("\x1B[1A\x1B[K");
+    println!("| {}", message.into());
+    showln!(white, "╰─ 🌕 ", white, LINE);
+}
+
+
+
+pub fn print_warning( message: impl Into<String>) {
+    //remove last line and print new line
+    print!("\x1B[1A\x1B[K");
+    println!("| {}", message.into());
+    showln!(white, "╰─ 🌕 ", white, LINE);
+}
+
+pub fn print_error( message: impl Into<String>) {
+    //remove last line and print new line
+    print!("\x1B[1A\x1B[K");
+    println!("| {}", message.into());
+    showln!(white, "╰─ 🌕 ", white, LINE);
+}
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct NoMeta {
     data: HashMap<String, Value>,
 }
 
-#[derive(Clone, Debug )]
+#[derive(Clone, Debug)]
 pub enum Value {
     Null,
     String(String),
@@ -235,8 +270,3 @@ impl PartialEq for Value {
 }
 
 impl Eq for Value {}
- 
-
- 
-pub use parser::*;
-pub mod parser;

@@ -15,3 +15,5 @@ zip = "0.6.6"
 minimo = "0.3.4"
 walkdir = "2.4.0"
 dirs = "5.0.1"
+kdam = { version = "0.5.1", features = ["gradient", "rich", "spinner", "template"] }
+tokio = { version = "1.36.0", features = ["full"] }

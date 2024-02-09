@@ -79,3 +79,15 @@ class SapTransaction implements AbstractUrl {
       'https://cbs.almansoori.biz/sap/bc/gui/sap/its/webgui/?sap-client=800&~TRANSACTION=$code#';
   const SapTransaction(this.code);
 }
+
+/// For example.
+/// the code for
+/// Header release Service PR is ZPRS
+/// Header release Rental PR is ZPRR
+/// Header release Opex PR is ZPRO
+class SapPurchaseRequest implements AbstractUrl {
+  final String code;
+  String get url =>
+      'https://cbs.almansoori.biz/sap/bc/gui/sap/its/webgui/?sap-client=800&~TRANSACTION=*ME51N MEREQ_TOPLINE-BSART=$code#';
+  const SapPurchaseRequest(this.code);
+}

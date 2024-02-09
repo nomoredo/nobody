@@ -5,6 +5,21 @@ void main(List<String> arguments) async {
 }
 
 Future export_emp_attendance() async {
+  return create_pr();
+}
+
+// create PR
+Future create_pr() async {
+  return Nobody()
+      .online()
+      .login(Sap.User('amohandas'))
+      .goto(SapPurchaseRequest("ZPRS"))
+      .wait(Waitable.Seconds(10))
+      .close();
+}
+
+//create time report
+Future create_time_report() async {
   return Nobody()
       .online()
       .login(Sap.User('amohandas'))
@@ -18,12 +33,6 @@ Future export_emp_attendance() async {
       .wait(Waitable.Seconds(50)) // this was for testing
       .close();
 }
-
-
-
-
-
-
 
 
 

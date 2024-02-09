@@ -5,8 +5,80 @@ use std::{
 
 pub use constants::*;
 pub mod constants;
-
+pub use progress::*;
+pub mod progress;
+pub use tui::*;
+pub mod tui;
+pub use script::*;
+pub mod script;
 pub use minimo::*;
+pub mod show;
+
+
+
+pub use ctx::*;
+pub mod ctx {
+    use std::{collections::HashMap, sync::{Arc, Mutex, OnceLock}};
+    pub use super::*;
+
+    const CTX : OnceLock<Ctx> = OnceLock::new();
+
+    pub fn get() -> Ctx {
+        CTX.get_or_init(|| Ctx::new()).clone()
+    }
+
+
+
+    #[derive(Debug, Clone)]
+    pub struct Ctx {
+        pub data: Arc<Mutex<HashMap<String, Value>>>, 
+    }
+
+    impl Ctx {
+        pub fn new() -> Self {
+            Self {
+                data: Arc::new(Mutex::new(HashMap::new())),
+            }
+        }
+
+        pub fn set<T: Into<Value>>(&self, key: impl Into<String>, value: T) {
+            self.data.lock().unwrap().insert(key.into(), value.into());
+        }
+
+        pub fn get<T: From<Value>>(&self, key:  impl Into<String>) -> T {
+            let key = key.into();
+            self.data.lock().unwrap().get(&key).map(|v| v.clone().into()).unwrap_or(T::from(Value::Null))
+        }
+
+        pub fn remove(&self, key: &str) -> Option<Value> {
+            self.data.lock().unwrap().remove(key)
+        }
+
+        pub fn clear(&self) {
+            self.data.lock().unwrap().clear();
+        }
+    }
+
+    impl Default for Ctx {
+        fn default() -> Self {
+            Self::new()
+        }
+    }
+
+    pub trait Task {
+        fn act(&self, ctx: &Ctx);
+        fn get_name(&self) -> String;
+        fn get_description(&self) -> String;
+        fn get_length(&self) -> usize;
+        fn get_actions(&self) -> Vec<Box<dyn Task>>;
+        fn enumerate_actions(&self) -> Vec<(usize, Box<dyn Task>)> {
+            self.get_actions().into_iter().enumerate().collect()
+        }
+    }
+
+}
+
+
 
 use crossterm::event::{read, KeyCode, KeyEvent, KeyModifiers};
 use crossterm::{cursor, event, execute, terminal, ExecutableCommand};
@@ -56,10 +128,3 @@ pub fn handle_args() {
     }
 }
 
-pub use tui::*;
-pub mod tui;
-
-pub mod show;
-
-pub use script::*;
-pub mod script;
