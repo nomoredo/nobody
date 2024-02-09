@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::{collections::HashMap, io::{BufRead, BufReader}, process::{Command, Stdio}, sync::mpsc::{self, Receiver, Sender}, thread};
 
 pub use super::*;
 
@@ -91,25 +91,78 @@ impl NoScript {
         self.create()?;
         let path = dirs::home_dir().unwrap().join(".nobody");
         let dir = path.join(self.get_name());
-        showln!(white, "running script: ", cyan, self.get_name());
-        let std_out_pipe = std::process::Stdio::piped();
-        let std_err_pipe = std::process::Stdio::piped();
-        let output = std::process::Command::new("dart")
+        println!("running script: {}", self.get_name());
+
+        // Spawn the Dart script process with piped stdio
+        let mut child = Command::new("dart")
             .arg("run")
-            .current_dir(dir)
-            .stdout(std_out_pipe)
-            .stderr(std_err_pipe)
-            .output()?;
+            .current_dir(&dir)
+            .stdout(Stdio::piped())
+            .stdin(Stdio::piped())
+            .stderr(Stdio::piped())
+            .spawn()?;
 
+        let stdout = child.stdout.take().expect("Failed to open stdout");
+        let stderr = child.stderr.take().expect("Failed to open stderr");
+        let mut stdin = child.stdin.take().expect("Failed to open stdin");
 
-        let stdout = String::from_utf8_lossy(&output.stdout);
-        let stderr = String::from_utf8_lossy(&output.stderr);
-        if stdout.len() > 0 {
-            showln!(green, "stdout: ", white,stdout);
-        }
-        if stderr.len() > 0 {
-            showln!(red, "stderr: ",white, stderr);
-        }
+        // Channels for real-time communication
+        let (tx_out, rx_out): (Sender<String>, Receiver<String>) = mpsc::channel();
+        let (tx_err, rx_err): (Sender<String>, Receiver<String>) = mpsc::channel();
+
+        // Thread to handle stdout
+        thread::spawn(move || {
+            let reader = BufReader::new(stdout);
+            reader.lines().for_each(|line| {
+                if let Ok(line) = line {
+                    tx_out.send(line).expect("Failed to send stdout");
+                }
+            });
+        });
+
+        // Thread to handle stderr
+        thread::spawn(move || {
+            let reader = BufReader::new(stderr);
+            reader.lines().for_each(|line| {
+                if let Ok(line) = line {
+                    tx_err.send(line).expect("Failed to send stderr");
+                }
+            });
+        });
+
+        // Thread to read from terminal and write to child's stdin
+        let mut tx_in = stdin;
+        thread::spawn(move || {
+            let stdin = io::stdin();
+            for line in stdin.lock().lines() {
+                let line = line.expect("Failed to read from stdin");
+                if let Err(e) = writeln!(tx_in, "{}", line) {
+                    println!("Failed to write to child's stdin: {}", e);
+                    break;
+                }
+            }
+        });
+        //box drawing characters
+        // ┌ ┐ └ ┘ ─ │ and ╭ ╮ ╯ ╰ ╱ ╲ ╳
+        showln!(white,"╭─",yellow_bold, " running ",white,"────────────────────────── ");
+
+        // Output handling
+        thread::spawn(move || {
+
+            for received in rx_out.iter() {
+                println!("| {}", received);
+            }
+        });
+
+        thread::spawn(move || {
+            for received in rx_err.iter() {
+                println!("| {}", received);
+            }
+        });
+
+        // Wait for the child process to finish
+        let _ = child.wait();
+
         Ok(())
     }
 

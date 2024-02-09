@@ -13,7 +13,7 @@ String getChromePath() {
 /// this is nobody
 class Nobody {
   Nobody() {
-    showBanner();
+    // showBanner();
   }
 
   Future<Online> online({
