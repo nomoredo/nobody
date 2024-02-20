@@ -39,6 +39,10 @@ class Sap {
   /// Header of first table
   /// usually the first table is the one we want to use
   static AbstractSelector get TableHeader => Css('table[role="grid"]>tbody>tr');
+
+  /// Grid cell
+  static AbstractSelector GridCell(String grid_id, int row, int column) => Css(
+      'table[role="grid"][id="$grid_id"] td[lsmatrixcolindex="$column"][lsmatrixrowindex="$row"]');
 }
 
 class SapUser implements Authable {
@@ -86,8 +90,15 @@ class SapTransaction implements AbstractUrl {
 /// Header release Rental PR is ZPRR
 /// Header release Opex PR is ZPRO
 class SapPurchaseRequest implements AbstractUrl {
+  /// Header release Service PR is ZPRS
+  /// Header release Rental PR is ZPRR
+  /// Header release Opex PR is ZPRO
   final String code;
   String get url =>
       'https://cbs.almansoori.biz/sap/bc/gui/sap/its/webgui/?sap-client=800&~TRANSACTION=*ME51N MEREQ_TOPLINE-BSART=$code#';
+
+  /// Header release Service PR is ZPRS
+  /// Header release Rental PR is ZPRR
+  /// Header release Opex PR is ZPRO
   const SapPurchaseRequest(this.code);
 }

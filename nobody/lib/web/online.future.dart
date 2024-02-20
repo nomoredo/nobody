@@ -27,14 +27,9 @@ extension ExOnline on Future<Online> {
     return Online.artificial_delay();
   }
 
-  Future<Online> log_clicks() async {
+  Future<Online> log_actions() async {
     var Online = await this;
-    return Online.log_clicks();
-  }
-
-  Future<Online> log_responses() async {
-    var Online = await this;
-    return Online.log_responses();
+    return Online.log_actions();
   }
 
   Future<Online> login(
@@ -95,6 +90,17 @@ extension ExOnline on Future<Online> {
       show: show,
       timeout: timeout,
       index: index,
+    );
+  }
+
+  Future<Online> grid_fill(
+    AbstractSelector Function(int, int) selectorBuilder,
+    List<Map<String, dynamic>> data,
+  ) async {
+    var Online = await this;
+    return Online.grid_fill(
+      selectorBuilder,
+      data,
     );
   }
 
@@ -199,6 +205,23 @@ extension ExOnline on Future<Online> {
       selector,
       show: show,
       index: index,
+    );
+  }
+
+  Future<Online> set_grid_cell(
+    String grid_id,
+    int row,
+    int column,
+    String text, {
+    bool show = true,
+  }) async {
+    var Online = await this;
+    return Online.set_grid_cell(
+      grid_id,
+      row,
+      column,
+      text,
+      show: show,
     );
   }
 

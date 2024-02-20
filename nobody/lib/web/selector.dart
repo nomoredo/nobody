@@ -14,6 +14,13 @@ class XPath implements AbstractSelector {
   const XPath(this.internal);
 }
 
+class NestedSelector implements AbstractSelector {
+  final AbstractSelector outer;
+  final AbstractSelector inner;
+  String get selector => '${outer.selector} ${inner.selector}';
+  const NestedSelector(this.outer, this.inner);
+}
+
 /// Button
 /// appends button to the selector
 class Button implements AbstractSelector {

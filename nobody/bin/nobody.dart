@@ -10,11 +10,53 @@ Future export_emp_attendance() async {
 
 // create PR
 Future create_pr() async {
+  var items = [
+    {
+      "material": "1000004543",
+      "quantity": "1",
+      "delivery_date": "01.01.2023",
+      "plant": "22A1",
+      "wbs": "MWS-AE-0017.01.001"
+    },
+    {
+      "material": "1000004543",
+      "quantity": "1",
+      "delivery_date": "01.01.2023",
+      "plant": "22A1",
+      "wbs": "MWS-AE-0017.01.001"
+    },
+    {
+      "material": "1000004543",
+      "quantity": "1",
+      "delivery_date": "01.01.2023",
+      "plant": "22A1",
+      "wbs": "MWS-AE-0017.01.001"
+    }
+  ];
+
   return Nobody()
       .online()
       .login(Sap.User('amohandas'))
       .goto(SapPurchaseRequest("ZPRS"))
-      .wait(Waitable.Seconds(10))
+      .click(Sap.Button("Expand Header Ctrl+F2"))
+      .set(
+          TextArea.WithClass([
+            "lsTextEdit lsTextEdit--monospace lsTextEdit--overflow-hidden lsTextEdit--itsfont lsTextEdit--itsborder lsTextEdit--explicitheight lsTextEdit--explicitwidth"
+          ]),
+          "header test")
+      // .set(selector, text)
+      .click(Sap.Button("Collapse Header Ctrl+F5"))
+      .set_grid_cell("C106", 1, 3, "P")
+      .set_grid_cell("C106", 1, 4, "D")
+      .set_grid_cell("C106", 1, 6, "TEST DESCRIPTION")
+      .set_grid_cell("C106", 1, 7, "1")
+      .set_grid_cell("C106", 1, 8, "EA")
+      .set_grid_cell("C106", 1, 11, "SERVICE")
+      .set_grid_cell("C106", 1, 12, "0.01")
+      .set_grid_cell("C106", 1, 13, "AED")
+      .set_grid_cell("C106", 1, 14, "TRACK")
+      .press(Key.enter)
+      .wait(Waitable.Seconds(500))
       .close();
 }
 

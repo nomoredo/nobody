@@ -15,6 +15,6 @@ Future po_export() async {
       .set(SapInput("Plant"), "22A2")
       .set(SapInput("Purchasing Group"), "161")
       .click(SapButton("Execute (F8)"))
-      .download(DownloadableSapTable(), AbsolutePath("example.xlsx"))
-      .wait(Seconds(20));
+      .download(DownloadableSapTable(), AbsolutePath("example.xlsx"));
+  // .wait(Seconds(20));
 }

@@ -1,4 +1,5 @@
 import 'package:coco/coco.dart';
+import 'package:puppeteer/protocol/dom.dart';
 
 class Show {
   //INFO
@@ -217,9 +218,46 @@ class Show {
           }
         }
         break;
+
       default:
-        data.write(inWhite);
-        print("");
+        try {
+          "$data".write(inWhite);
+          print("");
+        } catch (e) {
+          "null".write(inWhite);
+          print("");
+        }
     }
+  }
+
+  static void click_event(String tag, String id, String attributes) {
+    "CLICKED".write(inGray);
+    "└─".write(inGray);
+    " $tag".write(inYellow);
+    " ├─ $id".write(inWhite);
+    " ├─ $attributes".write(inGray);
+    print("");
+  }
+
+  static void user_action(String action, Node node) {
+    var tag = node.nodeName;
+    var id = node.nodeId;
+    var attributes = node.attributes;
+
+    "ACTION".write(inGray);
+    "└─".write(inGray);
+    " $action".write(inYellow);
+    " ├─ $tag".write(inWhite);
+    " ├─ $id".write(inGray);
+    " ├─ $attributes".write(inGray);
+    print("");
+  }
+
+  static void set_value(String selector, String text) {
+    "SET".write(inGray);
+    "└─".write(inGray);
+    " $selector".write(inYellow);
+    " ├─ $text".write(inWhite);
+    print("");
   }
 }

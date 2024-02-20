@@ -1,5 +1,8 @@
 import '../references.dart';
 
+typedef SelectorBuilder = AbstractSelector Function(int line, int column);
+typedef SelectorFunc = Future Function(AbstractSelector selector);
+
 @NomoCode()
 class Online {
   Future<Page> get page => lastPage();
@@ -34,57 +37,50 @@ class Online {
     return this;
   }
 
-  Future<Online> log_clicks() async {
-    //expose a function to javascript to log clicks
-    await (await page).exposeFunction('log_click', (String element) {
-      Show.action('clicked', element.toString(), '(LOGGED FROM JAVASCRIPT)');
+  /// log actions
+  /// logs all user actions like clicks, typing, scrolling, etc in a structured format
+  /// so that we can use it to write automation scripts
+  Future<Online> log_actions() async {
+    await (await page).exposeFunction('log_action', (String action, target) {
+      Show.user_action(action, target);
     });
 
-    //add event listeners to all elements to log clicks
-    await (await page).evaluate(event_listner_code);
-
-    print('ADDED EVENT LISTENERS FOR CLICKS');
-    return this;
-  }
-
-  static String event_listner_code = '''() => {
-      function calculateXPath(element) {
-    if (element) {
-        //often times we cannot use id because it may change on page refresh
-        //since we are trying to get path to sap gui elements, we can use the id
-        //since it is static
-        if (element.id) {
-            return `id('\${element.id}')`;
-        }
-        //if there is no id, we can use the class name of the element and its parent
-        //to get the xpath
-        if (element.className) {
-            return calculateXPath(element.parentNode) + `/\${element.tagName.toLowerCase()}[@class="\${element.className}"]`;
-        }
-        //if there is no class name, we can use the tag name and parent to get the xpath
-        return calculateXPath(element.parentNode) + `/\${element.tagName.toLowerCase()}`;
-    }
-    return 'null';
-}
-
-//add event listeners to all elements to log clicks
-const elements = document.querySelectorAll('*');
-for (const element of elements) {
-    element.addEventListener('click', (event) => {
-        const xpath = calculateXPath(event.target);
-        window.log_click(xpath);
-    });
-}
-
-    }''';
-
-  Future<Online> log_responses() async {
-    await (await page).onResponse.listen((response) async {
-      print("RESPONSE: ${response.status} ${response.url}");
-      if (response.request.postData != null) {
-        print("POST DATA: ${response.request.postData}");
-      }
-    });
+    //create a listener for all user actions and redirect them to the log_action function
+    await (await page).evaluateOnNewDocument('''() => {
+      document.addEventListener('click', (e) => {
+        window.log_action('click', e.target);
+      });
+      document.addEventListener('contextmenu', (e) => {
+        window.log_action('right click', e.target);
+      });
+      document.addEventListener('dblclick', (e) => {
+        window.log_action('double click', e.target);
+      });
+      document.addEventListener('mouseover', (e) => {
+        window.log_action('hover', e.target);
+      });
+      document.addEventListener('mousedown', (e) => {
+        window.log_action('mouse down', e.target);
+      });
+      document.addEventListener('mouseup', (e) => {
+        window.log_action('mouse up', e.target);
+      });
+      document.addEventListener('keydown', (e) => {
+        window.log_action('key down', e.target);
+      });
+      document.addEventListener('keyup', (e) => {
+        window.log_action('key up', e.target);
+      });
+      document.addEventListener('scroll', (e) => {
+        window.log_action('scroll', e.target);
+      });
+      document.addEventListener('input', (e) => {
+        window.log_action('input', e.target);
+      });
+      document.addEventListener('change', (e) => {
+        window.log_action('change', e.target);
+      });
+    }''');
     return this;
   }
 
@@ -122,7 +118,7 @@ for (const element of elements) {
 
   Future<Online> set(AbstractSelector selector, String text,
       {bool show = true, Duration? timeout = null, int index = 0}) async {
-    if (show) Show.action('set', 'value', text);
+    if (show) Show.set_value(selector.selector, text);
     if (selector is XPath) {
       var selected = await (await page).waitForXPath(selector.selector);
       if (selected != null) {
@@ -150,6 +146,41 @@ for (const element of elements) {
         element.blur(); // Remove focus from the element
         
         }''', args: [text]);
+      }
+    }
+    return this;
+  }
+
+  /// fill sap grid with data
+  /// eg. .grid_fill(WithId//('C120', data)
+  /// data is a list of maps
+  /// will iterate through the list and fill the grid
+  /// set element with id "grid#C120#1,2#if" to "data[0]['1,2']"
+  /// set element with id "grid#C120#1,3#if" to "data[0]['1,3']"
+  /// set element with id "grid#C120#1,6#if" to "data[0]['1,6']"
+  Future<Online> grid_fill(
+      SelectorBuilder selectorBuilder, List<Map<String, dynamic>> data) async {
+    for (var rowIndex = 0; rowIndex < data.length; rowIndex++) {
+      var row = data[rowIndex];
+      for (var cellKey in row.keys) {
+        // CellKey is expected to be in the format 'row,column'
+        var coordinates = cellKey.split(',');
+        if (coordinates.length != 2) {
+          continue; // Skip invalid keys
+        }
+        var rowIdx = int.tryParse(coordinates[0]);
+        var colIdx = int.tryParse(coordinates[1]);
+        if (rowIdx == null || colIdx == null) {
+          continue; // Skip if indexes are not integers
+        }
+
+        // Build the selector using the provided SelectorBuilder function
+        var selector = selectorBuilder(rowIdx, colIdx);
+        var cellValue = row[cellKey];
+
+        // Perform the action on the cell, e.g., setting its value
+        // This assumes `action` is a function that can take a selector and a value
+        await set(selector, cellValue.toString());
       }
     }
     return this;
@@ -259,6 +290,48 @@ for (const element of elements) {
         await selected.click();
       }
     }
+    return this;
+  }
+
+  //set grid cell
+  // eg. set_grid_cell("C120", 1, 3, "hello world")
+  // will click on element with id=grid#C106#1,3#if
+  // type "hello world" element with id=grid#C106#1,3#if
+
+  Future<Online> set_grid_cell(String grid_id, int row, int column, String text,
+      {bool show = true}) async {
+    var selector = Css('#grid\\#$grid_id\\#$row\\,$column\\#if-r');
+    if (show) Show.action('setting', selector.selector, 'to', text);
+    await wait(Waitable.Element(selector));
+    await wait(Waitable.Seconds(1));
+    await (await page).click(selector.selector);
+    var input_selector = Css('input[id="grid\\#$grid_id\\#$row,$column\\#if"]');
+    await (await page).waitForSelector(input_selector.selector);
+    await (await page).type(input_selector.selector, text);
+    await (await page).keyboard.press(Key.tab);
+    return this;
+  }
+
+  //set_all
+  Future<Online> set_all(AbstractSelector selector, String text) async {
+    Show.action('setting', selector.selector, 'to', text);
+    await wait(Waitable.ElementVisible(selector));
+    await (await page).$$(selector.selector).then((elements) async {
+      for (var element in elements) {
+        await element.type(text);
+      }
+    });
+    return this;
+  }
+
+  //set_attribute
+  Future<Online> set_attribute(
+      AbstractSelector selector, String attribute, String value) async {
+    Show.action('setting', attribute, 'to', value, selector.selector);
+    await (await page).waitForSelector(selector.selector);
+    await (await page).evaluate('''(selector, attribute, value) => {
+      document.querySelector(selector).setAttribute(attribute, value);
+    }''', args: [selector.selector, attribute, value]);
     return this;
   }
 
