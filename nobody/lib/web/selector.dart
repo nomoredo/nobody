@@ -33,6 +33,7 @@ class Button implements AbstractSelector {
   factory Button.WithId(String id) => Button(WithId(id));
   factory Button.WithName(String name) => Button(WithName(name));
   factory Button.WithClass(List<String> classes) => Button(WithClass(classes));
+  factory Button.WithText(String text) => Button(WithText(text));
 }
 
 /// Input
@@ -46,6 +47,7 @@ class Input implements AbstractSelector {
   factory Input.WithId(String id) => Input(WithId(id));
   factory Input.WithName(String name) => Input(WithName(name));
   factory Input.WithClass(List<String> classes) => Input(WithClass(classes));
+  factory Input.WithText(String text) => Input(WithText(text));
 }
 
 /// TextArea
@@ -61,13 +63,47 @@ class TextArea implements AbstractSelector {
   factory TextArea.WithName(String name) => TextArea(WithName(name));
   factory TextArea.WithClass(List<String> classes) =>
       TextArea(WithClass(classes));
+  factory TextArea.WithText(String text) => TextArea(WithText(text));
+}
+
+/// Div
+class Div implements AbstractSelector {
+  final AbstractSelector? inner;
+  String get selector => inner == null ? 'div' : 'div[${inner!.selector}]';
+
+  const Div([this.inner]);
+
+  factory Div.WithId(String id) => Div(WithId(id));
+  factory Div.WithName(String name) => Div(WithName(name));
+  factory Div.WithClass(List<String> classes) => Div(WithClass(classes));
+  factory Div.WithText(String text) => Div(WithText(text));
+}
+
+/// With Text
+/// appends text="{text}" to the selector
+class WithText implements AbstractSelector {
+  final String text;
+  String get selector => 'text="$text"';
+
+  const WithText(this.text);
 }
 
 /// WithId
 /// appends id="{id}" to the selector
 class WithId implements AbstractSelector {
   final String id;
-  String get selector => 'id="$id"';
+  String get clean_id => id
+      .replaceAll(':', '\\:')
+      .replaceAll('.', '\\.')
+      .replaceAll(',', '\\,')
+      .replaceAll('[', '\\[')
+      .replaceAll(']', '\\]')
+      .replaceAll('#', '\\#')
+      .replaceAll(' ', '\\ ')
+      .replaceAll('(', '\\(')
+      .replaceAll(')', '\\)');
+
+  String get selector => 'id="$clean_id"';
 
   const WithId(this.id);
 }

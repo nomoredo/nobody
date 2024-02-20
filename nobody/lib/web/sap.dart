@@ -8,6 +8,7 @@ class Sap {
   static final Enter = Sap.Button("Enter (Enter)");
   static final Exit = Sap.Button("Exit (Shift+F3)");
   static final CreateNew = Sap.Button("Create New Items (F7)");
+  static AbstractSelector Data(String data) => SapDataField(data);
 
   static AbstractSelector Button(String label) =>
       Css('div[role="button"][title="$label"]');
@@ -43,6 +44,51 @@ class Sap {
   /// Grid cell
   static AbstractSelector GridCell(String grid_id, int row, int column) => Css(
       'table[role="grid"][id="$grid_id"] td[lsmatrixcolindex="$column"][lsmatrixrowindex="$row"]');
+
+  static AbstractSelector InputWithData(String s) => SapInputWithData(s);
+
+  static AbstractSelector InputForData(String lsdata) =>
+      SapInputWithinData(lsdata);
+}
+
+/// for sap specific data fields
+/// for example
+/// if the field html is as follows
+/*
+<td id="tbl2834[1,3]" subct="STC" lsdata="{&quot;2&quot;:&quot;EDIT&quot;,&quot;7&quot;:{&quot;SID&quot;:&quot;wnd[0]/usr/subSUB0:SAPLMEGUI:0019/subSUB3:SAPLMEVIEWS:1100/subSUB2:SAPLMEVIEWS:1200/subSUB1:SAPLMEGUI:1301/subSUB2:SAPLMEGUI:3303/tabsREQ_ITEM_DETAIL/tabpTABREQDT1/ssubTABSTRIPCONTROL1SUB:SAPLMEGUI:1328/subSUB0:SAPLMLSP:0400/tblSAPLMLSPTC_VIEW/ctxtESLL-SRVPOS[2,0]&quot;,&quot;Type&quot;:&quot;SAPTABLECSCELL&quot;}}" udat="hotspot" ctv="C" role="gridcell" lsmatrixrowindex="1" lsmatrixcolindex="3" acf="CSEL" ut="3" align="left" class="urSTC urST5HasContentDiv urST5L urST3TDIn urCursorClickable urStd urST3Cl" style=";white-space:nowrap;height:24px">...</td>
+*/
+/// we can access the field using the following selector
+/// SapDataField('wnd[0]/usr/subSUB0:SAPLMEGUI:0019/subSUB3:SAPLMEVIEWS:1100/subSUB2:SAPLMEVIEWS:1200/subSUB1:SAPLMEGUI:1301/subSUB2:SAPLMEGUI:3303/tabsREQ_ITEM_DETAIL/tabpTABREQDT1/ssubTABSTRIPCONTROL1SUB:SAPLMEGUI:1328/subSUB0:SAPLMLSP:0400/tblSAPLMLSPTC_VIEW/ctxtESLL-SRVPOS[2,0]')
+/// it will automatically replace unsafe characters with escaped representation and build the selector from it that can be used to access the field in the browser
+class SapDataField implements AbstractSelector {
+  final String data;
+
+  String get selector => '[lsdata*="${safe_data}"]';
+
+  // Escapes special characters for CSS selectors
+  String get safe_data {
+    var escapedData = data;
+    // Matches characters that need escaping: [ ] , : " ' = > ~ + * $ ^ | ! ? { } ; / ( ) ` and space
+    var specialCharsRegExp = RegExp(r'([\[\],:\"\;=><~+\*\$^\|!\?{}\(\)/` ])');
+    escapedData = escapedData.replaceAllMapped(
+        specialCharsRegExp, (match) => '\\${match.group(0)}');
+    return escapedData;
+  }
+
+  const SapDataField(this.data);
+}
+
+class SapInputWithData extends SapDataField {
+  String get selector => 'input[lsdata*="${safe_data}"]';
+  const SapInputWithData(String data) : super(data);
+}
+
+/// when the input field is nested within an element with lsdata attribute
+/// this will match the first input field within the element with matching lsdata
+/// even if the input field itself does not have lsdata attribute
+class SapInputWithinData extends SapDataField {
+  String get selector => '[lsdata*="${safe_data}"] input';
+  const SapInputWithinData(String data) : super(data);
 }
 
 class SapUser implements Authable {

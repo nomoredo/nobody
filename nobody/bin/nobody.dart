@@ -8,56 +8,265 @@ Future export_emp_attendance() async {
   return create_pr();
 }
 
+enum PrType {
+  Service,
+  Rental,
+  Opex,
+  Capex,
+  Stock,
+  Asset,
+  Material,
+}
+
+extension PrTypeExtension on PrType {
+  String get code {
+    switch (this) {
+      case PrType.Service:
+        return "ZPRS";
+      case PrType.Rental:
+        return "ZPRR";
+      case PrType.Opex:
+        return "ZPRO";
+      case PrType.Capex:
+        return "ZPRC";
+      case PrType.Stock:
+        return "ZPRK";
+      case PrType.Asset:
+        return "ZPRA";
+      case PrType.Material:
+        return "ZPRM";
+      default:
+        throw Exception('Unknown PrType: $this');
+    }
+  }
+}
+
+// Base class for a PR line item
+abstract class PrLineItem {
+  final String? tracking;
+  final String? account_assignment;
+  final String? expense_type;
+  final double quantity;
+  final String unit;
+  final String currency;
+  final double? price;
+
+  PrLineItem({
+    required this.tracking,
+    required this.account_assignment,
+    required this.expense_type,
+    required this.quantity,
+    required this.unit,
+    required this.currency,
+    required this.price,
+  });
+}
+
+// Specialized class for Service PR line items
+class ServicePrLineItem extends PrLineItem {
+  final String description;
+  final List<ServiceLineItem> serviceItems;
+
+  ServicePrLineItem({
+    required String tracking,
+    required String account_assignment,
+    required String expense_type,
+    required double quantity,
+    required String unit,
+    required String currency,
+    required double price,
+    required this.description,
+    required this.serviceItems,
+  }) : super(
+          tracking: tracking,
+          account_assignment: account_assignment,
+          expense_type: expense_type,
+          quantity: quantity,
+          unit: unit,
+          currency: currency,
+          price: price,
+        );
+}
+
+// Class for Service Line Items
+class ServiceLineItem {
+  final String serviceCode;
+  final String? description;
+  final String? quantity;
+  final String? unit;
+  final String? price;
+  final String? currency;
+  final String? wbs;
+  final String? costCenter;
+  final String? order;
+
+  const ServiceLineItem({
+    required this.serviceCode,
+    this.description,
+    this.quantity,
+    this.unit,
+    this.price,
+    this.currency,
+    this.wbs,
+    this.costCenter,
+    this.order,
+  }) // either wbs/costCenter/order should be present
+  : assert(wbs != null || costCenter != null || order != null);
+}
+
+// Generic PurchaseRequest class to handle different types of PRs
+class PurchaseRequest<T extends PrLineItem> {
+  final String header;
+  final PrType prType;
+  final List<T> lineItems;
+
+  const PurchaseRequest({
+    required this.header,
+    required this.prType,
+    required this.lineItems,
+  });
+}
+
+// Specialization for Service Purchase Requests
+class ServicePurchaseRequest extends PurchaseRequest<ServicePrLineItem> {
+  ServicePurchaseRequest({
+    required String header,
+    required List<ServicePrLineItem> lineItems,
+  }) : super(header: header, prType: PrType.Service, lineItems: lineItems);
+}
+
+const String lsdata_prefix =
+    "wnd[0]/usr/subSUB0:SAPLMEGUI:0019/subSUB3:SAPLMEVIEWS:1100/subSUB2:SAPLMEVIEWS:1200/subSUB1:SAPLMEGUI:1301/subSUB2:SAPLMEGUI:3303/tabsREQ_ITEM_DETAIL/tabpTABREQDT1/ssubTABSTRIPCONTROL1SUB:SAPLMEGUI:1328/subSUB0:SAPLMLSP:0400/tblSAPLMLSPTC_VIEW";
+const prline_prefix =
+    'wnd[0]/usr/subSUB0:SAPLMEGUI:0016/subSUB2:SAPLMEVIEWS:1100/subSUB2:SAPLMEVIEWS:1200/subSUB1:SAPLMEGUI:3212/cntlGRIDCONTROL/shellcont/shell/rowcol';
+
 // create PR
 Future create_pr() async {
-  var items = [
-    {
-      "material": "1000004543",
-      "quantity": "1",
-      "delivery_date": "01.01.2023",
-      "plant": "22A1",
-      "wbs": "MWS-AE-0017.01.001"
-    },
-    {
-      "material": "1000004543",
-      "quantity": "1",
-      "delivery_date": "01.01.2023",
-      "plant": "22A1",
-      "wbs": "MWS-AE-0017.01.001"
-    },
-    {
-      "material": "1000004543",
-      "quantity": "1",
-      "delivery_date": "01.01.2023",
-      "plant": "22A1",
-      "wbs": "MWS-AE-0017.01.001"
-    }
-  ];
+  final pr = ServicePurchaseRequest(
+    header: "this is a header text",
+    lineItems: [
+      ServicePrLineItem(
+          tracking: "trking",
+          account_assignment: "P",
+          expense_type: "D",
+          quantity: 1,
+          unit: "EA",
+          currency: "AED",
+          price: 0.01,
+          description: "TEST SERVICE DESCRIPTION",
+          serviceItems: [
+            ServiceLineItem(
+              serviceCode: "1000000438",
+              description: "TEST DESCRIPTION",
+              quantity: "1",
+              unit: "EA",
+              price: "0.01",
+              currency: "AED",
+              wbs: "MWS-AE-0017.01.001",
+            )
+          ]),
+    ],
+  );
 
-  return Nobody()
+  var browser = await Nobody()
       .online()
       .login(Sap.User('amohandas'))
-      .goto(SapPurchaseRequest("ZPRS"))
-      .click(Sap.Button("Expand Header Ctrl+F2"))
-      .set(
-          TextArea.WithClass([
-            "lsTextEdit lsTextEdit--monospace lsTextEdit--overflow-hidden lsTextEdit--itsfont lsTextEdit--itsborder lsTextEdit--explicitheight lsTextEdit--explicitwidth"
-          ]),
-          "header test")
-      // .set(selector, text)
-      .click(Sap.Button("Collapse Header Ctrl+F5"))
-      .set_grid_cell("C106", 1, 3, "P")
-      .set_grid_cell("C106", 1, 4, "D")
-      .set_grid_cell("C106", 1, 6, "TEST DESCRIPTION")
-      .set_grid_cell("C106", 1, 7, "1")
-      .set_grid_cell("C106", 1, 8, "EA")
-      .set_grid_cell("C106", 1, 11, "SERVICE")
-      .set_grid_cell("C106", 1, 12, "0.01")
-      .set_grid_cell("C106", 1, 13, "AED")
-      .set_grid_cell("C106", 1, 14, "TRACK")
-      .press(Key.enter)
-      .wait(Waitable.Seconds(500))
-      .close();
+      .goto(SapPurchaseRequest(pr.prType.code))
+      .maybe_click(Sap.Button("Expand Header Ctrl+F2"))
+      .set(Sap.Data('cntlTEXT_EDITOR_0101/shellcont/shell'), pr.header)
+      .maybe_click(Sap.Button("Collapse Header Ctrl+F5"));
+
+  for (int i = 0; i < pr.lineItems.length; i++) {
+    var item = pr.lineItems[i];
+    await browser
+        // account assignment
+        .click(Sap.Data('$prline_prefix/row[${i + 1}]/cell[2]'))
+        .set(Sap.InputForData('$prline_prefix/row[${i + 1}]/cell[2]'),
+            item.account_assignment)
+        // expense type
+        .click(Sap.Data('$prline_prefix/row[${i + 1}]/cell[3]'))
+        .set(Sap.InputForData('$prline_prefix/row[${i + 1}]/cell[3]'),
+            item.expense_type)
+        // description
+        .click(Sap.Data('$prline_prefix/row[${i + 1}]/cell[5]'))
+        .set(Sap.InputForData('$prline_prefix/row[${i + 1}]/cell[5]'),
+            item.description)
+        // quantity
+        .click(Sap.Data('$prline_prefix/row[${i + 1}]/cell[6]'))
+        .set(Sap.InputForData('$prline_prefix/row[${i + 1}]/cell[6]'),
+            item.quantity)
+        // unit
+        .click(Sap.Data('$prline_prefix/row[${i + 1}]/cell[7]'))
+        .set(
+            Sap.InputForData('$prline_prefix/row[${i + 1}]/cell[7]'), item.unit)
+
+        // nothing
+        // .click(Sap.Data('$prline_prefix/row[${i + 1}]/cell[8]'))
+        // .set(Sap.InputForData('$prline_prefix/row[${i + 1}]/cell[8]'), "")
+
+        // //nothing
+        // .click(Sap.Data('$prline_prefix/row[${i + 1}]/cell[9]'))
+        // .set(Sap.InputForData('$prline_prefix/row[${i + 1}]/cell[9]'), "")
+        // .wait(Waitable.Seconds(10))
+        // material type
+
+        .click(Sap.Data('$prline_prefix/row[${i + 1}]/cell[10]'))
+        .set(Sap.InputForData('$prline_prefix/row[${i + 1}]/cell[10]'),
+            "SERVICE")
+        // price
+        .click(Sap.Data('$prline_prefix/row[${i + 1}]/cell[11]'))
+        .set(
+            Sap.InputForData('shell/rowcol/row[${i + 1}]/cell[11]'), item.price)
+        // currency
+        .click(Sap.Data('$prline_prefix/row[${i + 1}]/cell[12]'))
+        .set(Sap.InputForData('$prline_prefix/row[${i + 1}]/cell[12]'),
+            item.currency)
+        // tracking
+        .click(Sap.Data('$prline_prefix/row[${i + 1}]/cell[13]'))
+        .set(Sap.InputForData('$prline_prefix/row[${i + 1}]/cell[13]'),
+            item.tracking)
+        .press(Key.enter);
+
+    //   await browser  .set_grid_cell("C106", 1, 3,item.account_assignment)
+    // .set_grid_cell("C106", 1, 4,item.order)
+    // .set_grid_cell("C106", 1, 6,item.description)
+    // .set_grid_cell("C106", 1, 7,item.quantity)
+    // .set_grid_cell("C106", 1, 8,item.unit)
+    // .set_grid_cell("C106", 1, 10,item.pr_date)
+    // .set_grid_cell("C106", 1, 11,item.material_type)
+    // .set_grid_cell("C106", 1, 12,item.price)
+    // .set_grid_cell("C106", 1, 13,item.currency)
+    // .set_grid_cell("C106", 1, 14,item.tracking)
+    // .press(Key.enter);
+    var service_items = item.serviceItems;
+    for (int j = 0; j < service_items.length; j++) {
+      var item = service_items[j];
+      await browser
+          .wait(Waitable.Seconds(2))
+          .click(Sap.Data('$lsdata_prefix/ctxtESLL-SRVPOS[2,$j]'))
+          .set(Sap.InputWithData('$lsdata_prefix/ctxtESLL-SRVPOS[2,$j]'),
+              item.serviceCode)
+          .click(Sap.Data('$lsdata_prefix/txtESLL-KTEXT1[3,$j]'))
+          .set(Sap.InputWithData('$lsdata_prefix/txtESLL-KTEXT1[3,$j]'),
+              item.description)
+          .click(Sap.Data('$lsdata_prefix/txtESLL-MENGE[4,$j]'))
+          .set(Sap.InputWithData('$lsdata_prefix/txtESLL-MENGE[4,$j]'),
+              item.quantity)
+          .click(Sap.Data('$lsdata_prefix/ctxtESLL-MEINS[5,$j]'))
+          .set(Sap.InputWithData('$lsdata_prefix/ctxtESLL-MEINS[5,$j]'),
+              item.unit)
+          .click(Sap.Data('$lsdata_prefix/ctxtRM11P-PS_PSP_PNR[6,$j]'))
+          .set(Sap.InputWithData('$lsdata_prefix/ctxtRM11P-PS_PSP_PNR[6,$j]'),
+              item.wbs)
+          .click(Sap.Data('$lsdata_prefix/txtESLL-TBTWR[7,$j]'))
+          .set(Sap.InputWithData('$lsdata_prefix/txtESLL-TBTWR[7,$j]'),
+              item.price)
+          .press(Key.enter);
+    }
+  }
+
+  return browser.click(Sap.Button("Check")).wait(Waitable.Seconds(50)).close();
+  // .click(Div.WithId("M0:46:1:4:2:1:2:1::0:0"))
 }
 
 //create time report
@@ -75,97 +284,3 @@ Future create_time_report() async {
       .wait(Waitable.Seconds(50)) // this was for testing
       .close();
 }
-
-
-
-
-
-
-
-
-
-// //create reservation
-// Future create_reservation() async {
-//   return Nobody()
-//       .online()
-//       .login(Sap.User('amohandas'))
-//       .goto(SapTransaction("MB21"))
-//       .set(Sap.Input("Movement type (inventory management)"), "221")
-//       .set(Sap.Input("Plant"), "22A1")
-//       .click(Sap.CreateNew)
-//       .set(Sap.Input("Work Breakdown Structure Element (WBS Element)"),
-//           "MWS-AE-0017.01.001")
-//       .set(
-//           XPath(
-//               "/html/body/table/tbody/tr/td/div/form/div/div[4]/div/div[9]/table/tbody/tr[2]/td/table/tbody/tr/td/div/div/div/div[9]/div/div[2]/table/tbody/tr/td/input"),
-//           "1000004543")
-//       .wait(Seconds(10));
-// }
-
-// Future run_GoogleSearch() {
-//   return Nobody()
-//       .online(slow: Duration(seconds: 1))
-//       .visit('https://search.brave.com/')
-//       .type('input[id="searchbox"]', 'pretty girl')
-//       .click(Button.WithId('submit-button'))
-//       .wait(UntilPageLoaded)
-//       .click(XPath('/html/body/div/div[1]/div/nav/ul[1]/li[2]/a/span[2]'))
-//       .wait(UntilPageLoaded)
-//       .wait(Seconds(5))
-//       .close();
-// }
-
-// Future create_pr() {
-//   return Nobody()
-//       .online()
-//       .login(Sap.User('amohandas'))
-//       .goto(SapTransaction("ME51N"))
-//       // .map(Sap.InputFields, Print)
-//       .wait(Seconds(20))
-//       .close();
-// }
-
-// Future read_excel() async {
-//   final purchase_orders = await Nobody()
-//       .open(ExcelFile(r"C:\Users\aghil\Downloads\EXPORT (10).xlsx"))
-//       .sheet("Sheet1")
-//       .rows((r) => r.cells.first != null)
-//       .take(50)
-//       .map(
-//           (x) => {"po": x.string(0), "item": x.string(1), "qty": x.integer(2)});
-//   for (final po in purchase_orders) {
-//     print(po);
-//   }
-// }
-
-// final Print = (x) {
-//   // Show.anything(x);
-//   return x;
-// };
-
-// //create trip request.
-// Future create_trip_request() async {
-//   return Nobody()
-//       .online()
-//       .login(Sap.User('amohandas'))
-//       .goto(SapFiori())
-//       .wait(Seconds(3))
-//       .click(Css('a[id="__tile38"]'))
-//       .click(Css('#__xmlview0--RB3-4 > div > svg > circle.sapMRbBInn'))
-//       .set(Css('#__xmlview0--idEmpNo-inner'), '9711068')
-//       //click go
-//       .click(Css('#__xmlview0--GO-BDI-content'))
-//       //click new booking
-//       .click(Css('#__xmlview0--RB21'))
-//       //click focal
-//       .click(Css('#__xmlview0--idFocal-vhi'))
-//       .ex((x) => x.click())
-//       .when_contains('div.sapMSLITitle', '9711068', (x) => x.click())
-//       .wait(Seconds(10))
-//       .click(XPath('//*[@id="__xmlview0--idFocal-vhi"]'))
-//       .click(XPath('//*[@id="__item51-__clone41"]'))
-//       .click(XPath('//*[@id="__xmlview0--idRefNo-inner"]'))
-//       .set(XPath('//*[@id="__xmlview0--idRefNo-inner"]'), 'mws/ar/ooo5')
-//       .click(XPath('//*[@id="__xmlview0--idContact-inner"]'))
-//       .wait(Seconds(1));
-// }

@@ -8,8 +8,11 @@ class Online {
   Future<Page> get page => lastPage();
   final Browser browser;
   final Duration? default_timeout;
+  final Duration minimal_timeout;
 
-  Online(this.browser, {this.default_timeout});
+  Online(this.browser,
+      {this.default_timeout,
+      this.minimal_timeout = const Duration(milliseconds: 500)});
 
   Future<Page> lastPage() async {
     var pages = await browser.pages;
@@ -116,27 +119,24 @@ class Online {
     return this;
   }
 
-  Future<Online> set(AbstractSelector selector, String text,
-      {bool show = true, Duration? timeout = null, int index = 0}) async {
+  Future<Online> set(AbstractSelector selector, Object? obj,
+      {bool show = true,
+      Duration? timeout = null,
+      int index = 0,
+      bool click = false}) async {
+    String text = obj?.toString() ?? '';
     if (show) Show.set_value(selector.selector, text);
-    if (selector is XPath) {
-      var selected = await (await page).waitForXPath(selector.selector);
-      if (selected != null) {
-        await selected.evaluateHandle('''(element, text) => {
-        element.focus(); // Focus on the element
-        var inputEvent = new Event('input', {bubbles: true});
-        var changeEvent = new Event('change', {bubbles: true});
-        element.dispatchEvent(inputEvent);
-        element.value = text;
-        element.dispatchEvent(changeEvent);
-        element.blur(); // Remove focus from the element
+    var selected = selector is XPath
+        ? await (await page).waitForXPath(selector.selector)
+        : await (await page).waitForSelector(selector.selector);
 
-        }''', args: [text]);
+    if (selected != null) {
+      if (click) {
+        await (await page).click(selector.selector);
       }
-    } else {
-      var selected = await (await page).waitForSelector(selector.selector);
-      if (selected != null) {
-        await selected.evaluateHandle('''(element, text) => {
+      await selected.evaluateHandle('''(element, text) => {
+\
+      if (element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement || element instanceof HTMLSelectElement) {
         element.focus(); // Focus on the element
         var inputEvent = new Event('input', {bubbles: true});
         var changeEvent = new Event('change', {bubbles: true});
@@ -144,9 +144,22 @@ class Online {
         element.value = text;
         element.dispatchEvent(changeEvent);
         element.blur(); // Remove focus from the element
-        
-        }''', args: [text]);
       }
+    }''', args: [text]);
+    }
+    return this;
+  }
+
+  //unfocus
+  Future<Online> unfocus(AbstractSelector selector, {bool show = true}) async {
+    if (show) Show.action('unfocusing', selector.selector);
+    var selected = selector is XPath
+        ? await (await page).waitForXPath(selector.selector)
+        : await (await page).waitForSelector(selector.selector);
+    if (selected != null) {
+      await selected.evaluate('''(element) => {
+      element.blur();
+    }''');
     }
     return this;
   }
@@ -216,10 +229,49 @@ class Online {
     return Online;
   }
 
-  Future<Online> type(String selector, String text) async {
-    Show.action('typing', text);
-    await (await page).waitForSelector(selector);
-    await (await page).type(selector, text);
+  /// type
+  /// more involved than set. more realistic due to waiting for the element to appear,
+  /// scrolling to the element, moving the mouse over the element, focusing on the element by clicking on it
+  /// waiting for the focusable child of the element and focusing on it, finding the first input/textarea/select and focusing on it
+  /// and then typing the text
+  Future<Online> type(AbstractSelector selector, String? text,
+      {bool show = true}) async {
+    text ??= '';
+    if (show) Show.action("waiting for", selector.selector, "to appear");
+    var item = await (await page).waitForSelector(selector.selector);
+    if (item != null) {
+      if (show) Show.action("scrolling to", selector.selector);
+      await item.evaluate('''(element) => {
+      element.scrollIntoView({behavior: "auto", block: "center", inline: "center"});
+    }''');
+      if (show) Show.action("hovering over", selector.selector);
+      await item.hover();
+      if (show) Show.action("focusing on", selector.selector);
+      await item.focus();
+      // just in case if the element focusable is child of this element, we should bubble up the focus
+      await item.evaluate('''(element) => {
+      // bubble down the focus to the first focusable child
+      var focusable = element.querySelector('input,button,textarea,select');
+      if (focusable) {
+        focusable.focus();
+      }
+      else {
+        //find the first focusable parent and focus on it
+        var parent = element.parentElement;
+        while (parent) {
+          var focusable = parent.querySelector('input,button,textarea,select');
+          if (focusable) {
+            focusable.focus();
+            break;
+          }
+          parent = parent.parentElement;
+        }
+      }
+    }''');
+      if (show) Show.action("typing", text);
+      await item.type(text);
+    }
+
     return this;
   }
 
@@ -247,8 +299,34 @@ class Online {
   //focus
   Future<Online> focus(AbstractSelector selector, {bool show = true}) async {
     if (show) Show.action('focusing', selector.selector);
-    await (await page).waitForSelector(selector.selector);
-    await (await page).focus(selector.selector);
+    var item = await (await page).waitForSelector(selector.selector);
+    if (item != null) {
+      await item.evaluate('''(element) => {
+      element.scrollIntoView({behavior: "auto", block: "center", inline: "center"});
+    }''');
+      await item.hover();
+      await item.focus();
+      // just in case if the element focusable is child of this element, we should bubble up the focus
+      await item.evaluate('''(element) => {
+      // bubble down the focus to the first focusable child
+      var focusable = element.querySelector('input,button,textarea,select');
+      if (focusable) {
+        focusable.focus();
+      }
+      else {
+        //find the first focusable parent and focus on it
+        var parent = element.parentElement;
+        while (parent) {
+          var focusable = parent.querySelector('input,button,textarea,select');
+          if (focusable) {
+            focusable.focus();
+            break;
+          }
+          parent = parent.parentElement;
+        }
+      }
+    }''');
+    }
     return this;
   }
 
@@ -277,18 +355,165 @@ class Online {
   Future<Online> click(AbstractSelector selector,
       {bool show = true, int index = 0}) async {
     if (show) Show.action('clicking', selector.selector);
-    if (selector is XPath) {
-      var selected =
-          await (await page).waitForXPath(selector.selector, visible: true);
-      if (selected != null) {
-        await selected.click();
+    var selected = selector is XPath
+        ? await (await page).waitForXPath(selector.selector, visible: true)
+        : await (await page).waitForSelector(selector.selector, visible: true);
+    if (selected != null) {
+      // await scroll_to(selector);
+      await mouse_enter(selector);
+      await mouse_over(selector);
+      await Future.delayed(Duration(milliseconds: 100));
+      await selected.click();
+      await Future.delayed(Duration(milliseconds: 100));
+    }
+    return this;
+  }
+
+  //mouse enter
+  Future<Online> mouse_enter(AbstractSelector selector) async {
+    Show.action('mouse enter', selector.selector);
+    var selected = selector is XPath
+        ? await (await page).waitForXPath(selector.selector, visible: true)
+        : await (await page).waitForSelector(selector.selector, visible: true);
+    if (selected != null) {
+      await selected.evaluate('''element => {
+      var mouseEnterEvent = new MouseEvent('mouseenter', {bubbles: true});
+      element.dispatchEvent(mouseEnterEvent);
+    }''');
+    }
+    return this;
+  }
+
+  //mouse leave
+  Future<Online> mouse_leave(AbstractSelector selector) async {
+    Show.action('mouse leave', selector.selector);
+    var selected = selector is XPath
+        ? await (await page).waitForXPath(selector.selector, visible: true)
+        : await (await page).waitForSelector(selector.selector, visible: true);
+    if (selected != null) {
+      await selected.evaluate('''element => {
+      var mouseLeaveEvent = new MouseEvent('mouseleave', {bubbles: true});
+      element.dispatchEvent(mouseLeaveEvent);
+    }''');
+    }
+    return this;
+  }
+
+  //mouse over
+  Future<Online> mouse_over(AbstractSelector selector) async {
+    Show.action('mouse over', selector.selector);
+    var selected = selector is XPath
+        ? await (await page).waitForXPath(selector.selector, visible: true)
+        : await (await page).waitForSelector(selector.selector, visible: true);
+    if (selected != null) {
+      await selected.evaluate('''element => {
+      var mouseOverEvent = new MouseEvent('mouseover', {bubbles: true});
+      element.dispatchEvent(mouseOverEvent);
+    }''');
+    }
+    return this;
+  }
+
+  //mouse out
+  Future<Online> mouse_out(AbstractSelector selector) async {
+    Show.action('mouse out', selector.selector);
+    var selected = selector is XPath
+        ? await (await page).waitForXPath(selector.selector, visible: true)
+        : await (await page).waitForSelector(selector.selector, visible: true);
+    if (selected != null) {
+      await selected.evaluate('''element => {
+      var mouseOutEvent = new MouseEvent('mouseout', {bubbles: true});
+      element.dispatchEvent(mouseOutEvent);
+    }''');
+    }
+    return this;
+  }
+
+  //scroll to element
+  Future<Online> scroll_to(AbstractSelector selector) async {
+    Show.action('scrolling', 'to', selector.selector);
+    var selected = selector is XPath
+        ? await (await page).waitForXPath(selector.selector, visible: true)
+        : await (await page).waitForSelector(selector.selector, visible: true);
+    if (selected != null) {
+      //scroll to the element make sure it is effective and everything loads (wait)
+      await selected.evaluate('''element => {
+      element.scrollIntoView({behavior: "auto", block: "center", inline: "center"});
+    }''');
+    }
+    //let everything load
+    await Future.delayed(Duration(milliseconds: 500));
+    return this;
+  }
+
+  //scroll by
+  Future<Online> scroll_by(int x, int y) async {
+    Show.action('scrolling', 'by', x.toString(), y.toString());
+    await (await page).evaluate('''() => {
+      window.scrollBy($x, $y);
+    }''');
+    return this;
+  }
+
+  //scroll to top
+  Future<Online> scroll_to_top() async {
+    Show.action('scrolling', 'to', 'top');
+    await (await page).evaluate('''() => {
+      window.scrollTo(0, 0);
+    }''');
+    return this;
+  }
+
+  //scroll to bottom
+  Future<Online> scroll_to_bottom() async {
+    Show.action('scrolling', 'to', 'bottom');
+    await (await page).evaluate('''() => {
+      window.scrollTo(0, document.body.scrollHeight);
+    }''');
+    return this;
+  }
+
+  //scroll to left
+  Future<Online> scroll_to_left() async {
+    Show.action('scrolling', 'to', 'left');
+    await (await page).evaluate('''() => {
+      window.scrollTo(0, 0);
+    }''');
+    return this;
+  }
+
+  //scroll to right
+  Future<Online> scroll_to_right() async {
+    Show.action('scrolling', 'to', 'right');
+    await (await page).evaluate('''() => {
+      window.scrollTo(document.body.scrollWidth, 0);
+    }''');
+    return this;
+  }
+
+  //maybe_click
+  //clicks if it exists and clickable. moves on if it does not.
+  //does not cry about things that do not exist or dosent work 😊
+  Future<Online> maybe_click(AbstractSelector selector,
+      {bool show = true, int index = 0}) async {
+    try {
+      if (show) Show.action('clicking', selector.selector);
+      if (selector is XPath) {
+        var selected = await (await page)
+            .waitForXPath(selector.selector, timeout: minimal_timeout);
+        if (selected != null) {
+          await selected.click();
+        }
+      } else {
+        var selected = await (await page)
+            .waitForSelector(selector.selector, timeout: minimal_timeout);
+        if (selected != null) {
+          await selected.click();
+        }
       }
-    } else {
-      var selected =
-          await (await page).waitForSelector(selector.selector, visible: true);
-      if (selected != null) {
-        await selected.click();
-      }
+    } catch (e) {
+      // it does not exist or is not clickable.
+      // life goes on...
     }
     return this;
   }
@@ -303,7 +528,7 @@ class Online {
     var selector = Css('#grid\\#$grid_id\\#$row\\,$column\\#if-r');
     if (show) Show.action('setting', selector.selector, 'to', text);
     await wait(Waitable.Element(selector));
-    await wait(Waitable.Seconds(1));
+    await wait(Waitable.Milliseconds(500));
     await (await page).click(selector.selector);
     var input_selector = Css('input[id="grid\\#$grid_id\\#$row,$column\\#if"]');
     await (await page).waitForSelector(input_selector.selector);

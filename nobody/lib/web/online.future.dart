@@ -78,18 +78,31 @@ extension ExOnline on Future<Online> {
 
   Future<Online> set(
     AbstractSelector selector,
-    String text, {
+    Object? obj, {
     bool show = true,
     Duration? timeout = null,
     int index = 0,
+    bool click = false,
   }) async {
     var Online = await this;
     return Online.set(
       selector,
-      text,
+      obj,
       show: show,
       timeout: timeout,
       index: index,
+      click: click,
+    );
+  }
+
+  Future<Online> unfocus(
+    AbstractSelector selector, {
+    bool show = true,
+  }) async {
+    var Online = await this;
+    return Online.unfocus(
+      selector,
+      show: show,
     );
   }
 
@@ -137,13 +150,15 @@ extension ExOnline on Future<Online> {
   }
 
   Future<Online> type(
-    String selector,
-    String text,
-  ) async {
+    AbstractSelector selector,
+    String? text, {
+    bool show = true,
+  }) async {
     var Online = await this;
     return Online.type(
       selector,
       text,
+      show: show,
     );
   }
 
@@ -208,6 +223,95 @@ extension ExOnline on Future<Online> {
     );
   }
 
+  Future<Online> mouse_enter(
+    AbstractSelector selector,
+  ) async {
+    var Online = await this;
+    return Online.mouse_enter(
+      selector,
+    );
+  }
+
+  Future<Online> mouse_leave(
+    AbstractSelector selector,
+  ) async {
+    var Online = await this;
+    return Online.mouse_leave(
+      selector,
+    );
+  }
+
+  Future<Online> mouse_over(
+    AbstractSelector selector,
+  ) async {
+    var Online = await this;
+    return Online.mouse_over(
+      selector,
+    );
+  }
+
+  Future<Online> mouse_out(
+    AbstractSelector selector,
+  ) async {
+    var Online = await this;
+    return Online.mouse_out(
+      selector,
+    );
+  }
+
+  Future<Online> scroll_to(
+    AbstractSelector selector,
+  ) async {
+    var Online = await this;
+    return Online.scroll_to(
+      selector,
+    );
+  }
+
+  Future<Online> scroll_by(
+    int x,
+    int y,
+  ) async {
+    var Online = await this;
+    return Online.scroll_by(
+      x,
+      y,
+    );
+  }
+
+  Future<Online> scroll_to_top() async {
+    var Online = await this;
+    return Online.scroll_to_top();
+  }
+
+  Future<Online> scroll_to_bottom() async {
+    var Online = await this;
+    return Online.scroll_to_bottom();
+  }
+
+  Future<Online> scroll_to_left() async {
+    var Online = await this;
+    return Online.scroll_to_left();
+  }
+
+  Future<Online> scroll_to_right() async {
+    var Online = await this;
+    return Online.scroll_to_right();
+  }
+
+  Future<Online> maybe_click(
+    AbstractSelector selector, {
+    bool show = true,
+    int index = 0,
+  }) async {
+    var Online = await this;
+    return Online.maybe_click(
+      selector,
+      show: show,
+      index: index,
+    );
+  }
+
   Future<Online> set_grid_cell(
     String grid_id,
     int row,
@@ -222,6 +326,30 @@ extension ExOnline on Future<Online> {
       column,
       text,
       show: show,
+    );
+  }
+
+  Future<Online> set_all(
+    AbstractSelector selector,
+    String text,
+  ) async {
+    var Online = await this;
+    return Online.set_all(
+      selector,
+      text,
+    );
+  }
+
+  Future<Online> set_attribute(
+    AbstractSelector selector,
+    String attribute,
+    String value,
+  ) async {
+    var Online = await this;
+    return Online.set_attribute(
+      selector,
+      attribute,
+      value,
     );
   }
 
