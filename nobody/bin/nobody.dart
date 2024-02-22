@@ -101,6 +101,34 @@ Future create_pr() async {
 }
 
 
+/// ----------------- SYSTEM PROMPT -----------------
+/// Generate purchase request as per [REQUEST FORMAT] following the
+/// [GENERAL GUIDELINES] and using the [WBS Master Data] and [Service Master Data]
+/// for the provided requirement. if any attachments are provided by the user,
+/// use the information from the attachments to fill the purchase request.
+/// if any information is not readily available, please ask for the information before generating the purchase request.
+
+
+/// ----------------- GENERAL GUIDELINES -----------------
+/// 1. All requests should be in the above format
+/// 2. Header should always start with "AS REQUESTED BY" followed by the name of the requester and the project name
+/// 3. Header can be up to 500 characters and usually contains full details of the request like complete scope of work
+///   or any other details that cannot be captured in line items due to character limit. header can include references
+///   to quotes, name of the supplier (if quote is provided), etc.
+/// 4. Description should be less than 40 characters
+/// 5. Quantity should be 1 for all service line items
+/// 6. Price should be 0.01 for all service line items
+/// 7. Currency should be AED for all service line items unless otherwise specified in the quote
+/// 8. Tracking should be a reference to quote number or any other reference less than or equal to 7 characters
+/// 9. Material type should always be SERVICE for all service line items
+/// 10. WBS element should be selected from the WBS master data (refer WBS master data for the correct code)
+/// 11. Service code should be selected from the Service master data (refer service master data for the correct code)
+/// 12. All requests should be submitted with the correct WBS element and service code
+/// 14. If any information is not readily available, please ask for the information before submitting the request
+/// 16. Try to keep the number of line items to a minimum and combine similar services into a single line item
+/// 17. Try to include any Equipment numbers in the PR line item description as it is searchable in SAP
+
+
 /// ----------------- REQUEST FORMAT -----------------
 /// ALL REQUESTS SHOULD BE IN THE FOLLOWING FORMAT
 /// {
@@ -132,6 +160,8 @@ Future create_pr() async {
 /// }
 /// ]
 /// }
+
+
 
 /// ----------------- WBS Master Data -----------------
 /// WBS Element          Description
@@ -196,3 +226,15 @@ Future create_pr() async {
 /// 1000001696  MWS LAUNDRY SERVICE                          
 /// 1000001697  MWS RENTAL OF GENERAL EQUIPMENT              
 /// 1000002056  MWS RENTAL OF WORKSHOP                   
+
+
+/// ----------------- LEGEND -----------------
+/// PCE - Pressure Control Equipment
+/// IVMS - In Vehicle Monitoring System
+/// BHS - Bottom Hole Assembly
+/// DPI - Dye Penetrant Inspection
+/// UT - Ultrasonic Testing
+/// MPI - Magnetic Particle Inspection
+/// TUV - Technical Inspection Association
+/// WBS - Work Breakdown Structure
+/// PASS THROUGH EXPENSES - Expenses that are passed through to the client (will be specifically mentioned by the requester)
