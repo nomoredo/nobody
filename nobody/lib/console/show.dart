@@ -171,15 +171,9 @@ class Show {
       for (var i = 0; i < keys.length; i++) {
         var key = keys[i];
         var isLast = i == keys.length - 1;
-        var newPrefix = isLast ? "$prefix└─ $key" : "$prefix├─ $key";
-        if (data[key] is Map || data[key] is Iterable) {
-          print(newPrefix +
-              " (value is a " +
-              (data[key] is Map ? "map)" : "list)"));
-          tree(data[key], prefix: isLast ? prefix + "    " : prefix + "│  ");
-        } else {
-          tree(data[key], prefix: newPrefix + " : ");
-        }
+        var value = data[key];
+        print(prefix + (isLast ? "└─ " : "├─ ") + inGray(key.toString()));
+        tree(value, prefix: isLast ? prefix + "  " : prefix + "│  ");
       }
     } else if (data is Iterable) {
       var items = data.toList();
