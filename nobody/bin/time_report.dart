@@ -1,11 +1,12 @@
 //create time report
 import 'package:nobody/lib.dart';
+import 'package:nobody/references.dart';
 
 Future create_time_report() async {
   return Nobody()
       .online()
       .login(Sap.User('amohandas'))
-      .goto(SapTransaction("ZHR076A"))
+      .goto(SapTransactionUrl("ZHR076A"))
       // .artificial_delay()
       .set(Sap.Input("Personnel Number"), "9711068")
       .set(Input.WithId("M0:46:::2:34"), "01.01.2023")

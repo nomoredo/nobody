@@ -123,11 +123,11 @@ class SapFiori implements AbstractUrl {
   const SapFiori();
 }
 
-class SapTransaction implements AbstractUrl {
+class SapTransactionUrl implements AbstractUrl {
   final String code;
   String get url =>
       'https://cbs.almansoori.biz/sap/bc/gui/sap/its/webgui/?sap-client=800&~TRANSACTION=$code#';
-  const SapTransaction(this.code);
+  const SapTransactionUrl(this.code);
 }
 
 /// For example.
@@ -135,7 +135,7 @@ class SapTransaction implements AbstractUrl {
 /// Header release Service PR is ZPRS
 /// Header release Rental PR is ZPRR
 /// Header release Opex PR is ZPRO
-class SapPurchaseRequest implements AbstractUrl {
+class SapPurchaseRequestUrl implements AbstractUrl {
   /// Header release Service PR is ZPRS
   /// Header release Rental PR is ZPRR
   /// Header release Opex PR is ZPRO
@@ -146,5 +146,5 @@ class SapPurchaseRequest implements AbstractUrl {
   /// Header release Service PR is ZPRS
   /// Header release Rental PR is ZPRR
   /// Header release Opex PR is ZPRO
-  const SapPurchaseRequest(this.code);
+  const SapPurchaseRequestUrl(this.code);
 }

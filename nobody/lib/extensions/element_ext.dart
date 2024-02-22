@@ -28,3 +28,36 @@ extension ElementExt on ElementHandle? {
     return value as String?;
   }
 }
+
+extension ElementFutureExt on Future<ElementHandle?> {
+  Future<String?> get_title() async {
+    final element = await this;
+    return await element?.get_title();
+  }
+
+  Future<String?> get_text() async {
+    final element = await this;
+    return await element?.get_text();
+  }
+
+  Future<String?> get_id() async {
+    final element = await this;
+    return await element?.get_id();
+  }
+
+  Future<String?> get_name() async {
+    final element = await this;
+    return await element?.get_name();
+  }
+
+  Future<String?> get_value() async {
+    final element = await this;
+    return await element?.get_value();
+  }
+}
+
+extension FutureMapExt<T> on Future<T> {
+  Future<R> map<R>(R Function(T) f) async {
+    return f(await this);
+  }
+}

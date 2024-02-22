@@ -1,5 +1,6 @@
 export 'authable.dart';
 export 'downloadable.dart';
+export 'form.dart';
 export 'online.dart';
 export 'online.future.dart';
 export 'password.dart';
