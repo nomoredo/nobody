@@ -65,6 +65,19 @@ extension ExOnline on Future<Online> {
     );
   }
 
+  Future<Online> scan(
+    AbstractSelector selector,
+    dynamic Function(ElementHandle) action, {
+    bool show = true,
+  }) async {
+    var Online = await this;
+    return Online.scan(
+      selector,
+      action,
+      show: show,
+    );
+  }
+
   Future<Online> navigate(
     String url, {
     bool show = true,
@@ -151,7 +164,7 @@ extension ExOnline on Future<Online> {
 
   Future<Online> type(
     AbstractSelector selector,
-    String? text, {
+    Object? text, {
     bool show = true,
   }) async {
     var Online = await this;
@@ -473,6 +486,15 @@ extension ExOnline on Future<Online> {
     return Online.waitFor(
       waitable,
       timeout: timeout,
+    );
+  }
+
+  Future<ElementHandle?> get_element(
+    AbstractSelector selector,
+  ) async {
+    var Online = await this;
+    return Online.get_element(
+      selector,
     );
   }
 

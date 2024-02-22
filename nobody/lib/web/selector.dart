@@ -25,8 +25,7 @@ class NestedSelector implements AbstractSelector {
 /// appends button to the selector
 class Button implements AbstractSelector {
   final AbstractSelector? inner;
-  String get selector =>
-      inner == null ? 'button' : 'button[${inner!.selector}]';
+  String get selector => inner == null ? 'button' : 'button${inner!.selector}';
 
   const Button([this.inner]);
 
@@ -40,7 +39,7 @@ class Button implements AbstractSelector {
 /// appends input to the selector
 class Input implements AbstractSelector {
   final AbstractSelector? inner;
-  String get selector => inner == null ? 'input' : 'input[${inner!.selector}]';
+  String get selector => inner == null ? 'input' : 'input${inner!.selector}';
 
   const Input([this.inner]);
 
@@ -55,7 +54,7 @@ class Input implements AbstractSelector {
 class TextArea implements AbstractSelector {
   final AbstractSelector? inner;
   String get selector =>
-      inner == null ? 'textarea' : 'textarea[${inner!.selector}]';
+      inner == null ? 'textarea' : 'textarea${inner!.selector}';
 
   const TextArea([this.inner]);
 
@@ -69,7 +68,7 @@ class TextArea implements AbstractSelector {
 /// Div
 class Div implements AbstractSelector {
   final AbstractSelector? inner;
-  String get selector => inner == null ? 'div' : 'div[${inner!.selector}]';
+  String get selector => inner == null ? 'div' : 'div${inner!.selector}';
 
   const Div([this.inner]);
 
@@ -83,7 +82,7 @@ class Div implements AbstractSelector {
 /// appends text="{text}" to the selector
 class WithText implements AbstractSelector {
   final String text;
-  String get selector => 'text="$text"';
+  String get selector => '[text="$text"]';
 
   const WithText(this.text);
 }
@@ -103,7 +102,7 @@ class WithId implements AbstractSelector {
       .replaceAll('(', '\\(')
       .replaceAll(')', '\\)');
 
-  String get selector => 'id="$clean_id"';
+  String get selector => '[id="$clean_id"]';
 
   const WithId(this.id);
 }
@@ -112,7 +111,7 @@ class WithId implements AbstractSelector {
 /// appends name="{name}" to the selector
 class WithName implements AbstractSelector {
   final String name;
-  String get selector => 'name="$name"';
+  String get selector => '[name="$name"]';
 
   const WithName(this.name);
 }
@@ -122,7 +121,7 @@ class WithName implements AbstractSelector {
 /// class can be a list of classes
 class WithClass implements AbstractSelector {
   final List<String> classes;
-  String get selector => 'class="${classes.join(' ')}"';
+  String get selector => '[class="${classes.join(' ')}"]';
 
   const WithClass(this.classes);
 }

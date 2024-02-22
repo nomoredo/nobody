@@ -8,7 +8,7 @@ Future export_emp_attendance() async {
   await Nobody()
       .online()
       .goto(Url("https://youtube.com"))
-      .type("input#search", "kachi sera")
+      // .type("input#search", "kachi sera")
       .click(Button.WithId("search-icon-legacy"))
       .wait(Waitable.Navigation())
       .click(Css("a#video-title"))

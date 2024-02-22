@@ -1,4 +1,5 @@
 import 'package:coco/coco.dart';
+import 'package:nobody/web/authable.dart';
 import 'package:puppeteer/protocol/dom.dart';
 
 class Show {
@@ -66,26 +67,6 @@ class Show {
     print("");
   }
 
-  //action
-  //gray,yellow,cyan,white,gray
-  static void action(String message,
-      [String? a, String? b, String? c, String? d]) {
-    message.write(inGray);
-    if (a != null) {
-      " $a".write(inYellow);
-    }
-    if (b != null) {
-      " $b".write(inCyan);
-    }
-    if (c != null) {
-      " $c".write(inWhite);
-    }
-    if (d != null) {
-      " $d".write(inGray);
-    }
-    print("");
-  }
-
   //input
   //gray,magenta,white,gray,cyan
   static void input(String message,
@@ -136,6 +117,7 @@ class Show {
 
   /// divider
   /// ————————————————————————————————————————————————————————————
+  /// box drawing characters like ─╮ ╰ ╭ ╯ │ ─ or sharp corners like ┌ ┐ └ ┘
   static void divider() {
     "————————————————————————————————————————————————————————————"
         .write(inGray);
@@ -230,34 +212,209 @@ class Show {
     }
   }
 
+  /// click ──╮─→ $tag
+  /// on      ╰─→ $id
+  /// with    ╰─→ $attributes
   static void click_event(String tag, String id, String attributes) {
-    "CLICKED".write(inGray);
-    "└─".write(inGray);
-    " $tag".write(inYellow);
-    " ├─ $id".write(inWhite);
-    " ├─ $attributes".write(inGray);
-    print("");
+    "click".write(inYellow);
+    " ──╮─→".write(inRed);
+    " $tag".writeLine(inPurple);
+    "on".write(inYellow);
+    " ╰─→".write(inRed);
+    " $id".writeLine(inWhite);
+    "with".write(inYellow);
+    " ╰─→".write(inRed);
+    " $attributes".writeLine(inWhite);
   }
 
+  /// action ──╮─→ $action
+  /// on       ╰─→ $node.className
+  /// with     ╰─→ $node.nodeId
+  /// and      ╰─→ $node.attributes
   static void user_action(String action, Node node) {
     var tag = node.nodeName;
     var id = node.nodeId;
     var attributes = node.attributes;
-
-    "ACTION".write(inGray);
-    "└─".write(inGray);
-    " $action".write(inYellow);
-    " ├─ $tag".write(inWhite);
-    " ├─ $id".write(inGray);
-    " ├─ $attributes".write(inGray);
-    print("");
+    "action".write(inYellow);
+    " ──╮─→".write(inRed);
+    " $action".writeLine(inPurple);
+    "on".write(inYellow);
+    " ╰─→".write(inRed);
+    " $tag".writeLine(inWhite);
+    "with".write(inYellow);
+    " ╰─→".write(inRed);
+    " $id".writeLine(inWhite);
+    if (attributes != null) {
+      "and".write(inYellow);
+      " ╰─→".write(inRed);
+      " $attributes".writeLine(inWhite);
+    }
   }
 
+  /// set ──╮─→ $selector
+  /// value ╰─→ $text
   static void set_value(String selector, String text) {
-    "SET".write(inGray);
-    "└─".write(inGray);
-    " $selector".write(inYellow);
-    " ├─ $text".write(inWhite);
-    print("");
+    "set".write(inYellow);
+    " ──╮─→".write(inRed);
+    " $selector".writeLine(inPurple);
+    "value".write(inGray);
+    " ╰─→".write(inRed);
+    " $text".writeLine(inGreen);
+  }
+
+  /// step ──╮─→ $s ─→ $t
+  static void step(String s, String t) {
+    "step".write(inYellow);
+    " ──╮─→".write(inRed);
+    " $s".write(inPurple);
+    " ─→".write(inRed);
+    " $t".writeLine(inGreen);
+  }
+
+  /// $message ──╮─→ $a ─→ $b
+  ///            ╰─→ $c ─→ $d
+  /// or
+  /// $message ─→ $a
+  /// or
+  /// $message ──╮─→ $a ─→ $b
+  ///            ╰─→ $c ─→ $d
+  static void action(String message,
+      [String? a, String? b, String? c, String? d]) {
+    if (a != null && b != null && c != null && d != null) {
+      print(inYellow(message) +
+          inRed(" ──╮─→ ") +
+          inPurple(a) +
+          inRed(" ─→ ") +
+          inGreen(b));
+    }
+    if (a != null && b != null && c == null) {
+      print(inYellow(message) + inRed(" ─→ ") + inPurple(a));
+    }
+    if (a != null && b == null && c == null) {
+      print(inYellow(message) + inRed(" ─→ ") + inPurple(a));
+    }
+    if (a != null && b != null && c != null && d != null) {
+      print(inYellow(message) +
+          inRed(" ──╮─→ ") +
+          inPurple(a) +
+          inRed(" ─→ ") +
+          inGreen(b));
+      print(inRed(" ".repeat(message.length)) +
+          inRed(" ╰─→ ") +
+          inPurple(c) +
+          inRed(" ─→ ") +
+          inGreen(d));
+    }
+  }
+
+  /// authenticating ─→ user
+  static void authenticating(Authable authable) {
+    "authenticating".write(inYellow);
+    " ─→ ".write(inRed);
+    "${authable.username}".writeLine(inGreen);
+  }
+
+  static void visiting(String url) {
+    "visiting".write(inYellow);
+    " ─→ ".write(inRed);
+    "$url".writeLine(inGreen);
+  }
+
+  static void scanning(String selector) {
+    "scanning".write(inYellow);
+    " ─→ ".write(inRed);
+    "$selector".writeLine(inGreen);
+  }
+
+  static void unfocusing(String selector) {
+    "unfocusing".write(inYellow);
+    " ─→ ".write(inRed);
+    "$selector".writeLine(inGreen);
+  }
+
+  static void setting(String selector, String text, {required bool secret}) {
+    "setting".write(inYellow);
+    " ─→ ".write(inRed);
+    "$selector".write(inPurple);
+    " ─→ ".write(inRed);
+    if (secret) {
+      "********".writeLine(inGreen);
+    } else {
+      "$text".writeLine(inGreen);
+    }
+  }
+
+  static void setting_range(String selector, String from, String to) {
+    "setting".write(inYellow);
+    " ─→ ".write(inRed);
+    "$selector".write(inPurple);
+    " ─→ ".write(inRed);
+    "$from".write(inGreen);
+    " ─→ ".write(inRed);
+    "$to".writeLine(inGreen);
+  }
+
+  static void waiting_for(String selector, String s) {
+    "waiting for".write(inYellow);
+    " ─→ ".write(inRed);
+    "$selector".write(inPurple);
+    " ─→ ".write(inRed);
+    "$s".writeLine(inGreen);
+  }
+
+  static void scrolling(String selector) {
+    "scrolling".write(inYellow);
+    " ─→ ".write(inRed);
+    "$selector".writeLine(inGreen);
+  }
+
+  static void hover(String selector) {
+    "hover".write(inYellow);
+    " ─→ ".write(inRed);
+    "$selector".writeLine(inGreen);
+  }
+
+  static void focusing(String selector) {
+    "focusing".write(inYellow);
+    " ─→ ".write(inRed);
+    "$selector".writeLine(inGreen);
+  }
+
+  static void typing(String selector, String text) {
+    "typing".write(inYellow);
+    " ─→ ".write(inRed);
+    "$selector".write(inPurple);
+    " ─→ ".write(inRed);
+    "$text".writeLine(inGreen);
+  }
+
+  static void executing(String string) {
+    "executing".write(inYellow);
+    " ─→ ".write(inRed);
+    "$string".writeLine(inGreen);
+  }
+
+  static void clicking(String selector) {
+    "clicking".write(inYellow);
+    " ─→ ".write(inRed);
+    "$selector".writeLine(inGreen);
+  }
+
+  static void mouse_enter(String selector) {
+    "mouse enter".write(inYellow);
+    " ─→ ".write(inRed);
+    "$selector".writeLine(inGreen);
+  }
+
+  static void mouse_leave(String selector) {
+    "mouse leave".write(inYellow);
+    " ─→ ".write(inRed);
+    "$selector".writeLine(inGreen);
+  }
+}
+
+extension StringEx on String {
+  String repeat(int count) {
+    return List.filled(count, this).join();
   }
 }
