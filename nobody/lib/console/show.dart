@@ -1,6 +1,7 @@
 import 'package:coco/coco.dart';
-import 'package:nobody/web/authable.dart';
 import 'package:puppeteer/protocol/dom.dart';
+
+import '../references.dart';
 
 class Show {
   //INFO
@@ -147,68 +148,57 @@ class Show {
     divider();
   }
 
-  /// show the data as tree
-  /// using box drawing characters like ─╮ ╰ ╭ ╯ │ ─ or sharp corners like ┌ ┐ └ ┘
-  /// TITLE ─
-  /// └ key (value is a map)
-  ///   ├─ map child 0 : 00000000
-  ///   ├─ map child 1 : 00000000
-  ///   ├─ map child 2 : 00000000
-  ///   ├─ map child 3 : 00000000
-  ///   ├─ key (value is a list)
-  ///   │  ├─ value 0
-  ///   │  └─ value 1
-  ///   └─ map child 4 : 00000000
-  ///key is in yellow and value is in white. lines are in gray ┌ ┐ └ ┘
+  /// show the data as tree structure
+  /// ┌─ TITLE ─
+  /// │  ├─ key (value is a map)
+  /// │  │  ├─ map child 0 : 00000000
+  /// │  │  ├─ map child 1 : 00000000
+  /// │  │  ├─ map child 2 : 00000000
+  /// │  │  ├─ map child 3 : 00000000
+  /// │  │  └─ key (value is a list)
+  /// │  │     │  ├─ value 0
+  /// │  │     │  └─ value 1
+  /// │  └─ map child 4 : 00000000
+  /// └─────────────────────────────────
+
   static void tree(dynamic data, {String prefix = '', String? title}) {
     if (title != null) {
-      title.write(inGray);
-      print("");
+      print('$prefix┌─ $title ─');
+      prefix += "│  "; // Add spacing for nested items under the title
     }
-    switch (data.runtimeType) {
-      case Map:
-        data.write((key, value) {
-          prefix.write(inGray);
-          " $key".write(inYellow);
-          " : ".write(inGray);
-          if (value is Map) {
-            print("");
-            tree(value, prefix: prefix + "└─ ");
-          } else if (value is List) {
-            print("");
-            tree(value, prefix: prefix + "└─ ");
-          } else {
-            "$value".write(inWhite);
-            print("");
-          }
-        });
-        break;
-      case List:
-        for (var i = 0; i < data.length; i++) {
-          prefix.write(inGray);
-          " $i".write(inYellow);
-          " : ".write(inGray);
-          if (data[i] is Map) {
-            print("");
-            tree(data[i], prefix: prefix + "└─ ");
-          } else if (data[i] is List) {
-            print("");
-            tree(data[i], prefix: prefix + "└─ ");
-          } else {
-            "$data[i]".write(inWhite);
-            print("");
-          }
+    if (data is Map) {
+      var keys = data.keys.toList();
+      for (var i = 0; i < keys.length; i++) {
+        var key = keys[i];
+        var isLast = i == keys.length - 1;
+        var newPrefix = isLast ? "$prefix└─ $key" : "$prefix├─ $key";
+        if (data[key] is Map || data[key] is Iterable) {
+          print(newPrefix +
+              " (value is a " +
+              (data[key] is Map ? "map)" : "list)"));
+          tree(data[key], prefix: isLast ? prefix + "    " : prefix + "│  ");
+        } else {
+          tree(data[key], prefix: newPrefix + " : ");
         }
-        break;
-
-      default:
-        try {
-          "$data".write(inWhite);
-          print("");
-        } catch (e) {
-          "null".write(inWhite);
-          print("");
-        }
+      }
+    } else if (data is Iterable) {
+      var items = data.toList();
+      for (var i = 0; i < items.length; i++) {
+        var isLast = i == items.length - 1;
+        tree(items[i], prefix: isLast ? prefix + "  " : prefix + "├─ ");
+      }
+    } else if (data is String) {
+      print(prefix + inGreen(data));
+    } else if (data is int) {
+      print(prefix + inYellow(data.toString()));
+    } else if (data is double) {
+      print(prefix + inYellow(data.toString()));
+    } else if (data is bool) {
+      print(prefix + inCyan(data.toString()));
+    } else if (data is Cell) {
+      tree(data.get(), prefix: prefix);
+    } else {
+      print(prefix + inRed(data.toString()));
     }
   }
 
