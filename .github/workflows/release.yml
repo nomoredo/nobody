@@ -8,13 +8,12 @@ on:
       - '**.rs'
       - 'Cargo.toml'
       - 'Cargo.lock'
-    # This uses a wildcard match to trigger on commit messages containing "release"
-    commit_message:
-      patterns:
-        - '*release*'
+
 
 jobs:
   release:
+    # if commit message contains release, then run the job
+    if: contains(github.event.head_commit.message, 'release')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
