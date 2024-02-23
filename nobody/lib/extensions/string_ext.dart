@@ -241,3 +241,89 @@ extension ExNumber on num? {
   num? get toInt => this?.toInt();
   num? get toNum => this?.toDouble();
 }
+
+/// DateTime extensions
+extension ExDateTime on DateTime {
+  bool get isToday {
+    var now = DateTime.now();
+    return now.year == year && now.month == month && now.day == day;
+  }
+
+  bool get isYesterday {
+    var now = DateTime.now();
+    var yesterday = now.subtract(Duration(days: 1));
+    return yesterday.year == year &&
+        yesterday.month == month &&
+        yesterday.day == day;
+  }
+
+  bool get isTomorrow {
+    var now = DateTime.now();
+    var tomorrow = now.add(Duration(days: 1));
+    return tomorrow.year == year &&
+        tomorrow.month == month &&
+        tomorrow.day == day;
+  }
+
+  bool get isThisYear {
+    var now = DateTime.now();
+    return now.year == year;
+  }
+
+  bool get isThisMonth {
+    var now = DateTime.now();
+    return now.year == year && now.month == month;
+  }
+
+  bool get isThisWeek {
+    var now = DateTime.now();
+    var week = now.subtract(Duration(days: 7));
+    return isAfter(week);
+  }
+
+  bool get isThisHour {
+    var now = DateTime.now();
+    return now.year == year &&
+        now.month == month &&
+        now.day == day &&
+        now.hour == hour;
+  }
+
+  bool get isThisMinute {
+    var now = DateTime.now();
+    return now.year == year &&
+        now.month == month &&
+        now.day == day &&
+        now.hour == hour &&
+        now.minute == minute;
+  }
+
+  bool get isThisSecond {
+    var now = DateTime.now();
+    return now.year == year &&
+        now.month == month &&
+        now.day == day &&
+        now.hour == hour &&
+        now.minute == minute &&
+        now.second == second;
+  }
+
+  bool isAfter(DateTime other) => isAfter(other);
+  bool isBefore(DateTime other) => isBefore(other);
+  bool isAtSameMomentAs(DateTime other) => isAtSameMomentAs(other);
+
+  DateTime addYears(int years) => add(Duration(days: years * 365));
+  DateTime addMonths(int months) => add(Duration(days: months * 30));
+  DateTime addWeeks(int weeks) => add(Duration(days: weeks * 7));
+  DateTime addDays(int days) => add(Duration(days: days));
+  DateTime addHours(int hours) => add(Duration(hours: hours));
+  DateTime addMinutes(int minutes) => add(Duration(minutes: minutes));
+  DateTime addSeconds(int seconds) => add(Duration(seconds: seconds));
+  DateTime addMilliseconds(int milliseconds) =>
+      add(Duration(milliseconds: milliseconds));
+
+  /// to dd.MM.yyyy
+  String to_ddMMyyyy() {
+    return '${day.toString().padLeft(2, '0')}.${month.toString().padLeft(2, '0')}.${year}';
+  }
+}

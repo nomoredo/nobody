@@ -516,9 +516,10 @@ class Online {
     try {
       if (show) Show.action('clicking', selector.selector);
       var selected = selector is XPath
-          ? await (await page).waitForXPath(selector.selector, visible: true)
-          : await (await page)
-              .waitForSelector(selector.selector, visible: true);
+          ? await (await page).waitForXPath(selector.selector,
+              visible: true, timeout: minimal_timeout)
+          : await (await page).waitForSelector(selector.selector,
+              visible: true, timeout: minimal_timeout);
       if (selected != null) {
         await selected.click();
       }

@@ -66,12 +66,15 @@ Future<String?> get_token(String username, {retry_count = 0}) async {
     var url =
         '$authorization_endpoint?client_id=$APP_ID^&scope=$scope^&response_type=code^&redirect_uri=$redirect_url';
     print(url);
-    await launch(url);
     //once authenticated, the browser will redirect to localhost:44368 with the code
 
     var server = await HttpServer.bindSecure(
         InternetAddress.loopbackIPv4, 44368, SecurityContext.defaultContext);
+    Show.success("SERVER", "STARTED", "ON", "PORT 44368");
+    Show.action("url", "https://localhost:44368");
+    await launch(url);
     var request = await server.first;
+    Show.action("parsing", "code", "from", request.toString());
     var code = request.uri.queryParameters['code'];
 
     //get token from code

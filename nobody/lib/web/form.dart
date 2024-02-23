@@ -1,8 +1,8 @@
 import 'package:nobody/references.dart';
 
-typedef OnlineAction = Future<Online> Function(Online browser);
+typedef OnlineAction = FutureOr Function(Online browser);
 typedef CollectData<T> = T? Function(Online browser);
-typedef Validation = Future<ValidationResponse> Function(Online browser);
+typedef Validation = FutureOr<ValidationResponse> Function(Online browser);
 
 abstract class SimpleInput<T> {
   bool mandatory;
@@ -26,20 +26,24 @@ abstract class SimpleInput<T> {
   }
 
   Future<Online> fill_with(Online browser, T value) async {
+    Show.action("preparing", "to fill", value.toString());
     if (prepare_action != null) {
       await prepare_action!.call(browser);
     }
 
+    Show.action("collecting", "input data");
     if (collect_data != null && value == null && mandatory) {
       value = collect_data!.call(browser)!;
     }
 
+    Show.action("filling", "data");
     await fill_action(browser, value);
 
+    Show.action("validating", "input");
     if (validate_action != null) {
       final response = await validate_action!(browser);
       if (!response.valid) {
-        throw Exception(response.message);
+        Show.error("validation failed", response.message ?? "");
       } else {
         Show.success("validation successfull", response.message ?? "");
         if (submit_action != null) {
@@ -55,6 +59,7 @@ abstract class SimpleInput<T> {
     }
 
     if (cleanup_action != null) {
+      Show.action("cleaning", "up");
       await cleanup_action!.call(browser);
     }
     return browser;
@@ -168,13 +173,13 @@ class NoSapGridElement extends SimpleInput<String> {
 
   @override
   Future<Online> fill_action(Online browser, dynamic value) async {
-    await browser.click(selector);
+    await browser.click(selector, show: false);
     final selected =
         await (await browser.page).waitForSelector(selector.selector);
     if (selected != null) {
       final internal = await selected.$('input');
       await internal.type(value.toString());
-      await browser.press(Key.tab);
+      await browser.press(Key.tab, show: false);
     }
 
     return browser;
@@ -376,8 +381,7 @@ class SapTransaction extends NoForm {
     return this;
   }
 
-  SapTransaction many(
-      String field, NoForm Function(SapTransaction builder) builder,
+  SapTransaction many(String field, Function(SapTransaction builder) builder,
       {OnlineAction? before, OnlineAction? after}) {
     this.fields[field] = MultiForm(builder(SapTransaction.builder()),
         prepare_action: before, cleanup_action: after);

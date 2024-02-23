@@ -1,51 +1,49 @@
 import 'package:nobody/references.dart';
 
 void main(List<String> arguments) async {
-  await export_emp_attendance();
-}
-
-Future export_emp_attendance() async {
   return create_pr();
 }
 
 final SapTransaction create_service_pr = SapTransaction.builder()
     .prepare((x) =>
         x.login(Sap.User('amohandas')).goto(SapPurchaseRequestUrl("ZPRS")))
+    .maybe_click("maybe expand header",
+        css: 'div[role="button"][title="Expand Header Ctrl+F2"]')
     .with_textbox("header", lsdata: "cntlTEXT_EDITOR_0101/shellcont/shell")
     .maybe_click("maybe expand section",
         css: 'div[role="button"][title="Expand Items Ctrl+F3"]')
-    .many("lineItems", (SapTransaction n) {
-  return n
-      .grid_cell("account_assignment", lsdata: "rowcol/row[1]/cell[1]")
-      .grid_cell("description", lsdata: "rowcol/row[1]/cell[4")
-      .grid_cell("expense_type", lsdata: "rowcol/row[1]/cell[2]")
-      .grid_cell("quantity", lsdata: "rowcol/row[1]/cell[5]")
-      .grid_cell("unit", lsdata: "rowcol/row[1]/cell[6]")
-      .grid_cell("material_type", lsdata: "rowcol/row[1]/cell[9]")
-      .grid_cell("price", lsdata: "rowcol/row[1]/cell[10]")
-      .grid_cell("currency", lsdata: "rowcol/row[1]/cell[11]")
-      .grid_cell("tracking", lsdata: "rowcol/row[1]/cell[12]")
-      .many("serviceItems", (SapTransaction m) {
-    return m
-        // .prepare((x) => x.press(Key.enter))
-        .grid_cell("serviceCode", lsdata: "ctxtESLL-SRVPOS[2,0]")
-        .grid_cell("description", lsdata: "txtESLL-KTEXT1[3,0]")
-        .grid_cell("quantity", lsdata: "txtESLL-MENGE[4,0]")
-        .grid_cell("unit", lsdata: "ctxtESLL-MEINS[5,0]")
-        .grid_cell("wbs", lsdata: "ctxtRM11P-PS_PSP_PNR[6,0]")
-        .grid_cell("price", lsdata: "txtESLL-TBTWR[7,0]");
-  }, before: (x) => x.press(Key.enter));
-}).validate((browser) async {
-  final title = await browser
-      .click(Sap.Button("Check (Ctrl+Shift+F3)"))
-      .wait(Waitable.Seconds(2))
-      .get_element(WithId('wnd[0]/sbar_msg-txt'))
-      .get_value()
-      .map((x) =>
-          ValidationResponse.ShouldMatch(x, "No messages issued during check"));
-
-  return title;
-}).submit((x) async {
+    .many(
+        "lineItems",
+        (SapTransaction n) => n
+            .grid_cell("account_assignment", lsdata: "rowcol/row[1]/cell[1]")
+            .grid_cell("description", lsdata: "rowcol/row[1]/cell[4")
+            .grid_cell("expense_type", lsdata: "rowcol/row[1]/cell[2]")
+            .grid_cell("quantity", lsdata: "rowcol/row[1]/cell[5]")
+            .grid_cell("unit", lsdata: "rowcol/row[1]/cell[6]")
+            .grid_cell("delivery_date", lsdata: "rowcol/row[1]/cell[8]")
+            .grid_cell("material_type", lsdata: "rowcol/row[1]/cell[9]")
+            .grid_cell("price", lsdata: "rowcol/row[1]/cell[10]")
+            .grid_cell("currency", lsdata: "rowcol/row[1]/cell[11]")
+            .grid_cell("tracking", lsdata: "rowcol/row[1]/cell[12]")
+            .many(
+                "serviceItems",
+                (SapTransaction m) => m
+                    // .prepare((x) => x.press(Key.enter))
+                    .grid_cell("serviceCode", lsdata: "ctxtESLL-SRVPOS[2,0]")
+                    .grid_cell("description", lsdata: "txtESLL-KTEXT1[3,0]")
+                    .grid_cell("quantity", lsdata: "txtESLL-MENGE[4,0]")
+                    .grid_cell("unit", lsdata: "ctxtESLL-MEINS[5,0]")
+                    .grid_cell("wbs", lsdata: "ctxtRM11P-PS_PSP_PNR[6,0]")
+                    .grid_cell("price", lsdata: "txtESLL-TBTWR[7,0]"),
+                before: (x) => x.press(Key.enter)))
+    .validate((browser) => browser
+        .click(Sap.Button("Check (Ctrl+Shift+F3)"))
+        .wait(Waitable.Seconds(2))
+        .get_element(WithId('wnd[0]/sbar_msg-txt'))
+        .get_value()
+        .map((x) => ValidationResponse.ShouldMatch(
+            x, "No messages issued during check")))
+    .submit((x) async {
   final should_submit =
       await Ask.input("Do you want to submit the PR?", "yes/no");
   if (should_submit == "yes") {
@@ -56,64 +54,9 @@ final SapTransaction create_service_pr = SapTransaction.builder()
         .get_value();
     Show.action("PR Created", prnumber ?? "No PR number found");
   }
-  return x;
 });
 
 Future create_pr() async {
-  // SapTransaction create_service_pr = SapTransaction.builder()
-  //     .prepare((x) =>
-  //         x.login(Sap.User('amohandas')).goto(SapPurchaseRequestUrl("ZPRS")))
-  //     .with_textbox("header", lsdata: "cntlTEXT_EDITOR_0101/shellcont/shell")
-  //     .maybe_click("maybe expand section",
-  //         css: 'div[role="button"][title="Expand Items Ctrl+F3"]')
-  //     .many("lineItems", (SapTransaction n) {
-  //   return n
-  //       .grid_cell("account_assignment", lsdata: "rowcol/row[1]/cell[1]")
-  //       .grid_cell("description", lsdata: "rowcol/row[1]/cell[4")
-  //       .grid_cell("expense_type", lsdata: "rowcol/row[1]/cell[2]")
-  //       .grid_cell("quantity", lsdata: "rowcol/row[1]/cell[5]")
-  //       .grid_cell("unit", lsdata: "rowcol/row[1]/cell[6]")
-  //       .grid_cell("material_type", lsdata: "rowcol/row[1]/cell[9]")
-  //       .grid_cell("price", lsdata: "rowcol/row[1]/cell[10]")
-  //       .grid_cell("currency", lsdata: "rowcol/row[1]/cell[11]")
-  //       .grid_cell("tracking", lsdata: "rowcol/row[1]/cell[12]")
-  //       .many("serviceItems", (SapTransaction m) {
-  //     return m
-  //         // .prepare((x) => x.press(Key.enter))
-  //         .grid_cell("serviceCode", lsdata: "ctxtESLL-SRVPOS[2,0]")
-  //         .grid_cell("description", lsdata: "txtESLL-KTEXT1[3,0]")
-  //         .grid_cell("quantity", lsdata: "txtESLL-MENGE[4,0]")
-  //         .grid_cell("unit", lsdata: "ctxtESLL-MEINS[5,0]")
-  //         .grid_cell("wbs", lsdata: "ctxtRM11P-PS_PSP_PNR[6,0]")
-  //         .grid_cell("price", lsdata: "txtESLL-TBTWR[7,0]");
-  //   }, before: (x) => x.press(Key.enter));
-  // }).validate((browser) async {
-  //   final title = await browser
-  //       .click(Sap.Button("Check (Ctrl+Shift+F3)"))
-  //       .wait(Waitable.Seconds(2))
-  //       .get_element(WithId('wnd[0]/sbar_msg-txt'))
-  //       .get_value()
-  //       .map((x) => ValidationResponse.ShouldMatch(
-  //           x, "No messages issued during check"));
-
-  //   return title;
-  // }).submit((x) async {
-  //   final should_submit =
-  //       await Ask.input("Do you want to submit the PR?", "yes/no");
-  //   if (should_submit == "yes") {
-  //     final prnumber = await x
-  //         .click(Sap.Button("Save (Ctrl+S)"))
-  //         .wait(Waitable.Seconds(2))
-  //         .get_element(WithId('wnd[0]/sbar_msg-txt'))
-  //         .get_value();
-  //     Show.action("PR Created", prnumber ?? "No PR number found");
-  //   }
-
-  //   return x;
-  // });
-
-  // var browser = await Nobody().online();
-
   /// 0	1	2	3	4	5	6	7	8	9	10	11	12	13	14	15	16	17	18	19	20	21
   /// DATE	"REQUESTED BY"	"REQUESTED FOR"	"PR TYPE"	"PR NUMBER"	"PR ITEM"	ACC	EXT	DESCRIPTION	QTY	UNIT	PRICE	CURRENCY	TRACKING	TYPE	"SERVICE CODE"	"SERVICE DESCRIPTION"	SQTY	SUNIT	SPRICE	SCUR	WBS
 
@@ -122,13 +65,14 @@ Future create_pr() async {
       .sheet("REQUESTS")
       .rows((r) => r[5].is_empty && r[10].is_not_empty)
       .map((r) => {
-            "header": "AS REQUESTED BY ${r[1]} FOR ${r[2]}",
+            "header": "AS REQUESTED BY ${r[1]} FOR ${r[2]} \n ${r[22]}",
             "lineItems": [
               {
                 "account_assignment": r[6],
                 "expense_type": r[7],
                 "description": r[8],
                 "quantity": r[9],
+                "delivery_date": DateTime.now().addDays(3).to_ddMMyyyy(),
                 "unit": r[10],
                 "price": r[11],
                 "currency": r[12],
