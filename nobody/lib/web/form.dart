@@ -20,7 +20,12 @@ abstract class SimpleInput<T> {
       this.submit_action,
       this.collect_data});
 
-  Future<Online> fill(Online browser, T value) async {
+  Future<Online> fill(T value) async {
+    final browser = await nobody.online();
+    return fill_with(browser, value);
+  }
+
+  Future<Online> fill_with(Online browser, T value) async {
     if (prepare_action != null) {
       await prepare_action!.call(browser);
     }

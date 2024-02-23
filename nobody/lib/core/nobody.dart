@@ -10,6 +10,8 @@ String getChromePath() {
   return "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe";
 }
 
+final Nobody nobody = Nobody();
+
 /// this is nobody
 class Nobody {
   Nobody() {
