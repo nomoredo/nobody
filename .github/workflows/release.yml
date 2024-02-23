@@ -13,7 +13,6 @@ jobs:
   release:
     name: release ${{ matrix.target }} (with non-required env)
     runs-on: ubuntu-latest
-    # if: github.event_name == 'release'
     # trigger only when message contains 'release'
     if: contains(github.event.head_commit.message, 'release')
     strategy:
