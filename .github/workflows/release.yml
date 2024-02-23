@@ -1,19 +1,11 @@
-on:
-  # release:
-  #   types: [created]
-  # push:
-  push:
-    # only when ./src or ./Cargo.toml is changed
-    paths:
-      - 'src/**'
-      - 'Cargo.toml'
-  
+name: CI/CD Workflow
+
+on: push
 
 jobs:
   release:
     name: release ${{ matrix.target }} (with non-required env)
     runs-on: ubuntu-latest
-    # trigger only when message contains 'release'
     if: contains(github.event.head_commit.message, 'release')
     strategy:
       fail-fast: false
@@ -21,32 +13,30 @@ jobs:
         include:
           - target: x86_64-pc-windows-gnu
             archive: zip
-          # - target: x86_64-unknown-linux-musl
-          #   archive: tar.gz
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v2 # Updated to use v2
       - name: Compile and release
-        uses: rust-build/rust-build.action@master
+        uses: rust-build/rust-build.action@v1 # Assuming a version tag, replace with actual version
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           RUSTTARGET: ${{ matrix.target }}
           SRC_DIR: "."
           ARCHIVE_TYPES: ${{ matrix.archive }}
-          # PRE_BUILD: "pre_build.sh"
-          # POST_BUILD: "test/post_build.sh"
           MINIFY: "yes"
+
   release_without_not_required:
     name: release ${{ matrix.target }}
     runs-on: ubuntu-latest
+    if: contains(github.event.head_commit.message, 'release')
     strategy:
       fail-fast: true
       matrix:
         target: [x86_64-unknown-linux-musl]
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v2
       - name: Compile and release
-        uses: rust-build/rust-build.action@master
+        uses: rust-build/rust-build.action@v1 # Assuming a version tag, replace with actual version
         with:
           RUSTTARGET: ${{ matrix.target }}
           UPLOAD_MODE: none
