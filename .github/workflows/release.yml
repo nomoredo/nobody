@@ -1,44 +1,44 @@
-name: CI/CD Workflow
+name: Release Workflow
 
-on: push
+on:
+  push:
+    branches:
+      - master
 
 jobs:
   release:
-    name: release ${{ matrix.target }} (with non-required env)
     runs-on: ubuntu-latest
-    if: contains(github.event.head_commit.message, 'release')
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - target: x86_64-pc-windows-gnu
-            archive: zip
     steps:
-      - uses: actions/checkout@v2 # Updated to use v2
-      - name: Compile and release
-        uses: rust-build/rust-build.action@v1 # Assuming a version tag, replace with actual version
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Check commit message
+        id: check-message
+        run: |
+          commit_message=$(git log -1 --pretty=%B)
+          echo "Commit message: $commit_message"
+          if [[ "$commit_message" == *"release"* ]]; then
+            echo "::set-output name=trigger_release::true"
+          fi
+
+      - name: Tag the commit
+        if: steps.check-message.outputs.trigger_release == 'true'
+        run: |
+          TAG_NAME="v$(date +'%Y.%m.%d.%H.%M.%S')"
+          git tag $TAG_NAME
+          git push origin $TAG_NAME
+
+      - name: Build project
+        if: steps.check-message.outputs.trigger_release == 'true'
+        run: |
+          cargo build --release
+          strip target/release/YOUR_PROJECT_NAME # Adjust if necessary
+
+      - name: Create Release
+        if: steps.check-message.outputs.trigger_release == 'true'
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            target/release/YOUR_PROJECT_NAME
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          RUSTTARGET: ${{ matrix.target }}
-          SRC_DIR: "."
-          ARCHIVE_TYPES: ${{ matrix.archive }}
-          MINIFY: "yes"
-
-  release_without_not_required:
-    name: release ${{ matrix.target }}
-    runs-on: ubuntu-latest
-    if: contains(github.event.head_commit.message, 'release')
-    strategy:
-      fail-fast: true
-      matrix:
-        target: [x86_64-unknown-linux-musl]
-    steps:
-      - uses: actions/checkout@v2
-      - name: Compile and release
-        uses: rust-build/rust-build.action@v1 # Assuming a version tag, replace with actual version
-        with:
-          RUSTTARGET: ${{ matrix.target }}
-          UPLOAD_MODE: none
-      - name: Checkout output
-        run: ls -laR
