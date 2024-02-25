@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:nobody/references.dart';
+import 'package:oauth2_manager/oauth2_manager.dart';
 
 // const APP_SECRET = "QKr8Q~ZvViURbcgL60Tqd3MsyMXKqBPACX4K4dAt";
 const APP_ID = "69f1fa1f-6d33-4dd2-b49a-823bec62ae00";
@@ -16,6 +17,20 @@ const authorization_endpoint =
 const auth_token_endpoint =
     'https://login.microsoftonline.com/d6f6af94-f516-4217-a014-f61ce26f86db/oauth2/v2.0/token';
 const redirect_url = 'https://localhost:44368';
+
+const String authorizationSuccessHtml = '''
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Authorization Success</title>
+</head>
+<body>
+  <h1>Authorization Successful</h1>
+  <p>You have successfully authorized the application.</p>
+  <!-- You can add more content or elements here as needed -->
+</body>
+</html>
+''';
 
 // const scope_root = "https://graph.microsoft.com/";
 
@@ -63,29 +78,23 @@ Future<String?> get_token(String username, {retry_count = 0}) async {
     return token_from_store;
   }
   try {
-    var url =
-        '$authorization_endpoint?client_id=$APP_ID^&scope=$scope^&response_type=code^&redirect_uri=$redirect_url';
-    print(url);
-    //once authenticated, the browser will redirect to localhost:44368 with the code
-
-    var server = await HttpServer.bindSecure(
-        InternetAddress.loopbackIPv4, 44368, SecurityContext.defaultContext);
-    Show.success("SERVER", "STARTED", "ON", "PORT 44368");
-    Show.action("url", "https://localhost:44368");
-    await launch(url);
-    var request = await server.first;
-    Show.action("parsing", "code", "from", request.toString());
-    var code = request.uri.queryParameters['code'];
-
-    //get token from code
-    var token = await get_token_from_code(code!);
-    await tokenStore.set("token_$username", token);
-
-    //get token validity
+    final microsoftConfiguration = OAuth2Configuration(
+      authorizationEndpoint: authorization_endpoint,
+      tokenEndpoint: auth_token_endpoint,
+      clientID: APP_ID,
+      scopes: scopes,
+    );
+    final credentials = await OAuth2.login(
+      microsoftConfiguration,
+      redirect: (u) async {
+        final string_url = auth_token_endpoint;
+      },
+      redirectPage: authorizationSuccessHtml,
+    );
+    var token = credentials.accessToken;
     var validity = await get_token_validity(token);
+    await tokenStore.set("token_$username", token);
     await dateStore.set("token_validity_$username", validity);
-
-    await server.close(force: true);
     return token;
   } catch (e) {
     print(e);

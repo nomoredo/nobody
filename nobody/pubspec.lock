@@ -352,6 +352,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.5"
+  oauth2:
+    dependency: transitive
+    description:
+      name: oauth2
+      sha256: c4013ef62be37744efdc0861878fd9e9285f34db1f9e331cc34100d7674feb42
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.2"
+  oauth2_manager:
+    dependency: "direct main"
+    description:
+      name: oauth2_manager
+      sha256: "6d9367bf22a59ec333dc2e77e8598ce4a9acd072710b87b430fdda8f752b299b"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   package_config:
     dependency: transitive
     description:
