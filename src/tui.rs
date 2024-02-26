@@ -1,24 +1,21 @@
 use std::sync::Arc;
-
+use constants::*;
 pub use super::*;
 
 pub fn show_banner() {
     BANNER.print(vibrant);
     // get virsion from cargo.toml
     let version = env!("CARGO_PKG_VERSION");
-    FOOTER.print_positioned(-2, 6, in_white);
-    reset_line();
-    format!("🚀 {} ", version).print_positioned(-1, 42, in_gray);
-    reset_line();
-    "by github.com/incredimo 😎 a@xo.rs".print_positioned(-1, 0, in_gray);
-    divider();
-    //    divider();
-    reset_line();
-    // println!()
-    // "by aghil.mohan for slickline team".print_positioned(-1, 0, in_gray);
+    on_white(" NOBODY ").print_positioned(-2, 0, in_bold);
+    "WORKS FOR YOU".print_positioned(-2, 1, in_yellow);
     // reset_line();
-    //    showln!(gray,"so that you can focus on the things that matter");
-    //    divider();
+    format!("VERSION 🚀 {} ", version).print_positioned(-2, 2, in_gray);
+    " BY AGHIL K MOHAN ".print_positioned(-2, 10, in_gray);
+    reset_line();
+    // // "by incredimo 😎 a@xo.rs".print_positioned(-1, 0, in_gray);
+    // //    divider();
+    // reset_line();
+    STARTUP_INFO.println(in_gray);
 }
 
 pub fn get_options() -> Vec<Choice> {
@@ -60,6 +57,7 @@ pub fn install() {
     showln!(white, "INSTALL nobody");
 }
 
+use rand::random;
 use walkdir::WalkDir;
 //recusively get all the scripts in the current directory and subdirectories
 pub fn get_scripts() -> Vec<NoScript> {
