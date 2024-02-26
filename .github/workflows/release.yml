@@ -5,10 +5,9 @@ on:
     branches:
       - main
 
-
 jobs:
   release:
-    # if commit message contains release, then run the job
+    # If commit message contains 'release', then run the job
     if: contains(github.event.head_commit.message, 'release')
     runs-on: ubuntu-latest
     steps:
@@ -20,14 +19,18 @@ jobs:
           toolchain: stable
           override: true
 
+      - name: Determine Release Tag
+        id: release_tag
+        run: echo "RELEASE_TAG=v$(date +'%Y.%m.%d.%H%M%S')" >> $GITHUB_ENV
+
       - name: Create Release Tag and Release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          tag_name: ${{ env.RELEASE_TAG }}
+          release_name: Rust Project Release ${{ env.RELEASE_TAG }}
           draft: false
           prerelease: false
 
@@ -42,5 +45,5 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./target/release/your_artifact_name
-          asset_name: your_artifact_name
+          asset_name: your_artifact_name-${{ env.RELEASE_TAG }}
           asset_content_type: application/octet-stream
