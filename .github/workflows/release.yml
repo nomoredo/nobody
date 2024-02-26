@@ -5,6 +5,9 @@ on:
     branches:
       - main
 
+permissions:
+  contents: write  # Grants permission to create releases and push tags
+
 jobs:
   release:
     # If commit message contains 'release', then run the job
@@ -34,7 +37,7 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Build Rust Project
+      - name: Build nobody
         run: |
           cargo build --release
 
