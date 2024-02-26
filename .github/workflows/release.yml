@@ -6,20 +6,31 @@ on:
       - main
 
 permissions:
-  contents: write  # Grants permission to create releases and push tags
+  contents: write
 
 jobs:
   release:
-    # If commit message contains 'release', then run the job
     if: contains(github.event.head_commit.message, 'release')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
 
+      - name: Cache Cargo Registry and Target Directory
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
+
       - name: Setup Rust
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
+          profile: minimal
           override: true
 
       - name: Determine Release Tag
@@ -37,7 +48,7 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Build nobody
+      - name: Build Rust Project
         run: |
           cargo build --release
 
@@ -47,6 +58,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./target/release/my_rust_project
-          asset_name: my_rust_project-${{ env.RELEASE_TAG }}
+          asset_path: ./target/release/your_artifact_name
+          asset_name: your_artifact_name-${{ env.RELEASE_TAG }}
           asset_content_type: application/octet-stream
