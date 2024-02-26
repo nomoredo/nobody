@@ -12,7 +12,7 @@ pub use parser::*;
 
 const PATH_TO_NOBODY: &str = "C:\\repo\\nobody\\nobody";
 const IMPORT_PATH: &str = "import 'package:nobody/references.dart';";
-const LINE: &str = "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━";
+
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct NoScript {
@@ -95,7 +95,7 @@ impl NoScript {
     }
 
     /*
-
+─────────────────────────────────────────────────────────────────
     ╭─ running ─────────────────────────────────────────────────
     │ created files
     │ running script
@@ -107,8 +107,8 @@ impl NoScript {
         let path = dirs::home_dir().unwrap().join(".nobody");
         let dir = path.join(self.get_name());
         print_header(self.get_name());
-
-        // Spawn the Dart script process with piped stdio
+        print_warning("compling ...");
+         // Spawn the Dart script process with piped stdio
         let mut child = Command::new("dart")
             .arg("run")
             .current_dir(&dir)
@@ -215,15 +215,15 @@ fn get_name_from_path(path: &str) -> String {
 
 pub fn print_header(name: impl Into<String>) {
     let name = name.into();
-    showln!(white, "╭─ running ", cyan_bold, name, white, " ━━━━━━");
+    showln!(white_bold, "╭─ ",gray_dim,"running ", yellow_bold, name, white_bold, " ",white_bold,"─".repeat(52 - name.len()));
     println!("| ");
 }
 
 pub fn print_info( message: impl Into<String>) {
     //remove last line and print new line
     print!("\x1B[1A\x1B[K");
-    println!("| {}", message.into());
-    showln!(white, "╰─ 🌕 ", white, LINE);
+    showln!(white_bold, "| ", white, message.into());
+    showln!(white_bold, "╰─ 🌕 ", white_bold,  "─".repeat(56)); 
 }
 
 
@@ -231,15 +231,15 @@ pub fn print_info( message: impl Into<String>) {
 pub fn print_warning( message: impl Into<String>) {
     //remove last line and print new line
     print!("\x1B[1A\x1B[K");
-    println!("| {}", message.into());
-    showln!(white, "╰─ 🌕 ", white, LINE);
+    showln!(yellow_bold, "| ", yellow, message.into());
+    showln!(white_bold, "╰─ ⚠️ ", white_bold,  "─".repeat(56)); 
 }
 
 pub fn print_error( message: impl Into<String>) {
     //remove last line and print new line
     print!("\x1B[1A\x1B[K");
-    println!("| {}", message.into());
-    showln!(white, "╰─ 🌕 ", white, LINE);
+    showln!(red_bold, "| ", red, message.into());
+    showln!(white_bold, "╰─ ⛔ ", white_bold,  "─".repeat(56)); 
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]

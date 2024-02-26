@@ -45,7 +45,7 @@ Write-Output "Updated version to $newVersion in Cargo.toml"
 git add .
 
 # Commit the change with a message indicating the new version
-git commit -m "bump 🚀 to $newVersion and release"
+git commit -m "bump to 🚀 $newVersion and release 🎉"
 
 # Tag the commit as a release
 git tag -a "v$newVersion" -m "Release v$newVersion"

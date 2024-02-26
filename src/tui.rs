@@ -6,7 +6,7 @@ pub fn show_banner() {
     BANNER.print(vibrant);
     // get virsion from cargo.toml
     let version = env!("CARGO_PKG_VERSION");
-    on_white(" NOBODY ").print_positioned(-2, 0, in_bold);
+    " NOBODY ".print_positioned(-2, 0,on_yellow);
     "WORKS FOR YOU".print_positioned(-2, 1, in_yellow);
     // reset_line();
     format!("VERSION 🚀 {} ", version).print_positioned(-2, 2, in_gray);
@@ -87,6 +87,6 @@ pub fn create_new(_args: &Vec<String>) {
 }
 
 pub fn run_script(script: &NoScript)  {
-    showln!(white, "RUNNING SCRIPT");
+    // showln!(white, "RUNNING SCRIPT");
     script.run_script().unwrap();
 }

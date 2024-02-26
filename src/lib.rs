@@ -12,7 +12,7 @@ pub mod tui;
 pub use script::*;
 pub mod script;
 pub use minimo::*;
-pub mod show;
+
 
 
 
@@ -88,27 +88,25 @@ pub fn execution_loop() {
     loop {
         let options = get_options();
         // let selection = show::menu(&options);
-        let selection = show::menu(&options);
+        let selection = selection!("what do you want to do?", &options);
 
-        if let Some(selected_option) = selection {
-            divider();
-            showln!(
-                yellow_bold,
-                "running ",
-                cyan_bold,
-                selected_option.name,
-                white,
-                " ..."
-            );
-            selected_option.run();
-            showln!(
-                green_bold,
-                "completed running ",
-                cyan_bold,
-                selected_option.name
-            );
-            divider();
-        }
+        divider();
+        showln!(
+            yellow_bold,
+            "running ",
+            cyan_bold,
+            selection.name,
+            white,
+            " ..."
+        );
+        selection.run();
+        showln!(
+            green_bold,
+            "completed running ",
+            cyan_bold,
+            selection.name
+        );
+        divider();
     }
 }
 
