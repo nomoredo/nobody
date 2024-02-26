@@ -1,4 +1,4 @@
-name: Rust Project Release
+name: nobody release
 
 on:
   push:
@@ -30,7 +30,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ env.RELEASE_TAG }}
-          release_name: Rust Project Release ${{ env.RELEASE_TAG }}
+          release_name: nobody release ${{ env.RELEASE_TAG }}
           draft: false
           prerelease: false
 
