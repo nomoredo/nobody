@@ -51,7 +51,7 @@ jobs:
 
       - name: Build Rust Project
         run: |
-          cargo build --release --target x86_64-pc-windows-msvc
+          cargo build --release --bin no
       - name: Check and list files in release directory
         run: |
           $releaseDir = "./target/release/"
