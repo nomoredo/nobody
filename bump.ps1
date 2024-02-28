@@ -41,7 +41,7 @@ Set-Content -Path $cargoTomlPath -Value $newCargoTomlContent
 # Debug: Output the new version to verify it's correct
 Write-Output "Updated version to $newVersion in Cargo.toml"
 
-# add all changes to git
+# add ALL files to git
 git add .
 
 # Commit the change with a message indicating the new version

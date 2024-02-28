@@ -7,16 +7,25 @@ Future<void> main() async {
 }
 
 Future create_time_report() async {
-  return Nobody()
-      .online()
-      .login(Sap.User('amohandas'))
-      .goto(SapTransactionUrl("ZHR076A"))
-      // .artificial_delay()
-      .set(Sap.Input("Personnel Number"), "9711425")
-      .set(Input.WithId("M0:46:::2:34"), "01.01.2016")
-      .set(Input.WithId("M0:46:::2:59"), "01.03.2024")
-      .click(Sap.Execute)
-      .download(Sap.DownloadableTable, AbstractPath.Relative("9713057.xlsx"))
-      .wait(Waitable.Seconds(50)) // this was for testing
-      .close();
+  var excel = await nobody
+      .open(ExcelFile("emplist.xlsx"))
+      .sheet("Sheet1")
+      .rows((x) => x[2].is_not_empty)
+      .skip(1)
+      .map((x) => x[2].toString());
+
+  for (var emp in excel) {
+    await Nobody()
+        .online()
+        .login(Sap.User('amohandas'))
+        .goto(SapTransactionUrl("ZHR076A"))
+        // .artificial_delay()
+        .set(Sap.Input("Personnel Number"), emp)
+        .set(Input.WithId("M0:46:::2:34"), "01.01.2016")
+        .set(Input.WithId("M0:46:::2:59"), "01.03.2024")
+        .click(Sap.Execute)
+        .download(Sap.DownloadableTable, AbstractPath.Absolute("$emp.xlsx"))
+        .wait(Waitable.Seconds(10))
+        .close();
+  }
 }
