@@ -38,6 +38,15 @@
         
         },
         {
+            "name": "time_report",
+            "cwd": "nobody",
+            "request": "launch",
+            "type": "dart",
+            "program": "bin/time_report.dart",
+            "console": "terminal",
+        
+        },
+        {
             "name": "termo",
             "cwd": "termo",
             "request": "launch",

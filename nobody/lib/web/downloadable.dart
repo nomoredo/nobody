@@ -27,7 +27,16 @@ class DownloadableSapTable implements AbstractDownloadable {
         show: false);
     await browser.click(Css('div[role="button"][title="Continue (Enter)"]'),
         show: false);
-    await browser.set(Css('#popupDialogInputField'), 'table.xlsx', show: false);
+    //click "aria/File Name"
+    // await (await browser.page).onDialog.listen((dialog) async {
+    //   await dialog.accept(promptText: path.toString());
+    // });
+    await browser.waitFor(Css('input#popupDialogInputField'));
+    await browser.click(Css('input#popupDialogInputField'), show: true);
+    //send "9713057.xlsx" to window
+    await browser.clear_value(Css('input#popupDialogInputField'), show: false);
+    await browser.type(Css('input#popupDialogInputField'), "9713057.xlsx",
+        show: true);
     await browser.click(Css('#UpDownDialogChoose'), show: false);
     // await browser.waitFor(Waitable)
     return browser;

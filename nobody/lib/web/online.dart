@@ -726,6 +726,22 @@ class Online {
     return this;
   }
 
+  Future<Online> clear_value(AbstractSelector selector,
+      {bool show = true}) async {
+    if (show) Show.action('clearing', selector.selector);
+    await (await page).waitForSelector(selector.selector);
+    await (await page).evaluate('''(selector) => {
+      document.querySelector(selector).value = '';
+      //trigger change and input events with bubbles
+      var inputEvent = new Event('input', {bubbles: true});
+      var changeEvent = new Event('change', {bubbles: true});
+      document.querySelector(selector).dispatchEvent(inputEvent);
+      document.querySelector(selector).dispatchEvent(changeEvent);
+
+    }''', args: [selector.selector]);
+    return this;
+  }
+
   Future<Online> screenshot(String path) async {
     Show.action('capture', 'screenshot', path);
     var sc = await (await page).screenshot();
