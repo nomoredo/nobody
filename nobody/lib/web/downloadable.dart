@@ -38,7 +38,8 @@ class DownloadableSapTable implements AbstractDownloadable {
     await browser.type(Css('input#popupDialogInputField'), await path.path,
         show: true);
     await browser.click(Css('#UpDownDialogChoose'), show: false);
-    // await browser.waitFor(Waitable)
+    //wait for download to complete
+
     return browser;
   }
 }

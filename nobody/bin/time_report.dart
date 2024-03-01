@@ -15,17 +15,21 @@ Future create_time_report() async {
       .map((x) => x[2].toString());
 
   for (var emp in excel) {
-    await Nobody()
-        .online()
-        .login(Sap.User('amohandas'))
-        .goto(SapTransactionUrl("ZHR076A"))
-        // .artificial_delay()
-        .set(Sap.Input("Personnel Number"), emp)
-        .set(Input.WithId("M0:46:::2:34"), "01.01.2016")
-        .set(Input.WithId("M0:46:::2:59"), "01.03.2024")
-        .click(Sap.Execute)
-        .download(Sap.DownloadableTable, AbstractPath.Absolute("$emp.xlsx"))
-        .wait(Waitable.Seconds(10))
-        .close();
+    try {
+      await Nobody()
+          .online()
+          .login(Sap.User('amohandas'))
+          .goto(SapTransactionUrl("ZHR076A"))
+          // .artificial_delay()
+          .set(Sap.Input("Personnel Number"), emp)
+          .set(Input.WithId("M0:46:::2:34"), "01.01.2016")
+          .set(Input.WithId("M0:46:::2:59"), "01.03.2024")
+          .click(Sap.Execute)
+          .download(Sap.DownloadableTable, AbstractPath.Absolute("$emp.xlsx"))
+          .wait(Waitable.Seconds(5))
+          .close();
+    } catch (e) {
+      print(e);
+    }
   }
 }
