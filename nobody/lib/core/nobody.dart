@@ -48,6 +48,7 @@ class Nobody {
           //especially the ones that might interfere with automation
           //keep it headful for now and use full window size for viewport
           '--viewport-size=1920,1080',
+          '--allow-insecure-localhost',
           '--no-sandbox',
           '--disable-setuid-sandbox',
           '--disable-web-security',
