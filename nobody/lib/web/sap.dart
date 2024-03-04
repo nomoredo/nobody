@@ -120,8 +120,10 @@ class SapUser implements Authable {
   Future<bool> is_logged_in(Online browser) async {
     try {
       await browser.visit(url.url).wait(Waitable.PageLoaded()).wait(
-          Waitable.ElementVisible(Css(
-              'span[class="sapUshellAppTitle sapUshellAppTitleClickable"]')));
+            Waitable.ElementVisible(
+                Css('span[class="sapUshellAppTitle sapUshellAppTitleClickable"]'),
+                timeout: Duration(seconds: 2)),
+          );
       return true;
     } catch (e) {
       return false;
