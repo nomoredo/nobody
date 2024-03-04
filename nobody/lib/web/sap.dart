@@ -119,7 +119,11 @@ class SapUser implements Authable {
   @override
   Future<bool> is_logged_in(Online browser) async {
     try {
-      await browser.visit(url.url).wait(Waitable.PageLoaded()).wait(
+      await browser
+          .visit(
+              "https://cbs.almansoori.biz/sap/bc/gui/sap/its/webgui/?sap-client=800&sap-language=en#...")
+          .wait(Waitable.PageLoaded())
+          .wait(
             Waitable.ElementVisible(
                 Css('span[class="sapUshellAppTitle sapUshellAppTitleClickable"]'),
                 timeout: Duration(seconds: 2)),

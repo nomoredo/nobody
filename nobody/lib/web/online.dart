@@ -97,6 +97,7 @@ class Online {
       return this;
     } else {
       if (show) Show.authenticating(authable);
+      await (await page).goto("https://google.com", wait: Until.load);
       return await authable.login(this);
     }
   }

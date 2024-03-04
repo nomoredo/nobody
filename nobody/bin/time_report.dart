@@ -21,7 +21,7 @@ Future create_time_report() async {
           excel,
           (browser, emp) async => await browser
               .goto(SapTransactionUrl("ZHR076A"))
-              .set(Sap.Input("Personnel Number"), emp)
+              .set(Sap.Input("Personnel Number"), "9711588")
               .set(Input.WithId("M0:46:::2:34"), "01.01.2016")
               .set(Input.WithId("M0:46:::2:59"), "01.03.2024")
               .click(Sap.Execute)
