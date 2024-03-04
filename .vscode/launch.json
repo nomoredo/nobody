@@ -38,6 +38,15 @@
         
         },
         {
+            "name": "create_mb51_report",
+            "cwd": "nobody",
+            "request": "launch",
+            "type": "dart",
+            "program": "bin/generate_mb51.dart",
+            "console": "terminal",
+        
+        },
+        {
             "name": "time_report",
             "cwd": "nobody",
             "request": "launch",

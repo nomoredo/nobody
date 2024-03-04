@@ -5,7 +5,7 @@ import 'package:http/http.dart'
 
 import '../references.dart';
 
-String getChromePath() {
+String getEdgePath() {
   //get edge path
   return "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe";
 }
@@ -38,10 +38,10 @@ class Nobody {
       // If no existing browser is found, launch a new instance.
       Show.info("launching", "new", "browser instance");
       browser = await puppeteer.launch(
-        executablePath: getChromePath(),
+        executablePath: getEdgePath(),
         headless: !visible,
         args: [
-          '--debug-port=9222',
+          '--remote-debugging-port=9222',
           '--disable-infobars',
           '--disable-extensions',
           //disable everything we don't need.
@@ -76,7 +76,8 @@ class Nobody {
           '--disable-features=site-per-process',
           '--disable-features=site-per-process',
         ],
-        timeout: timeout ?? Duration(minutes: 5),
+        plugins: null,
+        timeout: timeout ?? Duration(minutes: 10),
         slowMo: slow,
       );
     }

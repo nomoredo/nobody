@@ -16,7 +16,11 @@ class Online {
 
   Future<Page> lastPage() async {
     var pages = await browser.pages;
-    return pages.last;
+    if (pages.length > 0) {
+      return pages.last;
+    } else {
+      return await browser.newPage();
+    }
   }
 
   Future<Online> log_requests() async {
@@ -88,8 +92,13 @@ class Online {
   }
 
   Future<Online> login(Authable authable, {bool show = true}) async {
-    if (show) Show.authenticating(authable);
-    return await authable.login(this);
+    if (await authable.is_logged_in(this)) {
+      if (show) Show.success("user is already logged in");
+      return this;
+    } else {
+      if (show) Show.authenticating(authable);
+      return await authable.login(this);
+    }
   }
 
   Future<Online> visit(String url, {bool show = true}) async {
@@ -623,10 +632,11 @@ class Online {
   }
 
   //right click
-  Future<Online> right_click(AbstractSelector selector) async {
-    Show.action('right click', selector.selector);
-    await (await page).waitForSelector(selector.selector);
+  Future<Online> right_click(AbstractSelector selector,
+      {bool show = true}) async {
+    if (show) Show.action('right clicking', selector.selector);
     await (await page).click(selector.selector, button: MouseButton.right);
+
     return this;
   }
 

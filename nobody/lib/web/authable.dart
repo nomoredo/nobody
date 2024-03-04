@@ -7,5 +7,5 @@ abstract class Authable {
   String get username;
   AbstractPassword get password;
   Future<Online> login(Online browser);
+  Future<bool> is_logged_in(Online browser);
 }
-

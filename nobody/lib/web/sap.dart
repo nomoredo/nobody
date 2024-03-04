@@ -115,6 +115,18 @@ class SapUser implements Authable {
     }
     return browser;
   }
+
+  @override
+  Future<bool> is_logged_in(Online browser) async {
+    try {
+      await browser.visit(url.url).wait(Waitable.PageLoaded()).wait(
+          Waitable.ElementVisible(Css(
+              'span[class="sapUshellAppTitle sapUshellAppTitleClickable"]')));
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
 }
 
 class SapFiori implements AbstractUrl {

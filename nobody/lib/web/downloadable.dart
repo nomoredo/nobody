@@ -44,6 +44,32 @@ class DownloadableSapTable implements AbstractDownloadable {
   }
 }
 
+/// DownloadableSap Table by right click on table header and selecting "Spreadsheet..." on context menu
+class DownloadableSapTable2 implements AbstractDownloadable {
+  String get name => 'Table from SAP';
+  const DownloadableSapTable2();
+
+  @override
+  Future<Online> download(Online browser, AbstractPath path) async {
+    await browser.waitFor(Sap.TableHeader);
+    await browser.right_click(Sap.TableHeader, show: false);
+    //select "Spreadsheet..." from context menu
+    await browser.click(
+        Sap.Data("wnd[0]/usr/cntlGRID1/shellcont/shell/mnu/menu&XXL"),
+        show: false);
+
+    await browser.click(Css('div[role="button"][title="Continue (Enter)"]'),
+        show: false);
+    await browser.waitFor(Css('input#popupDialogInputField'));
+    await browser.click(Css('input#popupDialogInputField'), show: true);
+    await browser.clear_value(Css('input#popupDialogInputField'), show: false);
+    await browser.type(Css('input#popupDialogInputField'), await path.path,
+        show: true);
+    await browser.click(Css('#UpDownDialogChoose'), show: false);
+    return browser;
+  }
+}
+
 extension ExDownload on Future<Online> {
   Future<Online> listen_for_downloads() async {
     var browser = await this;
