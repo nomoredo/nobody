@@ -8,7 +8,7 @@ final SapTransaction create_service_pr = SapTransaction.builder()
     .prepare((x) =>
         x.login(Sap.User('amohandas')).goto(SapPurchaseRequestUrl("ZPRS")))
     .maybe_click("maybe expand header",
-        css: 'div[role="button"][title="Expand Header Ctrl+F2"]')
+        css: 'div[role="button"][title*="Header"][lsdata*="DYN_4000-BUTTON"]')
     .with_textbox("header", lsdata: "cntlTEXT_EDITOR_0101/shellcont/shell")
     .maybe_click("maybe expand section",
         css: 'div[role="button"][title="Expand Items Ctrl+F3"]')

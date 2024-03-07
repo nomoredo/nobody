@@ -94,7 +94,8 @@ class SapInputWithinData extends SapDataField {
 class SapUser implements Authable {
   final String username;
   AbstractPassword get password => Password.From(scope: 'sap', key: username);
-  AbstractUrl get url => Url('https://cbs.almansoori.biz');
+  AbstractUrl get url => Url(
+      'https://cbs.almansoori.biz/sap/bc/gui/sap/its/webgui/?sap-client=800")');
 
   const SapUser(this.username);
 
@@ -118,18 +119,20 @@ class SapUser implements Authable {
 
   @override
   Future<bool> is_logged_in(Online browser) async {
+    Show.action('checking', 'if', username, 'is logged in');
     try {
       await browser
           .visit(
-              "https://cbs.almansoori.biz/sap/bc/gui/sap/its/webgui/?sap-client=800&sap-language=en#...")
-          .wait(Waitable.PageLoaded())
+              "https://cbs.almansoori.biz/sap/bc/gui/sap/its/webgui/?sap-client=800")
+          // .wait(Waitable.PageLoaded())
           .wait(
-            Waitable.ElementVisible(
-                Css('span[class="sapUshellAppTitle sapUshellAppTitleClickable"]'),
-                timeout: Duration(seconds: 2)),
+            Waitable.Element(WithId('ToolbarOkCode'),
+                timeout: Duration(seconds: 5)),
           );
+      Show.success("already logged in as", username);
       return true;
     } catch (e) {
+      Show.warning("not logged in as", username);
       return false;
     }
   }
