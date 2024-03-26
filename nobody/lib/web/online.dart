@@ -133,6 +133,12 @@ class Online {
     return this;
   }
 
+  Future<bool> has_cookie(String domain, String cookie) async {
+    final cookie_func = (await (await page).cookies);
+    final cookies = await cookie_func(urls: [domain]);
+    return cookies.any((element) => element.name == cookie);
+  }
+
   Future<Online> goto(AbstractUrl url, {bool show = true}) async {
     var clean_url = Uri.encodeFull(url.url);
     if (show) Show.visiting(clean_url);

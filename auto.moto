@@ -24,52 +24,8 @@
 // tasks are defined like this:
 // task <task_name>:
    
-
-
-task gen:
-    description: generate code
-    actions: {
-        echo "generating code..."
-        cd nobody && dart pub run build_runner build --delete-conflicting-outputs && cd ..
+task gen {
+       echo "generating code..."
+        cd ../nobody && dart pub run build_runner build --delete-conflicting-outputs && cd ..
         echo "done!"
-    }
-
-task push:
-    description: push to git
-    with: {
-        salt: 1.0
-    }
-    actions: {
-        echo "pushing to git..."
-        git add .
-        git commit -m "moto ❤️"
-        git push
-    }
-
-
-task clean:
-    description: clean dart packages
-    actions: {
-        echo "cleaning project..."
-        dart pub clean
-        echo "done!"
-    }
-
-task get:
-    description: get dart packages
-    actions: {
-        echo "retrieving dart packages for codegen..."
-        cd codegen && dart pub get && cd ..
-        echo "retrieving dart packages for nobody..."
-        cd nobody && dart pub get && cd ..
-        echo "retrieving dart packages for termo..."
-        cd termo && dart pub get && cd ..
-    }
-
-task upgrade:
-    description: upgrade dart packages
-    actions: {
-        echo "upgrading dart packages..."
-        dart pub upgrade
-        echo "done!"
-    }
+}:ps

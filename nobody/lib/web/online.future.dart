@@ -74,6 +74,17 @@ extension ExOnline on Future<Online> {
     );
   }
 
+  Future<bool> has_cookie(
+    String domain,
+    String cookie,
+  ) async {
+    var Online = await this;
+    return Online.has_cookie(
+      domain,
+      cookie,
+    );
+  }
+
   Future<Online> goto(
     AbstractUrl url, {
     bool show = true,
