@@ -160,6 +160,33 @@ class NoMaybeButton extends SimpleInput<void> {
   }
 }
 
+class NoKeyboardShortcut extends SimpleInput<void> {
+  final Key key;
+  final List<Key>? modifiers;
+
+  NoKeyboardShortcut(this.key, {this.modifiers, super.mandatory = false});
+
+  @override
+  Future<Online> fill_action(Online browser, dynamic value) async {
+    var page = (await browser.page);
+    //page wait for completly loaded
+    await Future.delayed(Duration(milliseconds: 500));
+    for (var modifier in modifiers ?? []) {
+      await page.keyboard.down(modifier);
+    }
+    //wait 500ms
+    await Future.delayed(Duration(milliseconds: 500));
+    await page.keyboard.press(key);
+    //wait 500ms
+    await Future.delayed(Duration(milliseconds: 500));
+    for (var modifier in modifiers ?? []) {
+      await page.keyboard.up(modifier);
+    }
+
+    return browser;
+  }
+}
+
 class NoSapGridElement extends SimpleInput<String> {
   final AbstractSelector selector;
 
@@ -381,11 +408,58 @@ class SapTransaction extends NoForm {
     return this;
   }
 
+  SapTransaction press_keyboard_shortcut(String name, Key key,
+      {List<Key>? modifiers}) {
+    this.fields[name] = NoKeyboardShortcut(key, modifiers: modifiers);
+    return this;
+  }
+
   SapTransaction many(String field, Function(SapTransaction builder) builder,
       {OnlineAction? before, OnlineAction? after}) {
     this.fields[field] = MultiForm(builder(SapTransaction.builder()),
         prepare_action: before, cleanup_action: after);
 
     return this;
+  }
+
+  //do something until the condition is met
+  SapTransaction do_until(String field, Do<Online> doit, Check<Online> check,
+      {Duration? delay,
+      int retry = 0,
+      OnlineAction? before,
+      OnlineAction? after}) {
+    this.fields[field] = DoUntil(doit, check,
+        delay: delay, retry: retry, before: before, after: after);
+
+    return this;
+  }
+}
+
+typedef Do<T> = FutureOr Function(T browser);
+typedef Check<T> = FutureOr<bool> Function(T browser);
+
+class DoUntil extends SimpleInput<void> {
+  final Do<Online> doit;
+  final Check<Online> check;
+  final Duration? delay;
+  final int retry;
+  final OnlineAction? before;
+  final OnlineAction? after;
+
+  DoUntil(this.doit, this.check,
+      {this.delay, this.retry = 0, this.before, this.after});
+
+  @override
+  Future<Online> fill_action(Online browser, dynamic value) async {
+    var count = 0;
+    do {
+      await before?.call(browser);
+      await doit(browser);
+      await after?.call(browser);
+      await Future.delayed(delay ?? Duration(seconds: 1));
+      count++;
+    } while (!(await check(browser)) && count < retry);
+
+    return browser;
   }
 }

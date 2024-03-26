@@ -37,10 +37,29 @@ extension ExOnline on Future<Online> {
     bool show = true,
   }) async {
     var Online = await this;
-
     return Online.login(
       authable,
       show: show,
+    );
+  }
+
+  Future<bool> has(
+    AbstractSelector selector,
+  ) async {
+    var Online = await this;
+    return Online.has(
+      selector,
+    );
+  }
+
+  Future<Online> press_keyboard_shortcut(
+    Key key, {
+    List<Key> modifiers = const [],
+  }) async {
+    var Online = await this;
+    return Online.press_keyboard_shortcut(
+      key,
+      modifiers: modifiers,
     );
   }
 
@@ -402,11 +421,13 @@ extension ExOnline on Future<Online> {
   }
 
   Future<Online> right_click(
-    AbstractSelector selector,
-  ) async {
+    AbstractSelector selector, {
+    bool show = true,
+  }) async {
     var Online = await this;
     return Online.right_click(
       selector,
+      show: show,
     );
   }
 
@@ -511,6 +532,17 @@ extension ExOnline on Future<Online> {
   Future<Online> close() async {
     var Online = await this;
     return Online.close();
+  }
+
+  Future<Online> clear_value(
+    AbstractSelector selector, {
+    bool show = true,
+  }) async {
+    var Online = await this;
+    return Online.clear_value(
+      selector,
+      show: show,
+    );
   }
 
   Future<Online> screenshot(

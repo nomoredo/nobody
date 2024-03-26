@@ -97,9 +97,34 @@ class Online {
       return this;
     } else {
       if (show) Show.authenticating(authable);
-      await (await page).goto("https://google.com", wait: Until.load);
+      await (await page).goto("https://google.com");
       return await authable.login(this);
     }
+  }
+
+  Future<bool> has(AbstractSelector selector) async {
+    try {
+      var selected = await (await page).$(selector.selector);
+      return selected != null;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<Online> press_keyboard_shortcut(Key key,
+      {List<Key> modifiers = const []}) async {
+    var keys = modifiers.map((e) => e.toString()).join('+');
+    Show.action('pressing', '$keys+$key');
+    await (await page).keyboard.down(key);
+    for (var modifier in modifiers) {
+      await (await page).keyboard.down(modifier);
+    }
+    await (await page).keyboard.press(key);
+    for (var modifier in modifiers) {
+      await (await page).keyboard.up(modifier);
+    }
+    await (await page).keyboard.up(key);
+    return this;
   }
 
   Future<Online> visit(String url, {bool show = true}) async {

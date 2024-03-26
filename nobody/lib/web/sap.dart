@@ -106,7 +106,7 @@ class SapUser implements Authable {
       await browser
           .visit(url.url)
           .set(Input.WithId('logonuidfield'), username)
-          .set(Input.WithId('logonpassfield'), pss)
+          .set_secret(Input.WithId('logonpassfield'), pss)
           .click(Input.WithName('uidPasswordLogon'))
           .wait(Waitable.PageLoaded())
           .wait(Waitable.ElementVisible(Css(

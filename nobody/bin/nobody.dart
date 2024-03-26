@@ -7,8 +7,15 @@ void main(List<String> arguments) async {
 final SapTransaction create_service_pr = SapTransaction.builder()
     .prepare((x) =>
         x.login(Sap.User('amohandas')).goto(SapPurchaseRequestUrl("ZPRS")))
-    .maybe_click("maybe expand header",
-        css: 'div[role="button"][title*="Header"][lsdata*="DYN_4000-BUTTON"]')
+    .do_until(
+        "expand header",
+        (browser) =>
+            browser.press_keyboard_shortcut(Key.f2, modifiers: [Key.control]),
+        (browser) =>
+            browser.has(Sap.Data('cntlTEXT_EDITOR_0101/shellcont/shell')))
+    // .press_keyboard_shortcut("expand header", Key.f2, modifiers: [Key.control])
+    // .maybe_click("maybe expand header",
+    //     css: 'div[role="button"][title*="Header"][lsdata*="DYN_4000-BUTTON"]')
     .with_textbox("header", lsdata: "cntlTEXT_EDITOR_0101/shellcont/shell")
     .maybe_click("maybe expand section",
         css: 'div[role="button"][title="Expand Items Ctrl+F3"]')
