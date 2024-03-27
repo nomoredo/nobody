@@ -164,7 +164,7 @@ class Show {
   static void tree(dynamic data, {String prefix = '', String? title}) {
     if (title != null) {
       print('$prefix┌─ $title ─');
-      prefix += "│  "; // Add spacing for nested items under the title
+      prefix += "│  ".inRed; // Add spacing for nested items under the title
     }
     if (data is Map) {
       var keys = data.keys.toList();
@@ -172,14 +172,15 @@ class Show {
         var key = keys[i];
         var isLast = i == keys.length - 1;
         var value = data[key];
-        print(prefix + (isLast ? "└─ " : "├─ ") + inGray(key.toString()));
+        print(
+            prefix + (isLast ? "╰─→ " : "╰╮→ ").inRed + inGray(key.toString()));
         tree(value, prefix: isLast ? prefix + "  " : prefix + "│  ");
       }
     } else if (data is Iterable) {
       var items = data.toList();
       for (var i = 0; i < items.length; i++) {
         var isLast = i == items.length - 1;
-        tree(items[i], prefix: isLast ? prefix + "  " : prefix + "├─ ");
+        tree(items[i], prefix: isLast ? prefix + "  " : prefix + "├→ ");
       }
     } else if (data is String) {
       print(prefix + inGreen(data));
@@ -192,7 +193,7 @@ class Show {
     } else if (data is Cell) {
       tree(data.get(), prefix: prefix);
     } else {
-      print(prefix + inRed(data.toString()));
+      print(prefix.inRed + inYellow(data.toString()));
     }
   }
 

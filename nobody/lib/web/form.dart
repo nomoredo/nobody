@@ -1,3 +1,4 @@
+import 'package:nobody/lib.dart';
 import 'package:nobody/references.dart';
 
 typedef OnlineAction = FutureOr Function(Online browser);
@@ -27,6 +28,7 @@ abstract class SimpleInput<T> {
 
   Future<Online> fill_with(Online browser, T value) async {
     Show.action("preparing", "to fill", value.toString());
+    Show.tree(value);
     if (prepare_action != null) {
       await prepare_action!.call(browser);
     }
@@ -36,7 +38,7 @@ abstract class SimpleInput<T> {
       value = collect_data!.call(browser)!;
     }
 
-    Show.action("filling", "data");
+    // Show.action("filling", "data");
     await fill_action(browser, value);
 
     Show.action("validating", "input");
@@ -136,8 +138,10 @@ class NoButton extends SimpleInput<void> {
       super.mandatory = true});
 
   @override
-  Future<Online> fill_action(Online browser, dynamic value) {
-    final selected = browser.click(selector);
+  Future<Online> fill_action(Online browser, dynamic value) async {
+    await browser.hover(selector);
+    await Future.delayed(Duration(milliseconds: 100));
+    final selected = await browser.click(selector);
     return selected;
   }
 }
@@ -200,13 +204,19 @@ class NoSapGridElement extends SimpleInput<String> {
 
   @override
   Future<Online> fill_action(Online browser, dynamic value) async {
+    Show.action("fill", selector.selector, value.toString());
     await browser.click(selector, show: false);
     final selected =
         await (await browser.page).waitForSelector(selector.selector);
     if (selected != null) {
-      final internal = await selected.$('input');
-      await internal.type(value.toString());
-      await browser.press(Key.tab, show: false);
+      try {
+        final internal = await selected.$('input');
+
+        await internal.type(value.toString());
+        await browser.press(Key.tab, show: false);
+      } catch (e) {
+        Show.error("error", e.toString());
+      }
     }
 
     return browser;
@@ -230,11 +240,18 @@ class NoForm extends SimpleInput<Map<String, Object>> {
   Future<Online> fill_action(Online browser, Map<String, Object> values) async {
     for (var field in fields.keys) {
       if (values[field] == null && fields[field]!.mandatory) {
-        values[field] = await collect_data!.call(browser)!;
+        if (fields[field]!.collect_data == null) {
+          //ask for input
+          values[field] = await Ask.input("form field", field);
+        }
+        values[field] = fields[field]!.collect_data!.call(browser);
       }
     }
 
     for (var field in fields.keys) {
+      if (values[field] != null) {
+        Show.action("fill", field, values[field].toString());
+      }
       await fields[field]!.fill_action(browser, values[field]);
     }
 
@@ -282,7 +299,7 @@ class SapTransaction extends NoForm {
     return SapTransaction();
   }
 
-  SapTransaction with_textbox(String field,
+  SapTransaction textbox(String field,
       {AbstractSelector? selector,
       String? lsdata,
       String? id,
@@ -408,8 +425,7 @@ class SapTransaction extends NoForm {
     return this;
   }
 
-  SapTransaction press_keyboard_shortcut(String name, Key key,
-      {List<Key>? modifiers}) {
+  SapTransaction press_key(String name, Key key, {List<Key>? modifiers}) {
     this.fields[name] = NoKeyboardShortcut(key, modifiers: modifiers);
     return this;
   }

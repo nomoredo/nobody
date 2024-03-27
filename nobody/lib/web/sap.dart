@@ -109,8 +109,7 @@ class SapUser implements Authable {
           .set_secret(Input.WithId('logonpassfield'), pss)
           .click(Input.WithName('uidPasswordLogon'))
           .wait(Waitable.PageLoaded())
-          .wait(Waitable.ElementVisible(Css(
-              'span[class="sapUshellAppTitle sapUshellAppTitleClickable"]')));
+          .wait(Waitable.ElementVisible(WithId('ToolbarOkCode')));
     } catch (e) {
       print(e);
     }
@@ -121,11 +120,12 @@ class SapUser implements Authable {
   Future<bool> is_logged_in(Online browser) async {
     Show.action('checking', 'if', username, 'is logged in');
     try {
-      final is_logged_in_already = await browser
+      final is_logged_in_already = !await browser
           .visit(
               "https://cbs.almansoori.biz/sap/bc/gui/sap/its/webgui/?sap-client=800")
           // .wait(Waitable.PageLoaded())
-          .has_cookie('https://cbs.almansoori.biz', 'SAP_SESSIONID_ECP_800');
+          .has(WithClass(['urLogonData']));
+      // .has_cookie('https://cbs.almansoori.biz', 'SAP_SESSIONID_ECP_800');
       if (is_logged_in_already) {
         Show.success("already logged in as", username);
         return true;
