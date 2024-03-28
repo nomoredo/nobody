@@ -396,6 +396,14 @@ class Show {
     " ─→ ".write(inRed);
     "$selector".writeLine(inGreen);
   }
+
+  static void selecting(String selector, String value) {
+    "selecting".write(inYellow);
+    " ─→ ".write(inRed);
+    "$selector".write(inPurple);
+    " ─→ ".write(inRed);
+    "$value".writeLine(inGreen);
+  }
 }
 
 extension StringEx on String {

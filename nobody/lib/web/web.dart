@@ -6,6 +6,7 @@ export 'online.future.dart';
 export 'password.dart';
 export 'path.dart';
 export 'sap.dart';
+export 'selection_strategy.dart';
 export 'selector.dart';
 export 'url.dart';
 export 'waitable.dart';

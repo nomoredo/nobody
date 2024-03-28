@@ -23,6 +23,12 @@ class Nobody {
     Duration? slow,
     Duration? timeout,
     String? browserWSEndpoint,
+    bool devtools = false,
+    int width = 1920,
+    int height = 1080,
+    double scale = 1,
+    bool isMobile = false,
+    bool hasTouch = false,
   }) async {
     Browser browser;
 
@@ -40,6 +46,13 @@ class Nobody {
       browser = await puppeteer.launch(
         executablePath: getEdgePath(),
         headless: !visible,
+        devTools: devtools,
+        defaultViewport: DeviceViewport(
+            width: width,
+            height: height,
+            deviceScaleFactor: scale,
+            isMobile: isMobile,
+            hasTouch: hasTouch),
         args: [
           '--remote-debugging-port=9222',
           '--disable-infobars',
@@ -47,7 +60,7 @@ class Nobody {
           //disable everything we don't need.
           //especially the ones that might interfere with automation
           //keep it headful for now and use full window size for viewport
-          '--viewport-size=1920,1080',
+          // '--viewport-size=1920,1080',
           // '--allow-insecure-localhost',
           '--no-sandbox',
           '--disable-setuid-sandbox',
@@ -59,23 +72,10 @@ class Nobody {
           '--disable-extensions',
           '--disable-features=site-per-process',
           '--disable-accelerated-2d-canvas',
-          // '--disable-gpu',
-          // '--hide-scrollbars',
           '--disable-backgrounding-occluded-windows',
           '--disable-background-timer-throttling',
           '--disable-background-networking',
           '--disable-renderer-backgrounding',
-          // '--disable-ipc-flooding-protection',
-          // '--disable-notifications',
-          // '--disable-ipc-flooding-protection',
-          // '--disable-database',
-          // '--disable-geolocation',
-          // '--disable-media-cache',
-          // '--disable-metrics',
-          // '--disable-background-timer-throttling',
-          // '--disable-features=site-per-process',
-          // '--disable-features=site-per-process',
-          // '--disable-features=site-per-process',
         ],
         plugins: null,
         timeout: timeout ?? Duration(minutes: 10),

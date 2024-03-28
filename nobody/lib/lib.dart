@@ -5,4 +5,5 @@ export 'excel/excel.dart';
 export 'extensions/extensions.dart';
 export 'graph/graph.dart';
 export 'references.dart';
+export 'score/score.dart';
 export 'web/web.dart';

@@ -139,6 +139,19 @@ extension ExOnline on Future<Online> {
     );
   }
 
+  Future<Online> select(
+    AbstractSelector selector,
+    SelectionStrategy strategy, {
+    bool show = true,
+  }) async {
+    var Online = await this;
+    return Online.select(
+      selector,
+      strategy,
+      show: show,
+    );
+  }
+
   Future<Online> unfocus(
     AbstractSelector selector, {
     bool show = true,

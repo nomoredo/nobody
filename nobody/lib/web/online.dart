@@ -204,6 +204,56 @@ class Online {
     return this;
   }
 
+  Future<Online> select(AbstractSelector selector, SelectionStrategy strategy,
+      {bool show = true}) async {
+    if (show) {
+      Show.selecting(selector.selector, strategy.getSelectionScript());
+    }
+
+    try {
+      var selected = selector is XPath
+          ? await (await page).waitForXPath(selector.selector)
+          : await (await page).waitForSelector(selector.selector);
+
+      if (selected != null) {
+        /// Perform the necessary steps to select an option from a select element based on the strategy
+        var selectionScript = strategy.getSelectionScript();
+
+        await selected.evaluateHandle('''
+        function(element, selectionScript) {
+          if (element instanceof HTMLSelectElement && element.options.length > 0) {
+            element.focus(); // Focus on the element
+            
+            // Create and dispatch the input event
+            var inputEvent = new Event('input', { bubbles: true });
+            element.dispatchEvent(inputEvent);
+            
+            // Set the selected option based on the selection strategy
+            eval(selectionScript);
+            
+            // Create and dispatch the change event
+            var changeEvent = new Event('change', { bubbles: true });
+            element.dispatchEvent(changeEvent);
+            
+            element.blur(); // Remove focus from the element
+          } else {
+            console.error('Invalid element or no options available');
+          }
+        }
+      ''', args: [selectionScript]);
+      } else {
+        throw Exception('Element not found for selector: ${selector.selector}');
+      }
+    } catch (error) {
+      // Handle any errors that occur during the selection process
+      print('Error during selection: $error');
+      // You can choose to rethrow the error or handle it in a specific way
+      rethrow;
+    }
+
+    return this;
+  }
+
   //unfocus
   Future<Online> unfocus(AbstractSelector selector, {bool show = true}) async {
     if (show) Show.unfocusing(selector.selector);

@@ -20,4 +20,9 @@ extension ExSpreadsheet on Future<Spreadsheet> {
       predicate,
     );
   }
+
+  FutureOr<Iterable<Row>> rows_not_empty() async {
+    var Spreadsheet = await this;
+    return Spreadsheet.rows_not_empty();
+  }
 }

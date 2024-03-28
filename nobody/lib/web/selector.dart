@@ -107,6 +107,24 @@ class WithId implements AbstractSelector {
   const WithId(this.id);
 }
 
+class WithIdContains implements AbstractSelector {
+  final String id;
+  String get clean_id => id
+      .replaceAll(':', '\\:')
+      .replaceAll('.', '\\.')
+      .replaceAll(',', '\\,')
+      .replaceAll('[', '\\[')
+      .replaceAll(']', '\\]')
+      .replaceAll('#', '\\#')
+      .replaceAll(' ', '\\ ')
+      .replaceAll('(', '\\(')
+      .replaceAll(')', '\\)');
+
+  String get selector => '[id*="$clean_id"]';
+
+  const WithIdContains(this.id);
+}
+
 /// WithName
 /// appends name="{name}" to the selector
 class WithName implements AbstractSelector {
