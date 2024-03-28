@@ -93,7 +93,7 @@ class Online {
 
   Future<Online> login(Authable authable, {bool show = true}) async {
     if (await authable.is_logged_in(this)) {
-      if (show) Show.success("user is already logged in");
+      // if (show) Show.success("user is already logged in");
       return this;
     } else {
       if (show) Show.authenticating(authable);

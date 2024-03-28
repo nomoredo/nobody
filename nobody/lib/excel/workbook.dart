@@ -13,6 +13,6 @@ class Workbook {
       Show.error("Sheet $name not found");
       throw Exception("Sheet $name not found");
     }
-    return Spreadsheet(sheet);
+    return Spreadsheet(sheet, this);
   }
 }

@@ -4,6 +4,7 @@ import 'package:nobody/references.dart';
 @NomoCode()
 class Row {
   final List<Data?> cells;
+  final Spreadsheet spreadsheet;
 
   @override
   noSuchMethod(Invocation invocation) {
@@ -17,7 +18,15 @@ class Row {
     return super.noSuchMethod(invocation);
   }
 
-  const Row(this.cells);
+  const Row(this.cells, this.spreadsheet);
+
+  Row previous_row() {
+    final index = spreadsheet.sheet.rows.indexOf(cells);
+    if (index == 0) {
+      return this;
+    }
+    return Row(spreadsheet.sheet.rows.elementAt(index - 1), spreadsheet);
+  }
 
   Cell operator [](int index) => Cell(cells[index]);
 
