@@ -404,6 +404,14 @@ class Show {
     " ─→ ".write(inRed);
     "$value".writeLine(inGreen);
   }
+
+  static void set_values(String selector, List<String> texts) {
+    "setting".write(inYellow);
+    " ─→ ".write(inRed);
+    "$selector".write(inPurple);
+    " ─→ ".write(inRed);
+    "$texts".writeLine(inGreen);
+  }
 }
 
 extension StringEx on String {

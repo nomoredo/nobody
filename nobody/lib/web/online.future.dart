@@ -123,6 +123,7 @@ extension ExOnline on Future<Online> {
   Future<Online> set(
     AbstractSelector selector,
     Object? obj, {
+    Object? max = null,
     bool show = true,
     Duration? timeout = null,
     int index = 0,
@@ -132,10 +133,24 @@ extension ExOnline on Future<Online> {
     return Online.set(
       selector,
       obj,
+      max: max,
       show: show,
       timeout: timeout,
       index: index,
       click: click,
+    );
+  }
+
+  Future<Online> sets(
+    AbstractSelector selector,
+    List<String> texts, {
+    bool show = true,
+  }) async {
+    var Online = await this;
+    return Online.sets(
+      selector,
+      texts,
+      show: show,
     );
   }
 

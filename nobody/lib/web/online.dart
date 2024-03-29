@@ -174,7 +174,8 @@ class Online {
   }
 
   Future<Online> set(AbstractSelector selector, Object? obj,
-      {bool show = true,
+      {Object? max = null,
+      bool show = true,
       Duration? timeout = null,
       int index = 0,
       bool click = false}) async {
@@ -200,6 +201,36 @@ class Online {
         element.blur(); // Remove focus from the element
       }
     }''', args: [text]);
+    }
+
+    return this;
+  }
+
+  ///sets
+  ///sets all the elements that match the selector with a set of values
+  /// only tries to set the elements that are available (ignores the rest)
+  Future<Online> sets(AbstractSelector selector, List<String> texts,
+      {bool show = true}) async {
+    if (show) Show.set_values(selector.selector, texts);
+    //wait for the selector to appear
+    await (await page).waitForSelector(selector.selector);
+    //find all the elements that match the selector
+    var elements = await (await page).$$(selector.selector);
+    for (var i = 0; i < elements.length; i++) {
+      if (i < texts.length) {
+        var text = texts[i];
+        await elements[i].evaluateHandle('''(element, text) => {
+        if (element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement || element instanceof HTMLSelectElement) {
+          element.focus(); // Focus on the element
+          var inputEvent = new Event('input', {bubbles: true});
+          var changeEvent = new Event('change', {bubbles: true});
+          element.dispatchEvent(inputEvent);
+          element.value = text;
+          element.dispatchEvent(changeEvent);
+          element.blur(); // Remove focus from the element
+        }
+      }''', args: [text]);
+      }
     }
     return this;
   }
