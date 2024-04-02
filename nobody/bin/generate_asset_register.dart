@@ -11,7 +11,7 @@ Future generate_asset_report() async {
       .login(Sap.User('amohandas'))
       .goto(SapTransactionUrl("AR01"))
       // .set_range(SapInput('Plant'), '2200', '22A2')
-      .set(SapInput("Plant"), "22a1")
+      .set(SapInput("Plant"), "2200")
       .click(Sap.Execute)
       .download(DownloadableSapTable(), AbsolutePath("FAR2200.xlsx"));
   // .wait(Seconds(20));

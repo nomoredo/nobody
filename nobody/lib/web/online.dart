@@ -146,6 +146,14 @@ class Online {
     return this;
   }
 
+  //new tab
+  Future<Online> new_tab(AbstractUrl url, {bool show = true}) async {
+    if (show) Show.action('opening', 'new tab');
+    final p = await (await browser).newPage();
+    await p.goto(url.url, wait: Until.domContentLoaded);
+    return this;
+  }
+
   //scan
   Future<Online> scan(AbstractSelector selector, Function(ElementHandle) action,
       {bool show = true}) async {
