@@ -412,6 +412,19 @@ class Show {
     " ─→ ".write(inRed);
     "$texts".writeLine(inGreen);
   }
+
+  static void pleaseConfirm(
+      String scope, String action, String message, String question) {
+    "please confirm".write(inYellow);
+    " ─→ ".write(inRed);
+    "$scope".write(inPurple);
+    " ".write(inRed);
+    "$action".write(inYellow);
+    " ".write(inRed);
+    "$message".write(inWhite);
+    " ".write(inRed);
+    "$question".writeLine(inGreen);
+  }
 }
 
 extension StringEx on String {

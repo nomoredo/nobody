@@ -7,9 +7,16 @@ import 'show.dart';
 class Ask {
   static Future<String> password(String scope, String key) async {
     Show.pleaseEnter("PLEASE ENTER", scope, "PASSWORD", "FOR", key);
-     var password = await prompt('PASSWORD', hideInput: true);
+    var password = await prompt('PASSWORD', hideInput: true);
     return password;
+  }
 
+  static Future<bool> confirmation(
+      String scope, String action, String message, String question) async {
+    Show.pleaseConfirm(scope, action, message, question);
+    var confirmation = await prompt('CONFIRMATION');
+    return confirmation.toLowerCase() == 'y' ||
+        confirmation.toLowerCase() == 'yes';
   }
 
   static Future<String> input(String scope, String key) async {

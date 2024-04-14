@@ -60,6 +60,15 @@
             "cwd": "termo",
             "request": "launch",
             "type": "dart"
+        },
+        {
+            "name": "asset_register",
+            "cwd": "nobody",
+            "request": "launch",
+            "type": "dart",
+            "program": "bin/asset_register.dart",
+            "console": "terminal",
+            
         }
     ]
 }
