@@ -326,4 +326,9 @@ extension ExDateTime on DateTime {
   String to_ddMMyyyy() {
     return '${day.toString().padLeft(2, '0')}.${month.toString().padLeft(2, '0')}.${year}';
   }
+
+  /// to yyyyMMdd
+  String to_yyyyMMdd() {
+    return '${year}${month.toString().padLeft(2, '0')}${day.toString().padLeft(2, '0')}';
+  }
 }
