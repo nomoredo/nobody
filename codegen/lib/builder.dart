@@ -13,7 +13,7 @@
 library source_gen_example.builder;
 
 import 'package:build/build.dart';
-import 'package:codegen/codegen.dart';
+import 'package:nogen/nogen.dart';
 import 'package:source_gen/source_gen.dart';
 
 Builder futureBuilder(BuilderOptions options) => LibraryBuilder(

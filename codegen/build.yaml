@@ -3,7 +3,7 @@ builders:
   # name of the builder
   future_builder:
     # library URI containing the builder - maps to `lib/future_builder_library_generator.dart`
-    import: "package:codegen/builder.dart"
+    import: "package:nogen/builder.dart"
     # Name of the function in the above library to call.
     builder_factories: ["futureBuilder"]
     # The mapping from the source extension to the generated file extension
