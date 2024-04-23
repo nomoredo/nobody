@@ -1,6 +1,6 @@
 name: nogen
 description: nobody generates code for nobody
-version: 2.0.1
+version: 2.0.2
 homepage: "https://xo.rs"
 
 environment:
@@ -10,4 +10,5 @@ dependencies:
   analyzer: ^6.2.0
   build: ^2.4.1
   source_gen: ^1.4.0
+
 
