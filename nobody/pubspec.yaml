@@ -1,6 +1,6 @@
 name: nobody
 description: works for you
-version: 2.0.2
+version: 2.0.3
 homepage: "https://xo.rs"
 
 environment:
@@ -8,7 +8,6 @@ environment:
 
 dependencies:
   puppeteer: ^3.4.0
-  nogen: ^2.0.1
   collection: ^1.18.0
   flat_buffers: ^2.0.5
   encrypt: ^5.0.3
@@ -17,10 +16,12 @@ dependencies:
   archive: ^3.4.10
   coco: ^1.0.2
   oauth2_manager: ^1.0.0
+  nogen: ^2.0.0
 
 dev_dependencies:
   build_runner: any
   source_gen: any
+
 
 
 

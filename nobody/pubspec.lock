@@ -348,10 +348,11 @@ packages:
   nogen:
     dependency: "direct main"
     description:
-      path: "../codegen"
-      relative: true
-    source: path
-    version: "2.0.1"
+      name: nogen
+      sha256: fb0187deb4b2df3e2614dc46eb4d26e862540c77ab166646a513208861057e5a
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.2"
   oauth2:
     dependency: transitive
     description:
