@@ -1,6 +1,6 @@
 name: nobody
 description: works for you
-version: 1.0.2
+version: 2.0.2
 homepage: "https://xo.rs"
 
 environment:
@@ -21,5 +21,6 @@ dependencies:
 dev_dependencies:
   build_runner: any
   source_gen: any
+
 
 
