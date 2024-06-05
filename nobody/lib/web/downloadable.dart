@@ -15,31 +15,49 @@ class DownloadableSapTable implements AbstractDownloadable {
   @override
   Future<Online> download(Online browser, AbstractPath path) async {
     await browser.waitFor(Sap.TableHeader);
-    //send Ctrl+Shift+F10 to window
-    await browser.key_down(Key.control, show: false);
-    await browser.key_down(Key.control, show: false);
-    await browser.key_down(Key.shift, show: false);
-    await browser.press(Key.f10, show: false);
-    await browser.key_up(Key.control, show: false);
-    await browser.key_up(Key.shift, show: false);
-    await browser.click(
-        Css('div[role="button"][title="Spreadsheet... (Ctrl+Shift+F7)"]'),
-        show: false);
-    await browser.click(Css('div[role="button"][title="Continue (Enter)"]'),
-        show: false);
-    //click "aria/File Name"
-    // await (await browser.page).onDialog.listen((dialog) async {
-    //   await dialog.accept(promptText: path.toString());
-    // });
+
+    try {
+      // Send Ctrl+Shift+F10 to window
+      await browser.key_down(Key.control, show: false);
+      await browser.key_down(Key.shift, show: false);
+      await browser.press(Key.f10, show: false);
+      await browser.key_up(Key.control, show: false);
+      await browser.key_up(Key.shift, show: false);
+      // Attempt to click "Spreadsheet... (Ctrl+Shift+F7)" button
+      await browser.click(
+          Css('div[role="button"][title="Spreadsheet... (Ctrl+Shift+F7)"]'),
+          show: false);
+      await browser.click(Css('div[role="button"][title="Continue (Enter)"]'),
+          show: false);
+    } catch (e) {
+      // If the initial click fails, attempt redundancy: Send Ctrl+Shift+F7 to window
+      await browser.key_down(Key.control, show: false);
+      await browser.key_down(Key.shift, show: false);
+      await browser.press(Key.f7, show: false);
+      await browser.key_up(Key.control, show: false);
+      await browser.key_up(Key.shift, show: false);
+
+      // Retry clicking the button after redundancy
+      await browser.click(
+          Css('div[role="button"][title="Spreadsheet... (Ctrl+Shift+F7)"]'),
+          show: false);
+      await browser.click(Css('div[role="button"][title="Continue (Enter)"]'),
+          show: false);
+    }
+
+    // Click "aria/File Name" input field
     await browser.waitFor(Css('input#popupDialogInputField'));
     await browser.click(Css('input#popupDialogInputField'), show: true);
-    //send "9713057.xlsx" to window
+
+    // Clear and send the file name to the input field
     await browser.clear_value(Css('input#popupDialogInputField'), show: false);
     await browser.type(Css('input#popupDialogInputField'), await path.path,
         show: true);
-    await browser.click(Css('#UpDownDialogChoose'), show: false);
-    //wait for download to complete
 
+    // Click the "Choose" button to confirm
+    await browser.click(Css('#UpDownDialogChoose'), show: false);
+
+    // Wait for download to complete
     return browser;
   }
 }

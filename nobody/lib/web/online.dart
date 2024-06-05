@@ -189,16 +189,23 @@ class Online {
       bool click = false}) async {
     String text = obj?.toString() ?? '';
     if (show) Show.set_value(selector.selector, text);
-    var selected = selector is XPath
-        ? await (await page).waitForXPath(selector.selector)
-        : await (await page).waitForSelector(selector.selector);
 
-    if (selected != null) {
+// first wait for the page to load and the selector to appear
+    if (selector is XPath) {
+      await (await page).waitForXPath(selector.selector);
+    } else {
+      await (await page).waitForSelector(selector.selector);
+    }
+    var selectedElements = await (await page).$$(selector.selector);
+
+    if (selectedElements.length > index) {
+      var selected = selectedElements[index];
+
       if (click) {
-        await (await page).click(selector.selector);
+        await selected.click();
       }
+
       await selected.evaluateHandle('''(element, text) => {
-\
       if (element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement || element instanceof HTMLSelectElement) {
         element.focus(); // Focus on the element
         var inputEvent = new Event('input', {bubbles: true});
