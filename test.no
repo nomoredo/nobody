@@ -1,0 +1,4 @@
+/// name: simple test script
+/// description: A simple test script that logs a message to the console.
+console.log("Hello, world!");
+console.log("This is a test script running in the custom script runner.");
