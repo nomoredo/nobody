@@ -3,19 +3,14 @@ use constants::*;
 pub use super::*;
 
 pub fn show_banner() {
-    BANNER.print(vibrant);
-    // get virsion from cargo.toml
+    BANNER.vibrant().println();
     let version = env!("CARGO_PKG_VERSION");
-    " NOBODY ".print_positioned(-2, 0,on_yellow);
-    "WORKS FOR YOU".print_positioned(-2, 1, in_yellow);
-    // reset_line();
-    format!("VERSION 🚀 {} ", version).print_positioned(-2, 2, in_gray);
-    " BY AGHIL K MOHAN ".print_positioned(-2, 10, in_gray);
+    " NOBODY ".print_positioned(-3, 0, |x|x.style(yellowbg));
+    "WORKS FOR YOU".print_positioned(-3, 1, |x|x.style(yellow));
+    format!("VERSION 🚀 {} ", version).print_positioned(-3, 2, |x|x.style(gray));
+    " BY AGHIL K MOHAN ".print_positioned(-3, 10, |x|x.style(gray));
     reset_line();
-    // // "by incredimo 😎 a@xo.rs".print_positioned(-1, 0, in_gray);
-    // //    divider();
-    // reset_line();
-    STARTUP_INFO.println(in_gray);
+    STARTUP_INFO.in_gray().println();
 }
 
 pub fn get_options() -> Vec<Choice> {
@@ -31,7 +26,7 @@ pub fn get_options() -> Vec<Choice> {
         opt.push(choice!(script.get_name(), "run script",move || run_script(&script),move |args| args.contains(&scriptname)));
     }
 
-    opt.push(choice!("create", "create new nobody script", || create_new(&vec![]), |args| args.contains(&String::from("create"))) );
+    opt.push(choice!("create", "create new script", || create_new(&vec![]), |args| args.contains(&String::from("create"))) );
     opt.push(choice!("help", "display help", || display_help(&vec![]), |args| args.contains(&String::from("help"))) );
 
     opt.push(choice!("exit", "exit nobody", || std::process::exit(0), |args| args.contains(&String::from("exit"))) );
@@ -79,7 +74,7 @@ pub fn get_scripts() -> Vec<NoScript> {
 
 pub fn display_help(_args: &Vec<String>) {
     showln!(yellow, "HELP");
-    "nomo is a simple cli application that fecilitates creation and running of nomo scripts (.nomo files)".print(in_white);
+    "nobody is a simple cli application that fecilitates creation and running of nomo scripts (.nomo files)".in_white().print();
 }
 
 pub fn create_new(_args: &Vec<String>) {
