@@ -6,7 +6,8 @@ use std::{
     thread,
 };
 
-use deno_core::{JsRuntime, RuntimeOptions};
+use deno_core::{JsRuntime, PollEventLoopOptions, RuntimeOptions};
+use tokio::runtime::Runtime;
 
 pub use super::*;
 
@@ -36,8 +37,44 @@ impl NoScript {
     }
 
     pub fn run_script(&self) -> Result<(), deno_core::error::AnyError> {
-        let mut js_runtime = JsRuntime::new(RuntimeOptions::default());
-        js_runtime.execute_script("<anon>", self.content.clone())?;
-        Ok(())
+        // Create a new Tokio runtime
+        let rt = Runtime::new().unwrap();
+        rt.block_on(async {
+            let mut js_runtime = JsRuntime::new(RuntimeOptions::default());
+
+            // Create channels for communication
+            let (tx, rx): (Sender<String>, Receiver<String>) = mpsc::channel();
+
+            // Prepare the script
+            let script_content = self.get_content()?;
+            let script = script_content
+                .replace("print(", "tx.send(")
+                .replace("println(", "tx.send(");
+
+            let script = format!(
+                r#"
+                (async () => {{
+                    {}
+                }})()
+                "#,
+                script
+            );
+
+            // Execute the script
+            js_runtime.execute_script("main.js", script)?;
+
+            // Spawn a thread to print the output in real-time
+            thread::spawn(move || {
+                for line in rx {
+                    showln!(white, "{}", line);
+                }
+            });
+
+            // Run the event loop
+            js_runtime.run_event_loop(PollEventLoopOptions::default()).await?;
+
+            Ok(())
+        })
     }
+
 }
