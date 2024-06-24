@@ -9,7 +9,8 @@ Future po_export() async {
       .online()
       .login(Sap.User('amohandas'))
       .goto(SapTransactionUrl("ME2N"))
-      .set(SapInput('Purchasing organization'), '2200')
+      .set(SapInput('Purchasing organization'),
+          '') // include 2000 , 2200 and others
       .set_range(
           SapInput('Purchasing Document Date'), '01.01.2023', '30.12.2025')
       .set_range(SapInput("Plant"), "2200", "22A2")
