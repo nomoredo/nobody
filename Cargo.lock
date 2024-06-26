@@ -1231,6 +1231,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f620a33195e592a643f615eae50fa9b131aef32755f025f1ab9acbd4f065a9ae"
 dependencies = [
  "crossterm",
+ "futures",
  "lazy_static",
  "paste",
  "rand",
@@ -1238,6 +1239,7 @@ dependencies = [
  "serde",
  "serde_json",
  "textwrap",
+ "tokio",
 ]
 
 [[package]]

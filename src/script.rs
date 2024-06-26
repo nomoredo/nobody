@@ -1,10 +1,15 @@
 use std::{
-    borrow::Cow, cell::RefCell, env, io::{BufRead, BufReader, Read}, process::{Command, Stdio}, rc::Rc, sync::mpsc::{self, Receiver, Sender}, thread
+    env,
+    io::{ BufRead, BufReader },
+    process::{ Command, Stdio },
+    sync::mpsc::{ self, Receiver, Sender },
+    thread,
+    rc::Rc,
+    cell::RefCell,
+    borrow::Cow,
 };
 
-use deno_core::{
-    anyhow::Error, extension, Extension, JsRuntime, OpState, RuntimeOptions
-};
+use deno_core::{ anyhow::Error, extension, Extension, JsRuntime, OpState, RuntimeOptions };
 use minimo::Arc;
 use tokio::runtime::Runtime;
 
@@ -18,9 +23,14 @@ use deno_core::ModuleSourceCode;
 
 const PATH_TO_NOBODY: &str = ".nobody";
 
-pub const TEMPLATE: &str = r#"
+pub const TEMPLATE: &str =
+    r#"
 /// name: Sample Script
 /// description: This is a sample script demonstrating the capabilities of Nobody.
+
+import nobody from "nobody"; // support importing from known modules
+import browser from "https://github.com/puppeteer/puppeteer/raw/main/puppeteer.ts"; // support importing from URLs
+
 
 let a = 10;
 let b = 20;
@@ -45,33 +55,44 @@ await file.save();
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct NoScript {
     pub name: String,
-    pub content: String,
     pub description: String,
+    pub path: String,
 }
 
 use nom::{
     branch::alt,
-    bytes::complete::{tag, take_until},
-    character::complete::{char, multispace0},
-    combinator::{map, opt},
+    bytes::complete::{ tag, take_until },
+    character::complete::{ char, multispace0 },
+    combinator::{ map, opt },
     multi::many0,
-    sequence::{preceded, terminated},
+    sequence::{ preceded, terminated },
     IResult,
 };
 
-
-
-
+use crate::{runjs, TsModuleLoader, RUNTIME_SNAPSHOT};
 
 impl NoScript {
-    pub fn from_file(path: &std::path::Path) -> Result<Self, Error> {
-        let content = std::fs::read_to_string(path)?;
-        let (_, script) = parse_script(&content).unwrap();
-        Ok(script)
+    pub fn from_file(path: &std::path::Path) -> Option<Self> {
+        let metadata = extract_metadata(path);
+        if let Some(name) = metadata.get("name") {
+            if let Some(description) = metadata.get("description") {
+                Some(Self {
+                    name: name.to_string(),
+                    description: description.to_string(),
+                    path: path.to_string_lossy().to_string(),
+                })
+            } else {
+              Some(Self {
+                  name: name.to_string(),
+                  description: "".to_string(),
+                  path: path.to_string_lossy().to_string(),
+                })
+
+            }
+        } else {
+            None
+        }
     }
-
-
- 
 
     pub fn get_name(&self) -> String {
         self.name.clone()
@@ -81,181 +102,72 @@ impl NoScript {
         self.description.clone()
     }
 
-    pub fn get_description_trimmed(&self, len: usize) -> String {
-        if self.description.len() > len {
-            format!("{}...", &self.description[..len])
+    pub fn get_description_truncated(&self, max_length: usize) -> String {
+        if self.description.len() > max_length {
+            format!("{}...", &self.description[..max_length])
         } else {
             self.description.clone()
         }
     }
 
-
     //run the script
     pub fn run_script(&self) -> minimo::result::Result<()> {
-        let mut runtime = deno_core::JsRuntime::new(RuntimeOptions {
-            module_loader: Some( Rc::new(TsModuleLoader)),
-            extensions: vec![runjs::init_ops_and_esm(), ],
-            ..Default::default()
-        });
 
-        let content = self.content.clone();
-        runtime.execute_script( "runtime.js", content)?;
+        tokio::runtime::Runtime::new()?.block_on(async move {
+            let main_module = deno_core::resolve_path(&self.path, env::current_dir()?.as_path())?;
+            let mut js_runtime = deno_core::JsRuntime::new(deno_core::RuntimeOptions {
+                module_loader: Some(Rc::new(TsModuleLoader)),
+                startup_snapshot: Some(RUNTIME_SNAPSHOT),
+                extensions: vec![runjs::init_ops()],
+                ..Default::default()
+            });
+        
+            let mod_id = js_runtime.load_main_es_module(&main_module).await?;
+            let result = js_runtime.mod_evaluate(mod_id);
+            js_runtime.run_event_loop(Default::default()).await?;
+            result.await
+        }).unwrap();
+
         Ok(())
-    
-    }
 
-}
-
-//parse the script
-// try to match `///` followed by `name` followed by `:` and then the name of the script
-// similarly for `description` and then the description of the script
-// everything else is considered as the script content
-fn parse_script(input: &str) -> IResult<&str, NoScript> {
-    let (input, name) = parse_name(input)?;
-    let (input, description) = parse_description(input)?;
-    let (input, content) = parse_content(input)?;
-    Ok((input, NoScript { name, description, content }))
-}
-
-
-fn parse_name(input: &str) -> IResult<&str, String> {
-    let (input, _) = tag("///")(input)?;
-    let (input, _) = multispace0(input)?;
-    let (input, _) = tag("name:")(input)?;
-    let (input, name) = take_until("\n")(input)?;
-    let (input, _) = multispace0(input)?;
-    Ok((input, name.trim().to_string()))
-}
-
-fn parse_description(input: &str) -> IResult<&str, String> {
-    let (input, _) = tag("///")(input)?;
-    let (input, _) = multispace0(input)?;
-    let (input, _) = tag("description:")(input)?;
-    let (input, description) = take_until("\n")(input)?;
-    let (input, _) = multispace0(input)?;
-    Ok((input, description.trim().to_string()))
-}
-
-fn parse_content(input: &str) -> IResult<&str, String> {
-    let (input, content) = take_until("\n")(input)?;
-    Ok((input, content.trim().to_string()))
-}
-
-
-
-
-
-#[op2(async)]
-#[string]
-async fn op_read_file(#[string] path: String) -> Result<String, AnyError> {
-    let contents = tokio::fs::read_to_string(path).await?;
-    Ok(contents)
-}
-
-#[op2(async)]
-#[string]
-async fn op_write_file(#[string] path: String, #[string] contents: String) -> Result<(), AnyError> {
-    tokio::fs::write(path, contents).await?;
-    Ok(())
-}
-
-#[op2(async)]
-#[string]
-async fn op_fetch(#[string] url: String) -> Result<String, AnyError> {
-    let body = reqwest::get(url).await?.text().await?;
-    Ok(body)
-}
-
-#[op2(async)]
-async fn op_set_timeout(delay: f64) -> Result<(), AnyError> {
-    tokio::time::sleep(std::time::Duration::from_millis(delay as u64)).await;
-    Ok(())
-}
-
-#[op2(fast)]
-fn op_remove_file(#[string] path: String) -> Result<(), AnyError> {
-    std::fs::remove_file(path)?;
-    Ok(())
-}
-
-struct TsModuleLoader;
-
-impl deno_core::ModuleLoader for TsModuleLoader {
-    fn resolve(
-        &self,
-        specifier: &str,
-        referrer: &str,
-        _kind: deno_core::ResolutionKind,
-    ) -> Result<deno_core::ModuleSpecifier, AnyError> {
-        deno_core::resolve_import(specifier, referrer).map_err(|e| e.into())
-    }
-
-    fn load(
-        &self,
-        module_specifier: &deno_core::ModuleSpecifier,
-        _maybe_referrer: Option<&reqwest::Url>,
-        _is_dyn_import: bool,
-        _requested_module_type: deno_core::RequestedModuleType,
-    ) -> ModuleLoadResponse {
-        let module_specifier = module_specifier.clone();
-
-        let module_load = Box::pin(async move {
-            let path = module_specifier.to_file_path().unwrap();
-
-            let media_type = MediaType::from_path(&path);
-            let (module_type, should_transpile) = match MediaType::from_path(&path) {
-                MediaType::JavaScript | MediaType::Mjs | MediaType::Cjs => {
-                    (deno_core::ModuleType::JavaScript, false)
-                }
-                MediaType::Jsx => (deno_core::ModuleType::JavaScript, true),
-                MediaType::TypeScript
-                | MediaType::Mts
-                | MediaType::Cts
-                | MediaType::Dts
-                | MediaType::Dmts
-                | MediaType::Dcts
-                | MediaType::Tsx => (deno_core::ModuleType::JavaScript, true),
-                MediaType::Json => (deno_core::ModuleType::Json, false),
-                _ => panic!("Unknown extension {:?}", path.extension()),
-            };
-
-            let code = std::fs::read_to_string(&path)?;
-            let code = if should_transpile {
-                let parsed = deno_ast::parse_module(ParseParams {
-                    specifier: module_specifier.clone(),
-                                  media_type,
-                    capture_tokens: false,
-                    scope_analysis: false,
-                    maybe_syntax: None,
-                    text:  code.into(),
-                })?;
-                
-                  panic!("parsed: {:?}", parsed);
-            } else {
-                code
-            };
-            let module = deno_core::ModuleSource::new(
-                module_type,
-                ModuleSourceCode::String(code.into()),
-                &module_specifier,
-                None,
-            );
-            Ok(module)
-        });
-
-        ModuleLoadResponse::Async(module_load)
+       
     }
 }
 
-extension! {
-    runjs,
-    ops = [
-        op_read_file,
-        op_write_file,
-        op_remove_file,
-        op_fetch,
-        op_set_timeout,
-    ]
+
+//extract metadata from the script
+//metadata is in the form of `///` ~ ` `? ~ [key]: ~ ` `? ~ [value]
+fn extract_metadata(path: &std::path::Path) -> std::collections::HashMap<String, String> {
+    let file = std::fs::File::open(path).unwrap();
+    let mut reader = BufReader::new(file).lines();
+    let mut metadata = std::collections::HashMap::new();
+
+     while let Some(Ok(line)) = reader.next() {
+        if let Some((key, value)) = extract_metadata_line(line) {
+            metadata.insert(key, value);
+        } else {
+            break;
+        }
+    }
+
+
+    metadata
 }
+
+
+fn extract_metadata_line(line: String) -> Option<(String, String)> {
+ 
+    if line.starts_with("///") && line.contains(":") {
+      let splits = line.trim_start_matches("///").split(":").collect::<Vec<_>>();
+        if splits.len() == 2 {
+            Some((splits[0].trim().to_string(), splits[1].trim().to_string()))
+        } else {
+            None
+        }
+    } else {
+        None
+    }
+}
+
 
  
