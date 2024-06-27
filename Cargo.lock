@@ -1346,6 +1346,7 @@ dependencies = [
  "dirs",
  "indicatif",
  "kdam",
+ "lazy_static",
  "minimo",
  "nom",
  "once_cell",

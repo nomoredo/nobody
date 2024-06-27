@@ -13,7 +13,7 @@ pub fn show_banner() {
     reset_line();
     STARTUP_INFO.in_gray().println();
 }
-use std::future::Future;
+use std::{fs, future::Future};
 use std::pin::Pin;
 use std::error::Error;
 use std::sync::Arc;
@@ -179,7 +179,7 @@ pub fn async_menu(message: impl Into<String>, options: &Vec<AsyncChoice>) -> Opt
 
 pub fn get_options() -> Vec<AsyncChoice> {
     let mut opt = vec![];
-    for script in get_scripts() {
+    for script in get_scripts().unwrap() {
         let script = Arc::new(script);
         opt.push(
             AsyncChoice::new(
@@ -202,22 +202,3 @@ pub fn get_options() -> Vec<AsyncChoice> {
 }
 
 
-pub fn get_scripts() -> Vec<NoScript> {
-    let mut scripts = vec![];
-   //recursively search for scripts that can be parserd from files
-    let mut stack = vec![std::env::current_dir().unwrap()];
-    while let Some(dir) = stack.pop() {
-        for entry in std::fs::read_dir(dir).unwrap() {
-            let entry = entry.unwrap();
-            let path = entry.path();
-            if path.is_dir() {
-                stack.push(path);
-            } else {
-                if let Some(script) = NoScript::from_file(&path) {
-                    scripts.push(script);
-                }
-            }
-        }
-    }
-    scripts
-}

@@ -49,7 +49,7 @@ async fn op_set_timeout(delay: f64) -> Result<(), AnyError> {
 #[op2(fast)]
 fn op_remove_file(#[string] path: String) -> Result<(), AnyError> {
     std::fs::remove_file(path)?;
-    Ok(())  
+    Ok(()) 
 }
 
 // Keep the extension and RUNTIME_SNAPSHOT as they were

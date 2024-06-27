@@ -1,56 +1,20 @@
 use std::{
     env,
-    io::{ BufRead, BufReader },
-    process::{ Command, Stdio },
-    sync::mpsc::{ self, Receiver, Sender },
-    thread,
+    io::{BufRead, BufReader},
+    path::Path,
     rc::Rc,
-    cell::RefCell,
-    borrow::Cow,
+    collections::HashMap,
+    fs::File,
 };
-
-use deno_core::{ anyhow::Error, extension, Extension, JsRuntime, OpState, RuntimeOptions };
-use minimo::{showln, Arc};
-use tokio::runtime::Runtime;
-
-use deno_ast::MediaType;
-use deno_ast::ParseParams;
-use deno_ast::SourceTextInfo;
-use deno_core::error::AnyError;
-use deno_core::op2;
-use deno_core::ModuleLoadResponse;
-use deno_core::ModuleSourceCode;
-
-const PATH_TO_NOBODY: &str = ".nobody";
-
-pub const TEMPLATE: &str =
-    r#"
-/// name: Sample Script
-/// description: This is a sample script demonstrating the capabilities of Nobody.
-
-import nobody from "nobody"; // support importing from known modules
-import browser from "https://github.com/puppeteer/puppeteer/raw/main/puppeteer.ts"; // support importing from URLs
-
-
-let a = 10;
-let b = 20;
-let c = a + b;
-console.log(`The sum of ${a} and ${b} is ${c}`);
-
-let name = await nobody.ask("What is your name?");
-console.log(`Hello ${name}`);
-
-let isAdult = await nobody.confirm("Are you an adult?");
-console.log(`You are ${isAdult ? "an adult" : "not an adult"}`);
-
-let options = [{name: "apple", color: "red"}, {name: "banana", color: "yellow"}];
-let selected = await nobody.select("Select a fruit", options);
-console.log(`You selected ${selected.name} which is ${selected.color}`);
-
-let file = await files.create("test.txt");
-file.content = "This is a test file";
-await file.save();
-"#;
+use deno_core::{
+    error::AnyError,
+    ModuleSpecifier,
+    JsRuntime,
+    RuntimeOptions,
+};
+use minimo::result::Result;
+use tokio::task::LocalSet;
+use crate::{runjs, TsModuleLoader, RUNTIME_SNAPSHOT};
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct NoScript {
@@ -59,39 +23,14 @@ pub struct NoScript {
     pub path: String,
 }
 
-use nom::{
-    branch::alt,
-    bytes::complete::{ tag, take_until },
-    character::complete::{ char, multispace0 },
-    combinator::{ map, opt },
-    multi::many0,
-    sequence::{ preceded, terminated },
-    IResult,
-};
-
-use crate::{runjs, TsModuleLoader, RUNTIME_SNAPSHOT};
-
 impl NoScript {
-    pub fn from_file(path: &std::path::Path) -> Option<Self> {
+    pub fn from_file(path: &Path) -> Option<Self> {
         let metadata = extract_metadata(path);
-        if let Some(name) = metadata.get("name") {
-            if let Some(description) = metadata.get("description") {
-                Some(Self {
-                    name: name.to_string(),
-                    description: description.to_string(),
-                    path: path.to_string_lossy().to_string(),
-                })
-            } else {
-              Some(Self {
-                  name: name.to_string(),
-                  description: "".to_string(),
-                  path: path.to_string_lossy().to_string(),
-                })
-
-            }
-        } else {
-            None
-        }
+        metadata.get("name").map(|name| Self {
+            name: name.to_string(),
+            description: metadata.get("description").cloned().unwrap_or_default(),
+            path: path.to_string_lossy().to_string(),
+        })
     }
 
     pub fn get_name(&self) -> String {
@@ -110,70 +49,66 @@ impl NoScript {
         }
     }
 
-    //run the script
-    pub async fn run_script(&self) -> minimo::result::Result<()> {
-
+    pub async fn run_script(&self) -> Result<()> {
         let main_module = deno_core::resolve_path(&self.path, env::current_dir()?.as_path())?;
-        let mut js_runtime = deno_core::JsRuntime::new(deno_core::RuntimeOptions {
-            module_loader: Some(Rc::new(TsModuleLoader::new())),
+        let module_loader = Rc::new(TsModuleLoader::new());
+
+        let mut js_runtime = JsRuntime::new(RuntimeOptions {
+            module_loader: Some(module_loader),
             startup_snapshot: Some(RUNTIME_SNAPSHOT),
             extensions: vec![runjs::init_ops()],
+            custom_module_evaluation_cb: None,
+            inspector: true,
             ..Default::default()
         });
 
- 
-    
-        let future = async move {
-            let mod_id = js_runtime.load_main_es_module(&main_module).await?;
-            let result = js_runtime.mod_evaluate(mod_id);
-            js_runtime.run_event_loop(Default::default()).await?;
-            result.await
-          };
-
-
-        future.await?;
- 
-
+        let mod_id = js_runtime.load_main_es_module(&main_module).await?;
+        let result = js_runtime.mod_evaluate(mod_id);
+        
+        js_runtime.run_event_loop(Default::default()).await?;
+        
+        result.await?;
         Ok(())
-
-       
     }
 }
 
-
-//extract metadata from the script
-//metadata is in the form of `///` ~ ` `? ~ [key]: ~ ` `? ~ [value]
-fn extract_metadata(path: &std::path::Path) -> std::collections::HashMap<String, String> {
-    let file = std::fs::File::open(path).unwrap();
-    let mut reader = BufReader::new(file).lines();
-    let mut metadata = std::collections::HashMap::new();
-
-     while let Some(Ok(line)) = reader.next() {
-        if let Some((key, value)) = extract_metadata_line(line) {
-            metadata.insert(key, value);
-        } else {
-            break;
-        }
-    }
-
-
-    metadata
+fn extract_metadata(path: &Path) -> HashMap<String, String> {
+    File::open(path)
+        .map(|file| {
+            BufReader::new(file)
+                .lines()
+                .take_while(|line| line.as_ref().map(|l| l.starts_with("///")).unwrap_or(false))
+                .filter_map(|line| line.ok().and_then(extract_metadata_line))
+                .collect()
+        })
+        .unwrap_or_default()
 }
-
 
 fn extract_metadata_line(line: String) -> Option<(String, String)> {
- 
-    if line.starts_with("///") && line.contains(":") {
-      let splits = line.trim_start_matches("///").split(":").collect::<Vec<_>>();
-        if splits.len() == 2 {
-            Some((splits[0].trim().to_string(), splits[1].trim().to_string()))
-        } else {
-            None
-        }
-    } else {
-        None
-    }
+    let line = line.trim_start_matches("///").trim();
+    line.split_once(':').map(|(key, value)| (key.trim().to_string(), value.trim().to_string()))
 }
 
-
- 
+pub fn get_scripts() -> std::io::Result<Vec<NoScript>> {
+    let mut scripts = Vec::new();
+    let mut stack = vec![env::current_dir()?];
+   
+    while let Some(dir) = stack.pop() {
+        for entry in std::fs::read_dir(dir)? {
+            let entry = entry?;
+            let path = entry.path();
+           
+            if path.is_dir() {
+                stack.push(path);
+            } else if let Some(extension) = path.extension() {
+                if ["js", "ts", "no"].contains(&extension.to_str().unwrap_or("")) {
+                    if let Some(script) = NoScript::from_file(&path) {
+                        scripts.push(script);
+                    }
+                }
+            }
+        }
+    }
+   
+    Ok(scripts)
+}
