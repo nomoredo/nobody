@@ -10,7 +10,7 @@ use std::{
 };
 
 use deno_core::{ anyhow::Error, extension, Extension, JsRuntime, OpState, RuntimeOptions };
-use minimo::Arc;
+use minimo::{showln, Arc};
 use tokio::runtime::Runtime;
 
 use deno_ast::MediaType;
@@ -111,22 +111,28 @@ impl NoScript {
     }
 
     //run the script
-    pub fn run_script(&self) -> minimo::result::Result<()> {
+    pub async fn run_script(&self) -> minimo::result::Result<()> {
 
-        tokio::runtime::Runtime::new()?.block_on(async move {
-            let main_module = deno_core::resolve_path(&self.path, env::current_dir()?.as_path())?;
-            let mut js_runtime = deno_core::JsRuntime::new(deno_core::RuntimeOptions {
-                module_loader: Some(Rc::new(TsModuleLoader)),
-                startup_snapshot: Some(RUNTIME_SNAPSHOT),
-                extensions: vec![runjs::init_ops()],
-                ..Default::default()
-            });
-        
+        let main_module = deno_core::resolve_path(&self.path, env::current_dir()?.as_path())?;
+        let mut js_runtime = deno_core::JsRuntime::new(deno_core::RuntimeOptions {
+            module_loader: Some(Rc::new(TsModuleLoader::new())),
+            startup_snapshot: Some(RUNTIME_SNAPSHOT),
+            extensions: vec![runjs::init_ops()],
+            ..Default::default()
+        });
+
+ 
+    
+        let future = async move {
             let mod_id = js_runtime.load_main_es_module(&main_module).await?;
             let result = js_runtime.mod_evaluate(mod_id);
             js_runtime.run_event_loop(Default::default()).await?;
             result.await
-        }).unwrap();
+          };
+
+
+        future.await?;
+ 
 
         Ok(())
 

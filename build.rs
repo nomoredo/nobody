@@ -3,7 +3,7 @@ use std::env;
 use std::path::PathBuf;
 
 fn main() {
-    extension!(nobody, js = ["src/runtime.js",]);
+    extension!(nobody, js = ["./modules/runtime.js"]);
 
     let out_dir = PathBuf::from(env::var_os("OUT_DIR").unwrap());
     let snapshot_path = out_dir.join("SNAP.bin");

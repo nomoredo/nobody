@@ -1,3 +1,5 @@
+
+
 const { core } = Deno;
 const { ops } = core;
 
@@ -24,24 +26,23 @@ const nobody = {
   removeFile: (path) => {
     return ops.op_remove_file(path);
   },
-
   fetch: async (url) => {
     return ops.op_fetch(url);
   },
-
   print: (message) => {
     core.print(message);
   },
-
   exit: (code) => {
     core.exit(code);
   },
-
-  
+  wait: (milliseconds) => {
+    return new Promise((resolve) => {
+      setTimeout(resolve, milliseconds);
+    });
+  },
 };
 
-globalThis.setTimeout = (callback, delay) => {
+function setTimeout(callback, delay) {
   ops.op_set_timeout(delay).then(callback);
-};
-globalThis.console = console;
-globalThis.nobody = nobody;
+}
+
